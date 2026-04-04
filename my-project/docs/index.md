@@ -1,17 +1,15 @@
-# Welcome to MkDocs
+# 我的页面 / My Page
 
-For full documentation visit [text](https://las-stunning-leadership-pollution.trycloudflare.com).
+这是一个简单清晰的首页，方便你快速了解内容。  
+This is a simple and easy-to-read homepage.
 
-## Commands
+## 简介 / About
 
-* `mkdocs new [dir-name]` - Create a new project.
-* `mkdocs serve` - Start the live-reloading docs server.
-* `mkdocs build` - Build the documentation site.
-* `mkdocs -h` - Print help message and exit.
+我会在这里放项目说明、主要链接和更新内容。  
+I will add project notes, key links, and updates here.
 
-## Project layout
+## 你可以在这里做什么 / What you can do here
 
-    mkdocs.yml    # The configuration file.
-    docs/
-        index.md  # The documentation homepage.
-        ...       # Other markdown pages, images and other files.
+- 查看页面简介 / Read the page intro
+- 继续添加你的内容 / Add your own content
+- 保持结构简单 / Keep the layout simple
