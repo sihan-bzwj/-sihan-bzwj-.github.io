@@ -25,37 +25,53 @@ HOP_BY_HOP_HEADERS = {
 }
 
 
-class VisitorCounter:
-    """Thread-safe visitor counter using file persistence."""
-    def __init__(self, file_path: str = ".visitor_count"):
+class IPVisitorCounter:
+    """Thread-safe IP-based visitor counter with deduplication.
+    
+    Tracks unique visitor IPs and stores them persistently.
+    """
+    def __init__(self, file_path: str = ".visitor_ips"):
         self.file_path = Path(file_path)
         self.lock = threading.Lock()
+        self.visitor_ips: set[str] = set()
         self._load()
 
     def _load(self) -> None:
+        """Load existing visitor IPs from file."""
         if self.file_path.exists():
             try:
-                self.count = int(self.file_path.read_text().strip())
+                content = self.file_path.read_text().strip()
+                if content:
+                    self.visitor_ips = set(ip.strip() for ip in content.split('\n') if ip.strip())
+                else:
+                    self.visitor_ips = set()
             except (ValueError, OSError):
-                self.count = 0
+                self.visitor_ips = set()
         else:
-            self.count = 0
+            self.visitor_ips = set()
 
     def _save(self) -> None:
+        """Persist visitor IPs to file."""
         try:
-            self.file_path.write_text(str(self.count))
+            content = '\n'.join(sorted(self.visitor_ips))
+            self.file_path.write_text(content)
         except OSError:
             pass
 
-    def increment(self) -> int:
+    def record_visitor(self, ip: str) -> int:
+        """Record a visitor IP and return total unique visitor count."""
+        # Extract IP without port
+        ip = ip.split(':')[0].strip()
+        
         with self.lock:
-            self.count += 1
+            self.visitor_ips.add(ip)
             self._save()
-            return self.count
+            return len(self.visitor_ips)
 
-    def get(self) -> int:
+    def get_count(self) -> int:
+        """Get total unique visitor count."""
         with self.lock:
-            return self.count
+            return len(self.visitor_ips)
 
 
 @dataclass(frozen=True)
@@ -108,7 +124,20 @@ def rewrite_location(location: str, upstream: Upstream) -> str:
 
 class GatewayHandler(BaseHTTPRequestHandler):
     protocol_version = "HTTP/1.1"
-    visitor_counter: VisitorCounter | None = None
+    visitor_counter: IPVisitorCounter | None = None
+
+    def _get_client_ip(self) -> str:
+        """Extract real client IP, handling Cloudflare headers."""
+        # Check for Cloudflare header first
+        if "CF-Connecting-IP" in self.headers:
+            return self.headers["CF-Connecting-IP"]
+        
+        # Fall back to X-Forwarded-For
+        if "X-Forwarded-For" in self.headers:
+            return self.headers["X-Forwarded-For"].split(",")[0].strip()
+        
+        # Use direct connection IP
+        return self.client_address[0]
 
     def _send_json_response(self, status: int, data: dict) -> None:
         """Send JSON response with appropriate headers."""
@@ -117,6 +146,7 @@ class GatewayHandler(BaseHTTPRequestHandler):
         self.send_header("Content-Type", "application/json; charset=utf-8")
         self.send_header("Content-Length", str(len(response_body)))
         self.send_header("Access-Control-Allow-Origin", "*")
+        self.send_header("Cache-Control", "no-cache, no-store, must-revalidate")
         self.end_headers()
         self.wfile.write(response_body)
 
@@ -128,13 +158,16 @@ class GatewayHandler(BaseHTTPRequestHandler):
                 return True
 
             if self.command == "GET":
-                count = self.visitor_counter.increment()
+                # Record the visitor's IP
+                client_ip = self._get_client_ip()
+                count = self.visitor_counter.record_visitor(client_ip)
                 self._send_json_response(200, {"count": count, "success": True})
                 return True
             elif self.command == "OPTIONS":
                 self.send_response(200)
                 self.send_header("Access-Control-Allow-Origin", "*")
                 self.send_header("Access-Control-Allow-Methods", "GET, OPTIONS")
+                self.send_header("Access-Control-Allow-Headers", "Content-Type")
                 self.end_headers()
                 return True
         return False
@@ -242,7 +275,7 @@ def main() -> int:
     args = parser.parse_args()
 
     # Initialize visitor counter
-    counter = VisitorCounter()
+    counter = IPVisitorCounter()
 
     server = ThreadingHTTPServer((args.host, args.port), GatewayHandler)
     server.ai_host = args.ai_host
@@ -255,6 +288,7 @@ def main() -> int:
     print(f"Gateway listening on http://{args.host}:{args.port}")
     print(f"AI upstream: http://{server.ai_host}:{server.ai_port}")
     print(f"Cloud Drive upstream: http://{server.drive_host}:{server.drive_port}{server.drive_prefix}")
+    print(f"Visitor counter: {counter.get_count()} unique visitors")
 
     try:
         server.serve_forever()

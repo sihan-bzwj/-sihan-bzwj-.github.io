@@ -1,8 +1,6 @@
 (() => {
-  const STORAGE_KEY = "sihan-bzwj-github-stars";
-  const CACHE_EXPIRY_KEY = "sihan-bzwj-github-stars-expiry";
-  const CACHE_DURATION = 3600000; // 1 hour in milliseconds
   const API_TIMEOUT = 5000; // 5 seconds timeout
+  const CACHE_KEY = "sihan-bzwj-visitor-last-fetch";
 
   const renderCount = (value) => {
     document.querySelectorAll("[data-visitor-count]").forEach((node) => {
@@ -11,59 +9,48 @@
   };
 
   const loadCount = async () => {
-    // Try to use cached value first
-    const cachedValue = localStorage.getItem(STORAGE_KEY);
-    const cacheExpiry = localStorage.getItem(CACHE_EXPIRY_KEY);
-    const now = Date.now();
-
-    if (cachedValue && cacheExpiry && now < parseInt(cacheExpiry)) {
-      renderCount(cachedValue);
-      return;
-    }
-
-    // Show placeholder while loading
-    if (cachedValue) {
-      renderCount(cachedValue);
-    } else {
-      renderCount("加载中...");
-    }
-
     try {
-      // Fetch GitHub repository stars
+      // Create abort controller for timeout
       const controller = new AbortController();
       const timeoutId = setTimeout(() => controller.abort(), API_TIMEOUT);
 
-      const response = await fetch(
-        "https://api.github.com/repos/sihan-bzwj/-sihan-bzwj-.github.io",
-        {
-          headers: { "Accept": "application/vnd.github.v3+json" },
-          signal: controller.signal,
-        }
-      );
+      // Determine API URL based on current location
+      const baseUrl = window.location.origin;
+      const apiUrl = `${baseUrl}/api/visitor-count`;
+
+      const response = await fetch(apiUrl, {
+        method: "GET",
+        cache: "no-store",
+        signal: controller.signal,
+      });
 
       clearTimeout(timeoutId);
 
       if (!response.ok) {
-        throw new Error(`GitHub API error: ${response.status}`);
+        throw new Error(`HTTP ${response.status}`);
       }
 
-      const data = await response.json();
-      const starCount = data.stargazers_count;
+      const payload = await response.json();
+      const count = payload.count;
 
-      if (typeof starCount === "number" && starCount >= 0) {
-        const text = String(starCount);
-        localStorage.setItem(STORAGE_KEY, text);
-        localStorage.setItem(CACHE_EXPIRY_KEY, String(now + CACHE_DURATION));
-        renderCount(text);
+      if (typeof count === "number" && count > 0) {
+        const countStr = String(count);
+        renderCount(countStr);
+        localStorage.setItem(CACHE_KEY, countStr);
         return;
       }
     } catch (error) {
-      // Silently fail - use cached value or default
+      // Network error or timeout - silently fail
       void error;
     }
 
-    // Fall back to cached value or show default
-    renderCount(cachedValue || "--");
+    // Fall back to previously cached value if available
+    const cached = localStorage.getItem(CACHE_KEY);
+    if (cached) {
+      renderCount(cached);
+    } else {
+      renderCount("--");
+    }
   };
 
   const refresh = () => {
