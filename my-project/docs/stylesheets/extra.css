@@ -475,3 +475,47 @@ a {
         font-size: clamp(2rem, 10vw, 3rem);
     }
 }
+
+.md-grid {
+    max-width: min(100%, 96rem);
+}
+
+.md-main__inner {
+    width: 100%;
+    max-width: none;
+    margin: 0 auto;
+}
+
+.md-content__inner.md-typeset {
+    max-width: none;
+}
+
+@media screen and (min-width: 76.25em) {
+    .md-nav--primary .md-nav__title[for="__drawer"] {
+        display: none;
+    }
+
+    .site-shell {
+        width: min(100%, 98rem);
+        padding: clamp(1rem, 2vw, 1.8rem);
+    }
+
+    .hero {
+        grid-template-columns: minmax(0, 1.7fr) minmax(300px, 0.95fr);
+        gap: clamp(1rem, 1.8vw, 1.5rem);
+    }
+
+    .hero-panel,
+    .side-panel {
+        min-height: 18rem;
+    }
+
+    .hero-panel {
+        padding: clamp(1.4rem, 2vw, 2rem);
+    }
+
+    .hero-title {
+        max-width: 14ch;
+        text-wrap: balance;
+    }
+}

@@ -1,6 +1,6 @@
 <div class="site-shell">
 	<header class="topbar">
-		<div class="brand">Sihan's Blog | 思涵的站点</div>
+		<div class="brand">Sihan's Blog | 思涵的个人网站</div>
 		<nav class="nav-pills" aria-label="Top navigation">
 			<a class="pill" href="../">Home | 首页</a>
 			<a class="pill" href="#drive">Drive | 云盘</a>

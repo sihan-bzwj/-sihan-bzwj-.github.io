@@ -1,34 +1,34 @@
 <div class="site-shell">
 	<header class="topbar">
-		<div class="brand">Sihan's Blog | 思涵的站点</div>
+		<div class="brand">Sihan's Blog | 思涵的个人网站</div>
 		<nav class="nav-pills" aria-label="Top navigation">
 			<a class="pill" href="#posts">Blog | 文章</a>
-			<a class="pill" href="cloud-drive/">Projects | 项目</a>
-			<a class="pill" href="https://raised-telling-ppm-notre.trycloudflare.com" target="_blank" rel="noreferrer noopener">AI</a>
+			<a class="pill" href="cloud-drive/">云盘 | Cloud Drive</a>
+			<a class="pill" href="https://raised-telling-ppm-notre.trycloudflare.com" target="_blank" rel="noreferrer noopener">AI | AI</a>
 			<a class="social-link" href="https://github.com/sihan-bzwj/-sihan-bzwj-.github.io" target="_blank" rel="noreferrer noopener">GitHub</a>
 		</nav>
 	</header>
 
 	<section class="hero">
 		<div class="hero-panel">
-			<span class="kicker">Home / Notes | 首页 / 笔记</span>
-			<h1 class="hero-title">学习与项目 | Learning & Projects</h1>
-			<p class="hero-lead">我的个人站点 - 记录学习，也记录项目 | My Personal Website - Learning notes & projects</p>
+			<span class="kicker">Home / Hub | 首页 / 入口</span>
+			<h1 class="hero-title">云盘 / AI / 笔记入口<br>Personal Website Hub</h1>
+			<p class="hero-lead">这里集中放笔记、云盘和 AI 入口，方便快速直达常用服务。 | A hub for notes, cloud drive, and AI entrypoints.</p>
 			<div class="hero-meta">
-				<span class="meta-chip">learning notes</span>
-				<span class="meta-chip">projects</span>
-				<span class="meta-chip">tools</span>
+				<span class="meta-chip">notes</span>
+				<span class="meta-chip">cloud drive</span>
+				<span class="meta-chip">ai</span>
 			</div>
 			<div class="hero-actions">
 				<a class="button" href="#posts">浏览内容 | Browse</a>
-				<a class="button-secondary" href="https://raised-telling-ppm-notre.trycloudflare.com" target="_blank" rel="noreferrer noopener">AI 站点 | AI Chat</a>
-				<a class="button-secondary" href="https://github.com/sihan-bzwj/-sihan-bzwj-.github.io" target="_blank" rel="noreferrer noopener">GitHub</a>
+				<a class="button-secondary" href="cloud-drive/">打开云盘 | Open Drive</a>
+				<a class="button-secondary" href="https://raised-telling-ppm-notre.trycloudflare.com" target="_blank" rel="noreferrer noopener">打开 AI 站点 | AI Chat</a>
 			</div>
 		</div>
 
 		<aside class="side-panel">
 			<h2>站点说明 | About</h2>
-			<p>这个首页只保留几个必要入口 | Quick access to main services</p>
+			<p>这个首页只保留最常用的入口，后续内容会继续按需补充。 | Quick access to the main services, with more content added as needed.</p>
 			<div class="card-actions">
 				<a class="button" href="cloud-drive/">打开云盘 | Open Drive</a>
 				<a class="button-secondary" href="https://raised-telling-ppm-notre.trycloudflare.com" target="_blank" rel="noreferrer noopener">打开 AI 站点 | AI Chat</a>
@@ -41,7 +41,7 @@
 		<div class="section-header">
 			<div>
 				<h2>内容入口 | Contents</h2>
-				<p>下面是几个常用入口，内容不多，但足够把站点的主线放清楚。| Quick links to main sections</p>
+				<p>下面是几个常用入口，方便从主页直接跳到云盘、AI 和源码。 | Quick links to the cloud drive, AI, and source code.</p>
 			</div>
 		</div>
 
