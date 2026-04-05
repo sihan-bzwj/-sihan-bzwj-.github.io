@@ -23,6 +23,7 @@ def build_root(path_value: str | None) -> Path:
 
 
 ROOT = build_root(None)
+UPLOAD_PASSWORD = os.environ.get("CLOUD_DRIVE_UPLOAD_PASSWORD", "sihan123")
 
 
 def human_size(byte_count: int) -> str:
@@ -124,7 +125,7 @@ def write_response(handler: BaseHTTPRequestHandler, status: HTTPStatus, content_
     handler.send_header("Cache-Control", "no-store")
     handler.send_header("Access-Control-Allow-Origin", "*")
     handler.send_header("Access-Control-Allow-Methods", "GET, POST, DELETE, OPTIONS")
-    handler.send_header("Access-Control-Allow-Headers", "Content-Type")
+    handler.send_header("Access-Control-Allow-Headers", "Content-Type, X-Upload-Password")
     handler.end_headers()
     handler.wfile.write(data)
 
@@ -688,11 +689,19 @@ APP_HTML = """<!doctype html>
 
         <div class="field">
           <label>上传文件 / Upload</label>
+          <div class="field" style="margin-bottom: 0.7rem;">
+            <label for="upload-password">上传密码 / Upload password</label>
+            <div class="row">
+              <input id="upload-password" type="password" placeholder="sihan123">
+              <button id="save-upload-password" class="button-secondary" type="button">保存</button>
+            </div>
+          </div>
           <div id="dropzone" class="dropzone" tabindex="0" role="button" aria-label="上传文件区域">
             将文件拖到这里，或点击选择文件。支持批量上传。<br>
             Drop files here or click to select them.
           </div>
           <input id="file-input" type="file" multiple hidden>
+          <p class="hint">只有上传需要密码，下载不需要。请使用你设置的上传密码后再开始上传。</p>
         </div>
 
         <div class="field">
@@ -973,6 +982,12 @@ APP_HTML = """<!doctype html>
       const files = Array.from(fileList || []);
       if (!files.length) return;
 
+      const uploadPassword = elements.uploadPassword.value.trim();
+      if (!uploadPassword) {
+        setStatus("请输入上传密码 / Please enter the upload password", "error");
+        return;
+      }
+
       setStatus(`<span class="loader" aria-hidden="true"></span><span>正在上传 ${files.length} 个文件 / Uploading ${files.length} files...</span>`);
 
       for (const file of files) {
@@ -982,6 +997,9 @@ APP_HTML = """<!doctype html>
         try {
           await apiRequest(`/api/upload?path=${encodeURIComponent(state.path)}`, {
             method: "POST",
+            headers: {
+              "X-Upload-Password": uploadPassword,
+            },
             body: formData,
           });
         } catch (error) {
@@ -1065,6 +1083,8 @@ APP_HTML = """<!doctype html>
       elements.statFree = document.getElementById("stat-free");
       elements.statCount = document.getElementById("stat-count");
       elements.folderName = document.getElementById("folder-name");
+      elements.uploadPassword = document.getElementById("upload-password");
+      elements.saveUploadPassword = document.getElementById("save-upload-password");
       elements.createFolder = document.getElementById("create-folder");
       elements.dropzone = document.getElementById("dropzone");
       elements.fileInput = document.getElementById("file-input");
@@ -1077,6 +1097,11 @@ APP_HTML = """<!doctype html>
       elements.emptyState = document.getElementById("empty-state");
 
       wireEvents();
+      elements.uploadPassword.value = sessionStorage.getItem("cloudDriveUploadPassword") || "";
+      elements.saveUploadPassword.addEventListener("click", () => {
+        sessionStorage.setItem("cloudDriveUploadPassword", elements.uploadPassword.value.trim());
+        setStatus("上传密码已保存到当前浏览器会话", "success");
+      });
       renderBreadcrumbs("");
       await loadDirectory();
     };
@@ -1099,7 +1124,7 @@ class CloudDriveHandler(BaseHTTPRequestHandler):
         self.send_response(HTTPStatus.NO_CONTENT)
         self.send_header("Access-Control-Allow-Origin", "*")
         self.send_header("Access-Control-Allow-Methods", "GET, POST, DELETE, OPTIONS")
-        self.send_header("Access-Control-Allow-Headers", "Content-Type")
+        self.send_header("Access-Control-Allow-Headers", "Content-Type, X-Upload-Password")
         self.send_header("Cache-Control", "no-store")
         self.end_headers()
 
@@ -1187,6 +1212,11 @@ class CloudDriveHandler(BaseHTTPRequestHandler):
 
         if path == "/api/upload":
             try:
+                provided_password = self.headers.get("X-Upload-Password", "")
+                if provided_password != UPLOAD_PASSWORD:
+                    send_json(self, HTTPStatus.UNAUTHORIZED, {"ok": False, "error": "上传密码错误"})
+                    return
+
                 folder = resolve_inside_root(get_query_value(query, "path"))
                 if not folder.exists() or not folder.is_dir():
                     raise FileNotFoundError("目标目录不存在")
