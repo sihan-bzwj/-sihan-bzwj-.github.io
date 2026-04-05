@@ -60,13 +60,13 @@
 
 | 服务 | 地址 | 说明 |
 |------|------|------|
-| **AI 对话平台** | https://raised-telling-ppm-notre.trycloudflare.com | LobeChat 主界面 |
-| **云盘** | https://raised-telling-ppm-notre.trycloudflare.com/cloud-drive | 文件管理 |
+| **AI 对话平台** | https://procurement-trying-beside-beginning.trycloudflare.com | LobeChat 主界面 |
+| **云盘** | https://procurement-trying-beside-beginning.trycloudflare.com/cloud-drive | 文件管理 |
 | **项目主页** | https://sihan-bzwj.github.io/-sihan-bzwj-.github.io/ | 介绍页面 |
 
 ### AI 对话平台使用流程
 
-1. **访问** → https://raised-telling-ppm-notre.trycloudflare.com
+1. **访问** → https://procurement-trying-beside-beginning.trycloudflare.com
 2. **设置** → 左下角 Settings → Model Providers
 3. **选择供应商** → OpenRouter / OpenAI / Anthropic 等
 4. **输入 API 密钥** → 获取方式见下方
@@ -74,7 +74,7 @@
 
 ### 云盘使用流程
 
-1. **访问** → https://raised-telling-ppm-notre.trycloudflare.com/cloud-drive
+1. **访问** → https://procurement-trying-beside-beginning.trycloudflare.com/cloud-drive
 2. **查看文件** → 显示根目录 /cloud-drive 下的所有文件和文件夹
 3. **上传文件** → 点击上传按钮或拖拽文件（需要输入密码）
 4. **创建文件夹** → 点击"新建文件夹"按钮
@@ -470,4 +470,4 @@ MIT License
 
 **最近更新**: 2026年4月5日  
 **维护者**: @sihan-bzwj  
-**在线访问**: https://raised-telling-ppm-notre.trycloudflare.com
+**在线访问**: https://procurement-trying-beside-beginning.trycloudflare.com

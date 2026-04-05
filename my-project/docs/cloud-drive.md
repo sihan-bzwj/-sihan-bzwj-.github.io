@@ -21,8 +21,8 @@
 				<span class="meta-chip">cloud</span>
 			</div>
 			<div class="hero-actions">
-				<a class="button" href="https://raised-telling-ppm-notre.trycloudflare.com/cloud-drive" target="_blank" rel="noreferrer noopener">打开云盘 | Open Drive</a>
-				<a class="button-secondary" href="https://raised-telling-ppm-notre.trycloudflare.com" target="_blank" rel="noreferrer noopener">AI 站点 | AI Chat</a>
+				<a class="button" href="https://procurement-trying-beside-beginning.trycloudflare.com/cloud-drive" target="_blank" rel="noreferrer noopener">打开云盘 | Open Drive</a>
+				<a class="button-secondary" href="https://procurement-trying-beside-beginning.trycloudflare.com" target="_blank" rel="noreferrer noopener">AI 站点 | AI Chat</a>
 				<a class="button-secondary" href="../">回到首页 | Back Home</a>
 			</div>
 		</div>
@@ -31,8 +31,8 @@
 			<h2>使用说明 | Instructions</h2>
 			<p>文件存储在远程云服务器上，适合大文件和长期保存。上传需要密码保护，下载不需要。| Files stored on remote cloud servers, suitable for large files and long-term storage. Uploads require password, downloads are unrestricted.</p>
 			<div class="card-actions">
-				<a class="button" href="https://raised-telling-ppm-notre.trycloudflare.com/cloud-drive" target="_blank" rel="noreferrer noopener">打开云盘 | Open</a>
-				<a class="button-secondary" href="https://raised-telling-ppm-notre.trycloudflare.com" target="_blank" rel="noreferrer noopener">AI 站点 | AI</a>
+				<a class="button" href="https://procurement-trying-beside-beginning.trycloudflare.com/cloud-drive" target="_blank" rel="noreferrer noopener">打开云盘 | Open</a>
+				<a class="button-secondary" href="https://procurement-trying-beside-beginning.trycloudflare.com" target="_blank" rel="noreferrer noopener">AI 站点 | AI</a>
 				<a class="button-secondary" href="https://github.com/sihan-bzwj/-sihan-bzwj-.github.io" target="_blank" rel="noreferrer noopener">GitHub 源码 | Code</a>
 			</div>
 		</aside>
@@ -48,7 +48,7 @@
 
 		<div class="frame-panel">
 			<div class="frame-box">
-				<iframe src="https://raised-telling-ppm-notre.trycloudflare.com/cloud-drive" title="Cloud Drive | 云盘" loading="lazy"></iframe>
+				<iframe src="https://procurement-trying-beside-beginning.trycloudflare.com/cloud-drive" title="Cloud Drive | 云盘" loading="lazy"></iframe>
 			</div>
 			<p class="frame-note">如果内嵌加载不稳定，可以直接用上面的按钮打开。| If embedded loading is unstable, use the button above to open directly.</p>
 		</div>

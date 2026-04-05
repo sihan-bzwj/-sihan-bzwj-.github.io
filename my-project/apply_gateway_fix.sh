@@ -27,5 +27,5 @@ curl -sS -I http://127.0.0.1:8080/cloud-drive | head -n 1
 curl -sS http://127.0.0.1:8080/cloud-drive/health | head -c 300
 
 echo "Done. Validate public URLs in browser:"
-echo "  https://raised-telling-ppm-notre.trycloudflare.com/"
-echo "  https://raised-telling-ppm-notre.trycloudflare.com/cloud-drive"
+echo "  https://procurement-trying-beside-beginning.trycloudflare.com/"
+echo "  https://procurement-trying-beside-beginning.trycloudflare.com/cloud-drive"
