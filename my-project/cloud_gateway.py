@@ -4,9 +4,12 @@ from __future__ import annotations
 
 import argparse
 import http.client
+import json
 import os
+import threading
 from dataclasses import dataclass
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
+from pathlib import Path
 from urllib.parse import urlsplit, urlunsplit
 
 
@@ -20,6 +23,39 @@ HOP_BY_HOP_HEADERS = {
     "transfer-encoding",
     "upgrade",
 }
+
+
+class VisitorCounter:
+    """Thread-safe visitor counter using file persistence."""
+    def __init__(self, file_path: str = ".visitor_count"):
+        self.file_path = Path(file_path)
+        self.lock = threading.Lock()
+        self._load()
+
+    def _load(self) -> None:
+        if self.file_path.exists():
+            try:
+                self.count = int(self.file_path.read_text().strip())
+            except (ValueError, OSError):
+                self.count = 0
+        else:
+            self.count = 0
+
+    def _save(self) -> None:
+        try:
+            self.file_path.write_text(str(self.count))
+        except OSError:
+            pass
+
+    def increment(self) -> int:
+        with self.lock:
+            self.count += 1
+            self._save()
+            return self.count
+
+    def get(self) -> int:
+        with self.lock:
+            return self.count
 
 
 @dataclass(frozen=True)
@@ -72,6 +108,36 @@ def rewrite_location(location: str, upstream: Upstream) -> str:
 
 class GatewayHandler(BaseHTTPRequestHandler):
     protocol_version = "HTTP/1.1"
+    visitor_counter: VisitorCounter | None = None
+
+    def _send_json_response(self, status: int, data: dict) -> None:
+        """Send JSON response with appropriate headers."""
+        response_body = json.dumps(data).encode("utf-8")
+        self.send_response(status)
+        self.send_header("Content-Type", "application/json; charset=utf-8")
+        self.send_header("Content-Length", str(len(response_body)))
+        self.send_header("Access-Control-Allow-Origin", "*")
+        self.end_headers()
+        self.wfile.write(response_body)
+
+    def _handle_visitor_count(self) -> bool:
+        """Handle /api/visitor-count requests. Return True if handled."""
+        if self.path == "/api/visitor-count":
+            if self.visitor_counter is None:
+                self._send_json_response(500, {"error": "Counter not initialized"})
+                return True
+
+            if self.command == "GET":
+                count = self.visitor_counter.increment()
+                self._send_json_response(200, {"count": count, "success": True})
+                return True
+            elif self.command == "OPTIONS":
+                self.send_response(200)
+                self.send_header("Access-Control-Allow-Origin", "*")
+                self.send_header("Access-Control-Allow-Methods", "GET, OPTIONS")
+                self.end_headers()
+                return True
+        return False
 
     def _proxy(self) -> None:
         parsed = urlsplit(self.path)
@@ -136,6 +202,8 @@ class GatewayHandler(BaseHTTPRequestHandler):
             connection.close()
 
     def do_GET(self) -> None:
+        if self._handle_visitor_count():
+            return
         self._proxy()
 
     def do_POST(self) -> None:
@@ -151,6 +219,8 @@ class GatewayHandler(BaseHTTPRequestHandler):
         self._proxy()
 
     def do_OPTIONS(self) -> None:
+        if self._handle_visitor_count():
+            return
         self._proxy()
 
     def do_HEAD(self) -> None:
@@ -171,12 +241,16 @@ def main() -> int:
     parser.add_argument("--drive-prefix", default=os.environ.get("GATEWAY_DRIVE_PREFIX", "/cloud-drive"))
     args = parser.parse_args()
 
+    # Initialize visitor counter
+    counter = VisitorCounter()
+
     server = ThreadingHTTPServer((args.host, args.port), GatewayHandler)
     server.ai_host = args.ai_host
     server.ai_port = args.ai_port
     server.drive_host = args.drive_host
     server.drive_port = args.drive_port
     server.drive_prefix = normalize_mount_prefix(args.drive_prefix)
+    GatewayHandler.visitor_counter = counter
 
     print(f"Gateway listening on http://{args.host}:{args.port}")
     print(f"AI upstream: http://{server.ai_host}:{server.ai_port}")
