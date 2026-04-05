@@ -1,7 +1,0 @@
-version: "3"
-tunnels:
-  lobe-chat:
-    proto: http
-    addr: 127.0.0.1:3210
-    domain: lobe-chat
-    auth: ""
