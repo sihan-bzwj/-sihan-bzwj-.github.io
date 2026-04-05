@@ -5,7 +5,7 @@
 			<a class="pill" href="#posts">Blog | 文章</a>
 			<a class="pill" href="cloud-drive/">云盘 | Cloud Drive</a>
 			<a class="pill" href="https://procurement-trying-beside-beginning.trycloudflare.com" target="_blank" rel="noreferrer noopener">AI | AI</a>
-			<a class="social-link" href="https://github.com/sihan-bzwj/-sihan-bzwj-.github.io" target="_blank" rel="noreferrer noopener">GitHub</a>
+			<a class="social-link" href="https://github.com/sihan-bzwj/sihan-bzwj.github.io" target="_blank" rel="noreferrer noopener">GitHub</a>
 		</nav>
 	</header>
 
@@ -30,7 +30,7 @@
 			<h2>站点说明 | About</h2>
 			<p>这个首页只保留最常用的入口，后续内容会继续按需补充。 | Quick access to the main services, with more content added as needed.</p>
 			<div class="card-actions">
-				<a class="button-secondary" href="https://github.com/sihan-bzwj/-sihan-bzwj-.github.io" target="_blank" rel="noreferrer noopener">GitHub 源码 | Source Code</a>
+				<a class="button-secondary" href="https://github.com/sihan-bzwj/sihan-bzwj.github.io" target="_blank" rel="noreferrer noopener">GitHub 源码 | Source Code</a>
 			</div>
 		</aside>
 	</section>
@@ -72,7 +72,7 @@
 				<div class="post-aside"><span>进入 AI 站点 | Enter AI</span></div>
 			</a>
 
-			<a class="list-card post-card" href="https://github.com/sihan-bzwj/-sihan-bzwj-.github.io" target="_blank" rel="noreferrer noopener">
+			<a class="list-card post-card" href="https://github.com/sihan-bzwj/sihan-bzwj.github.io" target="_blank" rel="noreferrer noopener">
 				<div class="post-body">
 					<div class="post-meta">Source · 源码库</div>
 					<div class="post-title">项目源码 | Repository</div>

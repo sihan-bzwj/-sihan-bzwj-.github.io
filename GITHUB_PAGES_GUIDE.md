@@ -3,10 +3,10 @@
 ## 📍 访问地址
 
 ```
-https://sihan-bzwj.github.io/-sihan-bzwj-.github.io/
+https://sihan-bzwj.github.io/
 ```
 
-**注意**：这个 URL 看起来奇怪，是因为仓库名称是 `-sihan-bzwj-.github.io` 而不是标准的 `sihan-bzwj.github.io`。
+**注意**：标准用户主页仓库名称应为 `sihan-bzwj.github.io`。
 
 ---
 
@@ -17,7 +17,7 @@ https://sihan-bzwj.github.io/-sihan-bzwj-.github.io/
    - 最新网站文件已推送到 GitHub
 
 2. ✅ **添加 site_url 配置**
-   - mkdocs.yml 中已添加 `site_url: https://sihan-bzwj.github.io/-sihan-bzwj-.github.io/`
+   - mkdocs.yml 中已添加 `site_url: https://sihan-bzwj.github.io/`
    - 确保所有资源路径正确
 
 3. ✅ **工作流配置**
@@ -73,7 +73,7 @@ git show gh-pages:index.html | head -10
 
 | 方式 | 地址 | 说明 |
 |------|------|------|
-| GitHub Pages | https://sihan-bzwj.github.io/-sihan-bzwj-.github.io/ | 公网 GitHub 部署 |
+| GitHub Pages | https://sihan-bzwj.github.io/ | 公网 GitHub 部署 |
 | Azure VM | https://procurement-trying-beside-beginning.trycloudflare.com/ | Cloudflare 隧道 |
 | 本地测试 | http://localhost:8080 | 本地网关服务 |
 
@@ -106,11 +106,8 @@ mkdocs gh-deploy --force
 
 ## 🎯 常见问题
 
-**Q: 为什么 URL 这么长？**  
-A: 因为仓库名称不是标准的 GitHub Pages 格式。标准格式是 `username.github.io`，可以直接访问 `https://username.github.io`。
-
-**Q: 如何改为标准格式？**  
-A: 将仓库名改为 `sihan-bzwj.github.io`（需要在 GitHub 上重命名）
+**Q: 为什么要用这个短 URL？**  
+A: 因为仓库名称使用标准格式 `username.github.io` 后，主页会直接发布在 `https://username.github.io`。
 
 **Q: 页面显示乱码****Q: 页面显示乱码？**  
 A: MkDocs 会自动处理编码。检查 mkdocs.yml 中的 language 设置是否为 `zh`

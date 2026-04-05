@@ -5,7 +5,7 @@
 			<a class="pill" href="../">Home | 首页</a>
 			<a class="pill" href="#drive">Drive | 云盘</a>
 			<a class="pill" href="#features">Features | 功能</a>
-			<a class="social-link" href="https://github.com/sihan-bzwj/-sihan-bzwj-.github.io" target="_blank" rel="noreferrer noopener">GitHub</a>
+			<a class="social-link" href="https://github.com/sihan-bzwj/sihan-bzwj.github.io" target="_blank" rel="noreferrer noopener">GitHub</a>
 		</nav>
 	</header>
 
@@ -33,7 +33,7 @@
 			<div class="card-actions">
 				<a class="button" href="https://procurement-trying-beside-beginning.trycloudflare.com/cloud-drive" target="_blank" rel="noreferrer noopener">打开云盘 | Open</a>
 				<a class="button-secondary" href="https://procurement-trying-beside-beginning.trycloudflare.com" target="_blank" rel="noreferrer noopener">AI 站点 | AI</a>
-				<a class="button-secondary" href="https://github.com/sihan-bzwj/-sihan-bzwj-.github.io" target="_blank" rel="noreferrer noopener">GitHub 源码 | Code</a>
+				<a class="button-secondary" href="https://github.com/sihan-bzwj/sihan-bzwj.github.io" target="_blank" rel="noreferrer noopener">GitHub 源码 | Code</a>
 			</div>
 		</aside>
 	</section>

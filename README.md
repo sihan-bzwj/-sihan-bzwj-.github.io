@@ -45,8 +45,8 @@ The goal is not just to run a web page, but to keep the frontend, backend, tunne
 |------|------|------|
 | AI 对话平台 | https://procurement-trying-beside-beginning.trycloudflare.com | LobeChat 主界面 / Main interface |
 | 云盘 | https://procurement-trying-beside-beginning.trycloudflare.com/cloud-drive | 文件管理 / File management |
-| 项目主页 | https://sihan-bzwj.github.io/-sihan-bzwj-.github.io/ | 介绍页面 / Landing page |
-| 仓库地址 | https://github.com/sihan-bzwj/-sihan-bzwj-.github.io | 源码与文档 / Source and docs |
+| 项目主页 | https://sihan-bzwj.github.io/ | 介绍页面 / Landing page |
+| 仓库地址 | https://github.com/sihan-bzwj/sihan-bzwj.github.io | 源码与文档 / Source and docs |
 
 > Cloudflare Quick Tunnel 的公开地址可能会随着重新创建隧道而变化，访问前请以最新配置为准。
 > The public Cloudflare Quick Tunnel URL may change when the tunnel is recreated, so use the latest configured address.
@@ -241,8 +241,8 @@ You usually need to rebuild the MkDocs site and confirm the latest commit has be
 
 ## 相关链接 | Related Links
 
-- 项目主页 / Project home: https://sihan-bzwj.github.io/-sihan-bzwj-.github.io/
-- 仓库地址 / Repository: https://github.com/sihan-bzwj/-sihan-bzwj-.github.io
+- 项目主页 / Project home: https://sihan-bzwj.github.io/
+- 仓库地址 / Repository: https://github.com/sihan-bzwj/sihan-bzwj.github.io
 - Cloud Drive 页面 / Cloud Drive page: https://procurement-trying-beside-beginning.trycloudflare.com/cloud-drive
 - LobeChat 文档 / LobeChat docs: https://docs.lobehub.com/
 
