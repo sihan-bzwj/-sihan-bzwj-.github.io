@@ -61,7 +61,7 @@
 | 服务 | 地址 | 说明 |
 |------|------|------|
 | **AI 对话平台** | https://raised-telling-ppm-notre.trycloudflare.com | LobeChat 主界面 |
-| **云盘页面** | https://sihan-bzwj.github.io/-sihan-bzwj-.github.io/cloud-drive/ | 云盘说明页 |
+| **云盘** | https://raised-telling-ppm-notre.trycloudflare.com/cloud-drive | 文件管理 |
 | **项目主页** | https://sihan-bzwj.github.io/-sihan-bzwj-.github.io/ | 介绍页面 |
 
 ### AI 对话平台使用流程
@@ -74,10 +74,10 @@
 
 ### 云盘使用流程
 
-1. **访问** → https://sihan-bzwj.github.io/-sihan-bzwj-.github.io/cloud-drive/
-2. **查看说明** → 浏览云盘功能、目录结构和使用约定
-3. **进入实际服务** → 按部署环境中的云盘后端地址访问
-4. **上传文件** → 在后端页面完成上传和管理
+1. **访问** → https://raised-telling-ppm-notre.trycloudflare.com/cloud-drive
+2. **查看文件** → 显示根目录 /cloud-drive 下的所有文件和文件夹
+3. **上传文件** → 点击上传按钮或拖拽文件（需要输入密码）
+4. **创建文件夹** → 点击"新建文件夹"按钮
 5. **管理操作** → 删除、重命名、下载文件
 
 ### 获取 API 密钥
@@ -252,17 +252,40 @@ SyslogIdentifier=cloud-drive
 WantedBy=multi-user.target
 ```
 
+### Cloud Gateway 服务配置 (`cloud-gateway.service`)
+
+```ini
+[Unit]
+Description=Gateway for LobeChat and Cloud Drive
+After=network.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=azureuser
+WorkingDirectory=/home/azureuser
+ExecStart=/usr/bin/python3 /home/azureuser/bin/cloud_gateway.py --host 127.0.0.1 --port 8080 --ai-host 127.0.0.1 --ai-port 3210 --drive-host 127.0.0.1 --drive-port 8787 --drive-prefix /cloud-drive
+Restart=always
+RestartSec=5
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=cloud-gateway
+
+[Install]
+WantedBy=multi-user.target
+```
+
 ### Cloudflare 隧道服务 (`cloudflared.service`)
 
 ```ini
 [Unit]
-Description=Cloudflare Tunnel for LobeChat + Cloud Drive
+Description=Cloudflare Tunnel for LobeChat + Cloud Drive Gateway
 After=network.target
 
 [Service]
 Type=simple
 User=azureuser
-ExecStart=/usr/bin/cloudflared tunnel --url http://localhost:3210
+ExecStart=/usr/bin/cloudflared tunnel --url http://localhost:8080
 Restart=always
 RestartSec=5
 
@@ -401,7 +424,9 @@ grep -Eo "https://.*\.trycloudflare\.com" /var/log/syslog | tail -1
 │
 ├── cloud_drive_server.py              # Cloud Drive Python 服务
 ├── cloud-drive.service                # Cloud Drive systemd 配置
-├── cloud-drive-tunnel.service         # Cloud Drive 隧道配置
+├── cloud_gateway.py                   # Cloud Drive 网关脚本
+├── cloud-gateway.service              # Cloud Gateway systemd 配置
+├── cloudflared.service                # Cloudflare 隧道配置
 │
 ├── mkdocs.yml                         # MkDocs 配置
 ├── README.md                          # 本文件

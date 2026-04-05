@@ -3,15 +3,18 @@
 from __future__ import annotations
 
 import argparse
-import cgi
 import json
 import mimetypes
 import os
 import shutil
 import sys
 from datetime import datetime, timezone
+from dataclasses import dataclass
+from email.parser import BytesParser
+from email.policy import default as default_email_policy
 from http import HTTPStatus
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
+from io import BytesIO
 from pathlib import Path
 from urllib.parse import parse_qs, quote, urlparse
 
@@ -152,6 +155,50 @@ def get_query_value(values: dict[str, list[str]], key: str, default: str = "") -
     if not value_list:
         return default
     return value_list[0]
+
+
+@dataclass
+class UploadedFile:
+  filename: str
+  file: BytesIO
+
+
+def parse_uploaded_files(handler: BaseHTTPRequestHandler) -> list[UploadedFile]:
+  content_length = int(handler.headers.get("Content-Length", "0") or "0")
+  if content_length <= 0:
+    return []
+
+  content_type = handler.headers.get("Content-Type", "")
+  if not content_type.startswith("multipart/form-data"):
+    raise ValueError("上传接口只接受 multipart/form-data")
+
+  raw_body = handler.rfile.read(content_length)
+  if not raw_body:
+    return []
+
+  parser = BytesParser(policy=default_email_policy)
+  message = parser.parsebytes(
+    f"Content-Type: {content_type}\r\nMIME-Version: 1.0\r\n\r\n".encode("utf-8") + raw_body
+  )
+
+  uploaded_files: list[UploadedFile] = []
+  if not message.is_multipart():
+    return uploaded_files
+
+  for part in message.iter_parts():
+    if part.get_content_disposition() != "form-data":
+      continue
+    if part.get_param("name", header="content-disposition") != "file":
+      continue
+
+    filename = part.get_filename()
+    if not filename:
+      continue
+
+    payload = part.get_payload(decode=True) or b""
+    uploaded_files.append(UploadedFile(filename=filename, file=BytesIO(payload)))
+
+  return uploaded_files
 
 
 APP_HTML = """<!doctype html>
@@ -788,6 +835,10 @@ APP_HTML = """<!doctype html>
       return cleaned === "." ? "" : cleaned;
     };
 
+    const mountPath = window.location.pathname.startsWith("/cloud-drive") ? "/cloud-drive" : "";
+
+    const withMount = (endpoint) => `${mountPath}${endpoint}`;
+
     const joinPath = (basePath, childName) => {
       const cleanBase = normalizePath(basePath);
       const cleanChild = normalizePath(childName);
@@ -829,7 +880,7 @@ APP_HTML = """<!doctype html>
     };
 
     const refreshHealth = async () => {
-      const response = await apiRequest("/health");
+      const response = await apiRequest(withMount("/health"));
       const payload = await response.json();
       state.health = payload;
 
@@ -847,7 +898,7 @@ APP_HTML = """<!doctype html>
       setStatus('<span class="loader" aria-hidden="true"></span><span>正在读取目录 / Loading directory...</span>');
 
       try {
-        const response = await apiRequest(`/api/list?path=${encodeURIComponent(state.path)}`);
+        const response = await apiRequest(withMount(`/api/list?path=${encodeURIComponent(state.path)}`));
         const payload = await response.json();
         state.entries = payload.entries || [];
         state.path = payload.path || "";
@@ -937,7 +988,7 @@ APP_HTML = """<!doctype html>
         } else {
           const downloadLink = document.createElement("a");
           downloadLink.textContent = "下载";
-          downloadLink.href = `/api/download?path=${encodeURIComponent(joinPath(state.path, entry.name || ""))}`;
+          downloadLink.href = withMount(`/api/download?path=${encodeURIComponent(joinPath(state.path, entry.name || ""))}`);
           downloadLink.target = "_blank";
           downloadLink.rel = "noreferrer noopener";
           actions.appendChild(downloadLink);
@@ -954,7 +1005,7 @@ APP_HTML = """<!doctype html>
           if (!confirmed) return;
 
           try {
-            await apiRequest("/api/delete", {
+            await apiRequest(withMount("/api/delete"), {
               method: "POST",
               headers: { "Content-Type": "application/json" },
               body: JSON.stringify({ path: fullPath }),
@@ -995,7 +1046,7 @@ APP_HTML = """<!doctype html>
         formData.append("file", file, file.name);
 
         try {
-          await apiRequest(`/api/upload?path=${encodeURIComponent(state.path)}`, {
+          await apiRequest(withMount(`/api/upload?path=${encodeURIComponent(state.path)}`), {
             method: "POST",
             headers: {
               "X-Upload-Password": uploadPassword,
@@ -1020,7 +1071,7 @@ APP_HTML = """<!doctype html>
       }
 
       try {
-        await apiRequest("/api/mkdir", {
+        await apiRequest(withMount("/api/mkdir"), {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
@@ -1211,42 +1262,30 @@ class CloudDriveHandler(BaseHTTPRequestHandler):
         path, query = parse_query(self.path)
 
         if path == "/api/upload":
-            try:
-                provided_password = self.headers.get("X-Upload-Password", "")
-                if provided_password != UPLOAD_PASSWORD:
-                    send_json(self, HTTPStatus.UNAUTHORIZED, {"ok": False, "error": "上传密码错误"})
-                    return
+          try:
+            provided_password = self.headers.get("X-Upload-Password", "")
+            if provided_password != UPLOAD_PASSWORD:
+              send_json(self, HTTPStatus.UNAUTHORIZED, {"ok": False, "error": "上传密码错误"})
+              return
 
-                folder = resolve_inside_root(get_query_value(query, "path"))
-                if not folder.exists() or not folder.is_dir():
-                    raise FileNotFoundError("目标目录不存在")
+            folder = resolve_inside_root(get_query_value(query, "path"))
+            if not folder.exists() or not folder.is_dir():
+              raise FileNotFoundError("目标目录不存在")
 
-                content_type = self.headers.get_content_type()
-                if not content_type.startswith("multipart/form-data"):
-                    raise ValueError("上传接口只接受 multipart/form-data")
+            fields = parse_uploaded_files(self)
 
-                environ = {
-                    "REQUEST_METHOD": "POST",
-                    "CONTENT_TYPE": self.headers.get("Content-Type", ""),
-                    "CONTENT_LENGTH": self.headers.get("Content-Length", "0"),
-                }
-                form = cgi.FieldStorage(fp=self.rfile, headers=self.headers, environ=environ, keep_blank_values=True)
-                fields = form["file"] if "file" in form else []
-                if not isinstance(fields, list):
-                    fields = [fields]
+            uploaded: list[dict[str, object]] = []
+            for field in fields:
+              filename = safe_name(field.filename or "")
+              destination = make_unique_path(folder / filename)
+              with destination.open("wb") as destination_handle:
+                shutil.copyfileobj(field.file, destination_handle, length=1024 * 1024)
+              uploaded.append(file_metadata(destination))
 
-                uploaded: list[dict[str, object]] = []
-                for field in fields:
-                    filename = safe_name(field.filename or "")
-                    destination = make_unique_path(folder / filename)
-                    with destination.open("wb") as destination_handle:
-                        shutil.copyfileobj(field.file, destination_handle, length=1024 * 1024)
-                    uploaded.append(file_metadata(destination))
-
-                send_json(self, HTTPStatus.OK, {"ok": True, "uploaded": uploaded})
-            except Exception as error:
-                send_json(self, HTTPStatus.BAD_REQUEST, {"ok": False, "error": str(error)})
-            return
+            send_json(self, HTTPStatus.OK, {"ok": True, "uploaded": uploaded})
+          except Exception as error:
+            send_json(self, HTTPStatus.BAD_REQUEST, {"ok": False, "error": str(error)})
+          return
 
         if path == "/api/mkdir":
             try:

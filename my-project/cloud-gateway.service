@@ -1,0 +1,18 @@
+[Unit]
+Description=Gateway for LobeChat and Cloud Drive
+After=network.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=azureuser
+WorkingDirectory=/home/azureuser
+ExecStart=/usr/bin/python3 /home/azureuser/bin/cloud_gateway.py --host 127.0.0.1 --port 8080 --ai-host 127.0.0.1 --ai-port 3210 --drive-host 127.0.0.1 --drive-port 8787 --drive-prefix /cloud-drive
+Restart=always
+RestartSec=5
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=cloud-gateway
+
+[Install]
+WantedBy=multi-user.target

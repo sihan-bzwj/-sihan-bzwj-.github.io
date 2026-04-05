@@ -44,7 +44,7 @@ The goal is not just to run a web page, but to keep the frontend, backend, tunne
 | 服务 | 地址 | 说明 |
 |------|------|------|
 | AI 对话平台 | https://raised-telling-ppm-notre.trycloudflare.com | LobeChat 主界面 / Main interface |
-| 云盘页面 | https://sihan-bzwj.github.io/-sihan-bzwj-.github.io/cloud-drive/ | 云盘说明页 / Cloud Drive page |
+| 云盘 | https://raised-telling-ppm-notre.trycloudflare.com/cloud-drive | 文件管理 / File management |
 | 项目主页 | https://sihan-bzwj.github.io/-sihan-bzwj-.github.io/ | 介绍页面 / Landing page |
 | 仓库地址 | https://github.com/sihan-bzwj/-sihan-bzwj-.github.io | 源码与文档 / Source and docs |
 
@@ -98,6 +98,7 @@ The goal is not just to run a web page, but to keep the frontend, backend, tunne
 Browser / Web Client
   -> Cloudflare Quick Tunnel
     -> Azure Linux VM
+      -> Cloud Gateway (port 8080)
       -> LobeChat Docker container (port 3210)
       -> Cloud Drive Python service (127.0.0.1:8787)
       -> systemd and cloudflared service management
@@ -242,7 +243,7 @@ You usually need to rebuild the MkDocs site and confirm the latest commit has be
 
 - 项目主页 / Project home: https://sihan-bzwj.github.io/-sihan-bzwj-.github.io/
 - 仓库地址 / Repository: https://github.com/sihan-bzwj/-sihan-bzwj-.github.io
-- Cloud Drive 页面 / Cloud Drive page: https://sihan-bzwj.github.io/-sihan-bzwj-.github.io/cloud-drive/
+- Cloud Drive 页面 / Cloud Drive page: https://raised-telling-ppm-notre.trycloudflare.com/cloud-drive
 - LobeChat 文档 / LobeChat docs: https://docs.lobehub.com/
 
 ---
@@ -261,7 +262,7 @@ The purpose of this README is to explain the overall structure, live entrypoints
 - 密钥管理：把所有 API 密钥、上传密码和环境变量都放到单独的配置文件中，仓库只保留模板或说明，不要把真实秘密写进提交记录，这样回滚和迁移都会更安全。 / Secret management: keep API keys, upload passwords, and environment variables in dedicated config files; the repository should only contain templates or instructions, never real secrets, so rollbacks and migrations stay safe.
 - 版本控制：在改动 README、MkDocs 和服务配置之前先确认 `git status` 是干净的，修改后先看差异再提交，避免把临时调试内容、截图路径或旧地址混进正式文档。 / Version control: before changing README, MkDocs, or service configs, confirm `git status` is clean; after editing, review the diff before committing so temporary debugging content, screenshot paths, or stale URLs do not leak into the official docs.
 - 依赖准备：确保 `Docker`、`Python 3.11+`、`Git`、`systemd` 和 `cloudflared` 都已安装并可用，必要时先做最小化启动测试，再继续进行应用配置，这样能尽早暴露平台问题。 / Dependency prep: ensure `Docker`, `Python 3.11+`, `Git`, `systemd`, and `cloudflared` are installed and usable; if needed, run a minimal startup test first so platform issues surface early.
-- 端口规划：LobeChat 维持在 `3210`，云盘服务维持在 `127.0.0.1:8787`，对外只通过 Cloudflare Tunnel 暴露，不要额外开放多余端口，以免把内部服务直接暴露给公网。 / Port planning: keep LobeChat on `3210` and the cloud drive service on `127.0.0.1:8787`; expose them externally only through Cloudflare Tunnel and avoid opening extra ports that would expose internal services to the public Internet.
+- 端口规划：LobeChat 维持在 `3210`，Cloud Gateway 维持在 `127.0.0.1:8080`，云盘服务维持在 `127.0.0.1:8787`，对外只通过 Cloudflare Tunnel 暴露，不要额外开放多余端口，以免把内部服务直接暴露给公网。 / Port planning: keep LobeChat on `3210`, the Cloud Gateway on `127.0.0.1:8080`, and the cloud drive service on `127.0.0.1:8787`; expose them externally only through Cloudflare Tunnel and avoid opening extra ports that would expose internal services to the public Internet.
 - 文档源与生成物：`my-project/docs/` 保存源文档，`my-project/site/` 保存构建结果，编辑时只改源文档，发布前再构建生成物，避免把产物当成源文件一起维护。 / Source vs generated docs: `my-project/docs/` stores source content and `my-project/site/` stores generated output; edit only the source docs and rebuild before publishing so generated artifacts are not treated as source files.
 - 提交粒度：每次只处理一个明确主题，例如只改 README、只改云盘配置或只改 MkDocs 样式，这样在审查历史和回滚时更容易定位变化，也更容易确认问题来源。 / Commit granularity: handle one clear topic at a time, such as only README, only cloud drive config, or only MkDocs styling; this makes history review and rollback simpler and makes root cause analysis easier.
 - 联动验证：改完任意一处后，都要同时验证本地文件、浏览器展示和远端页面，因为一个链接、一个标题或一个样式都可能在不同层面呈现不同结果。 / Cross-layer verification: after editing anything, verify the local file, browser rendering, and remote page together because one link, heading, or style can behave differently across layers.
@@ -405,6 +406,9 @@ The purpose of this README is to explain the overall structure, live entrypoints
 | `my-project/README.md` | 子项目说明 / Subproject notes | 放实现和部署细节，适合更深入的排障信息。 / Use it for implementation and deployment details, including deeper troubleshooting. |
 | `my-project/cloud_drive_server.py` | 云盘服务入口 / Cloud drive entrypoint | 改动前先确认端口、路径和权限是否一致。 / Check ports, paths, and permissions before editing. |
 | `my-project/cloud-drive.service` | systemd 服务单元 / systemd unit | 修改后记得重载 systemd，再看启动日志。 / Reload systemd after edits, then review startup logs. |
+| `my-project/cloud_gateway.py` | 云盘网关 / Cloud drive gateway | 同一公网入口按路径拆到 AI 和云盘。 / Splits one public endpoint to AI and cloud drive by path. |
+| `my-project/cloud-gateway.service` | 网关服务单元 / Gateway unit | 先起网关，再让 Cloudflare Tunnel 指向它。 / Start the gateway first, then point Cloudflare Tunnel at it. |
+| `my-project/cloudflared.service` | 隧道服务单元 / Tunnel unit | 把网关暴露到公网。 / Expose the gateway to the public Internet. |
 | `my-project/mkdocs.yml` | 文档构建配置 / MkDocs config | 这里决定导航、主题和发布结构，改动要谨慎。 / It controls nav, theme, and publish structure, so edit carefully. |
 | `my-project/docs/` | 文档源文件 / Docs source | 只改这里，不要把生成产物当源文件维护。 / Edit only here; do not maintain generated output as source. |
 | `my-project/docs/stylesheets/extra.css` | 自定义样式 / Custom styles | 小范围改样式优先从这里下手，再看主题效果。 / Start here for scoped style changes and then verify theme behavior. |
