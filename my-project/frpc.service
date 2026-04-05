@@ -1,0 +1,18 @@
+[Unit]
+Description=Frp Client Tunnel for LobeChat - Auto Public Server
+After=network.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=azureuser
+WorkingDirectory=/tmp/frp_0.51.3_linux_amd64
+ExecStart=/tmp/frp_0.51.3_linux_amd64/frpc -c /home/azureuser/frpc-auto.ini
+Restart=always
+RestartSec=10
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=frpc
+
+[Install]
+WantedBy=multi-user.target
