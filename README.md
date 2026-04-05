@@ -1,6 +1,7 @@
-# 云端 AI 对话平台 + 个人云盘
+# 云端 AI 对话平台 + 个人云盘 | Cloud AI Chat + Cloud Drive
 
 > 一个完整的 LobeChat 云部署方案 + Python 云盘服务，支持多个 LLM 供应商和文件存储，通过 Cloudflare 隧道 24/7 公网访问。
+> A complete LobeChat cloud deployment plus Python cloud drive service. It supports multiple LLM providers and file storage, with 24/7 public access through a Cloudflare tunnel.
 
 ![Status](https://img.shields.io/badge/Status-Active-brightgreen)
 ![Platform](https://img.shields.io/badge/Platform-Azure%20VM%20%2B%20Docker-blue)
@@ -8,441 +9,176 @@
 
 ---
 
-## 🎯 项目概览
+## 项目概览 | Overview
 
-这是一个**完整的云端服务平台**，提供两大核心服务：
+这是一个面向演示、日常使用和长期维护的双服务平台，把 AI 对话和个人云盘放在同一套基础设施里统一管理。
+This repository combines AI chat and personal cloud storage on one infrastructure stack for demos, daily use, and long-term maintenance.
 
-### 🤖 AI 对话平台 (LobeChat)
-- ✅ **LobeChat** - 多模型 AI 对话平台（Next.js + Node.js）
-- ✅ **56+ LLM 供应商** - OpenRouter、OpenAI、Anthropic、DeepSeek 等
-- ✅ **动态模型获取** - 自动同步最新模型列表
-- ✅ **API 密钥代理** - 安全的后端代理架构
+### AI 对话平台 | AI Chat Platform
 
-### 💾 个人云盘 (Cloud Drive)
-- ✅ **文件管理** - 上传、下载、删除、重命名文件
-- ✅ **目录树结构** - 完整的文件夹管理
-- ✅ **密码保护** - 支持上传密码验证
-- ✅ **Web 前端** - 美观的响应式界面
+- LobeChat 多模型对话界面，基于 Next.js + Node.js。
+- Multi-model LobeChat interface built with Next.js + Node.js.
+- 支持 50+ 个模型源，包括 OpenRouter、OpenAI、Anthropic、DeepSeek 等。
+- Supports 50+ model sources, including OpenRouter, OpenAI, Anthropic, and DeepSeek.
+- 模型列表可动态获取，减少手工维护成本。
+- Model lists can be fetched dynamically to reduce manual maintenance.
+- API 密钥由后端代理处理，避免前端直接暴露。
+- API keys are proxied by the backend so they are never exposed in the frontend.
 
-### 🌐 整体特性
-- ✅ **24/7 公网访问** - Cloudflare 隧道自动化部署
-- ✅ **Landing Page** - GitHub Pages + MkDocs 项目介绍
-- ✅ **完全自动化** - systemd 服务自管理、Docker 自动重启
-- ✅ **双服务部署** - LobeChat + Cloud Drive 协作运行
+### 个人云盘 | Cloud Drive
 
-### AI 对话核心特性
+- 支持上传、下载、删除、重命名和目录管理。
+- Supports upload, download, delete, rename, and directory management.
+- 支持目录树展示，便于浏览文件结构。
+- Provides a tree view for easier navigation of the file hierarchy.
+- 支持密码保护上传，适合公网访问场景。
+- Supports password-protected uploads for public-access scenarios.
+- 提供简洁的 Web 前端，适合手机和桌面浏览器。
+- Provides a clean web frontend that works on mobile and desktop browsers.
 
-| 特性 | 说明 |
-|------|------|
-| **多模型支持** | 一个界面接入 50+ 个 LLM 模型源 |
-| **动态模型获取** | 自动从供应商 API 同步最新模型列表 |
-| **安全架构** | API 密钥在后端处理，前端无法访问 |
-| **用户可定制** | 用户在前端输入 API 密钥，后端代理请求 |
-| **自动化运维** | systemd 服务自动管理，异常自动重启 |
-| **国际访问** | Cloudflare Quick Tunnel，免费 24/7 |
+### 整体特性 | Key Features
 
-### 云盘核心特性
-
-| 特性 | 说明 |
-|------|------|
-| **文件上传** | Web 界面拖拽或点击上传，支持批量操作 |
-| **文件管理** | 创建文件夹，重命名，删除，修改权限 |
-| **密码保护** | 上传操作需要密码验证（默认：sihan123） |
-| **目录树展示** | 完整的文件夹结构和大小显示 |
-| **直链下载** | 支持文件直链访问和下载 |
-| **自动化部署** | systemd 服务自动启动和管理 |
+- 24/7 公网访问，基于 Cloudflare 隧道。
+- 24/7 public access powered by Cloudflare Tunnel.
+- GitHub Pages + MkDocs 作为项目介绍页。
+- GitHub Pages + MkDocs as the project landing page.
+- systemd 和 Docker 负责自动重启和基础运维。
+- systemd and Docker handle auto-restart and basic operations.
+- 双服务协作运行，便于统一展示与维护。
+- Dual-service deployment for unified presentation and maintenance.
 
 ---
 
-## 🚀 快速开始
+## 快速开始 | Quick Start
 
-### 访问地址
+### 访问地址 | Access URLs
 
 | 服务 | 地址 | 说明 |
 |------|------|------|
-| **AI 对话平台** | https://raised-telling-ppm-notre.trycloudflare.com | LobeChat 主界面 |
-| **云盘** | https://raised-telling-ppm-notre.trycloudflare.com/cloud-drive | 文件管理 |
-| **项目主页** | https://sihan-bzwj.github.io/-sihan-bzwj-.github.io/ | 介绍页面 |
+| AI 对话平台 | https://raised-telling-ppm-notre.trycloudflare.com | LobeChat 主界面 / Main interface |
+| 云盘 | https://raised-telling-ppm-notre.trycloudflare.com/cloud-drive | 文件管理 / File management |
+| 项目主页 | https://sihan-bzwj.github.io/-sihan-bzwj-.github.io/ | 介绍页面 / Landing page |
 
-### AI 对话平台使用流程
+### 使用流程 | Usage Flow
 
-1. **访问** → https://raised-telling-ppm-notre.trycloudflare.com
-2. **设置** → 左下角 Settings → Model Providers
-3. **选择供应商** → OpenRouter / OpenAI / Anthropic 等
-4. **输入 API 密钥** → 获取方式见下方
-5. **开始对话** → 选择模型 → 开始聊天
+- AI 对话平台：访问主页，进入 Settings -> Model Providers，选择供应商并输入 API 密钥，然后开始对话。
+- AI Chat: Open the main page, go to Settings -> Model Providers, choose a provider, enter an API key, and start chatting.
+- 云盘：访问 /cloud-drive，浏览目录树，上传或管理文件，必要时输入上传密码。
+- Cloud Drive: Open /cloud-drive, browse the directory tree, upload or manage files, and enter the upload password when required.
 
-### 云盘使用流程
-
-1. **访问** → https://raised-telling-ppm-notre.trycloudflare.com/cloud-drive
-2. **查看文件** → 显示根目录 /cloud-drive 下的所有文件和文件夹
-3. **上传文件** → 点击上传按钮或拖拽文件（需要输入密码）
-4. **创建文件夹** → 点击"新建文件夹"按钮
-5. **管理操作** → 删除、重命名、下载文件
-
-### 获取 API 密钥
+### 获取 API 密钥 | Get API Keys
 
 | 供应商 | 网址 | 特点 |
 |--------|------|------|
-| **OpenRouter** | https://openrouter.ai/keys | 聚合多家模型，推荐 |
-| **OpenAI** | https://platform.openai.com/api-keys | GPT-4、GPT-3.5 |
-| **Anthropic** | https://console.anthropic.com/ | Claude 家族 |
-| **Google Gemini** | https://ai.google.dev/ | Gemini 模型 |
-| **DeepSeek** | https://www.deepseek.com/ | 国内大模型 |
-| **Mistral AI** | https://console.mistral.ai/ | 开源模型 |
-| **Groq** | https://console.groq.com/ | 高速推理 |
-
-更多供应商支持，见下方架构说明。
+| OpenRouter | https://openrouter.ai/keys | 聚合多家模型，适合统一接入 / Aggregated model access |
+| OpenAI | https://platform.openai.com/api-keys | GPT 系列 / GPT models |
+| Anthropic | https://console.anthropic.com/ | Claude 家族 / Claude family |
+| Google Gemini | https://ai.google.dev/ | Gemini 模型 / Gemini models |
+| DeepSeek | https://www.deepseek.com/ | 国内大模型 / Domestic models |
+| Mistral AI | https://console.mistral.ai/ | 开源模型 / Open models |
+| Groq | https://console.groq.com/ | 高速推理 / High-speed inference |
 
 ---
 
-## 🏗️ 系统架构
+## 工作原理 | How It Works
 
-```
-┌─────────────────────────────────────────────────────────┐
-│              用户浏览器 (Web 客户端)                      │
-│              国际用户 / 国内用户                         │
-└──────────────────┬──────────────────────────────────────┘
-                   │ HTTPS 请求
-                   ▼
-    ┌──────────────────────────────────┐
-    │   Cloudflare Quick Tunnel        │
-    │  (国际隧道 - 免费，24/7)         │
-    │ raised-telling-ppm-notre...      │
-    │    trycloudflare.com             │
-    └──────────────┬───────────────────┘
-                   │ HTTP 转发
-                   ▼
-    ┌───────────────────────────────────────────────────────┐
-    │      Azure Linux VM (IP: 20.196.193.8)               │
-    │                                                       │
-    │  ┌────────────────────────────────────────────────┐  │
-    │  │   LobeChat Docker 容器                         │  │
-    │  │  (Next.js 前端 + Node.js 后端)               │  │
-    │  │  端口: 3210                                    │  │
-    │  └────────────────────────────────────────────────┘  │
-    │                                                       │
-    │  ┌────────────────────────────────────────────────┐  │
-    │  │  Cloud Drive Python 服务                       │  │
-    │  │  (Flask/HTTP 服务器)                          │  │
-    │  │  端口: 8787 (内部)                            │  │
-    │  │  访问: https://.../cloud-drive                │  │
-    │  └────────────────────────────────────────────────┘  │
-    │                                                       │
-    │  ┌────────────────────────────────────────────────┐  │
-    │  │  cloudflared (systemd 服务)                    │  │
-    │  │  自动重启、日志管理                            │  │
-    │  └────────────────────────────────────────────────┘  │
-    │                                                       │
-    │  数据存储:                                           │
-    │  • /home/azureuser/lobe-chat.env (环境变量)        │
-    │  • /home/azureuser/cloud-drive/ (文件系统)        │
-    │                                                       │
-    └───────────────────────────────────────────────────────┘
-                   ▲
-        ┌──────────┴───────────────────┐
-        │  外部 LLM API 供应商          │
-        │  OpenRouter / OpenAI / etc    │
-        │  (56+ 供应商)                 │
-        └───────────────────────────────┘
-```
+### AI 对话路径 | AI Chat Path
 
-### AI 对话工作原理
+用户输入消息 -> LobeChat 前端 -> Node.js 后端 -> 对应模型供应商 API -> 流式返回响应
+User message -> LobeChat frontend -> Node.js backend -> provider API -> streamed response
 
-```
-用户输入消息
-    ↓
-LobeChat 前端 (JavaScript) 显示
-    ↓
-POST /chat 到后端 (Node.js)
-    ↓
-后端验证 API 密钥
-    ↓
-调用对应供应商 API
-    ↓
-流式返回 AI 响应
-    ↓
-前端实时显示
-    ↓
-存储到本地或数据库
-```
+### 云盘路径 | Cloud Drive Path
 
-### 云盘操作流程
+浏览器打开云盘 -> Python 后端读取目录 -> 前端渲染文件树 -> 用户上传文件 -> 保存到存储目录 -> 刷新列表
+Browser opens cloud drive -> Python backend reads directories -> frontend renders file tree -> user uploads files -> files are saved -> list refreshes
 
-```
-用户在浏览器打开云盘页面
-    ↓
-Cloud Drive Python 后端列出 /cloud-drive 目录
-    ↓
-前端渲染文件树
-    ↓
-用户上传文件
-    ↓
-验证上传密码
-    ↓
-文件保存到 /home/azureuser/cloud-drive/
-    ↓
-刷新文件列表显示新文件
-```
+### 安全原则 | Security Principle
 
-### 为什么 API 密钥必须在后端
-
-- ❌ **前端暴露密钥** → 任何人可以盗用你的账户
-- ✅ **后端代理** → 密钥在服务器，前后端通信加密
-- ✅ **安全性高** → 用户将认证信息安全委托给服务器
+- API 密钥只在后端处理，前端不直接保存敏感信息。
+- API keys are handled only on the backend; the frontend does not store secrets directly.
+- 文件存储与服务进程分离，便于维护和备份。
+- File storage is separated from service processes for easier maintenance and backup.
 
 ---
 
-## 🔧 技术栈
+## 技术栈 | Tech Stack
 
 | 层级 | 技术 | 版本 | 用途 |
 |------|------|------|------|
-| **前端** | Next.js | 15.3.8 | AI 对话 UI |
-| **后端-AI** | Node.js | Built-in | API 代理 |
-| **后端-云盘** | Python | 3.11+ | 文件管理 |
-| **容器** | Docker | v26+ | 应用隔离和部署 |
-| **隧道** | Cloudflare | v2026.3.0 | 公网访问 |
-| **服务管理** | systemd | Linux native | 自动启停和重启 |
-| **网站** | MkDocs + GitHub Pages | Latest | Landing page |
-| **版本控制** | Git | Built-in | 代码管理 |
+| 前端 | Next.js | 15.3.8 | AI 对话 UI / AI chat UI |
+| 后端-AI | Node.js | Built-in | API 代理 / API proxy |
+| 后端-云盘 | Python | 3.11+ | 文件管理 / File management |
+| 容器 | Docker | v26+ | 应用隔离和部署 / Isolation and deployment |
+| 隧道 | Cloudflare | Latest | 公网访问 / Public access |
+| 服务管理 | systemd | Linux native | 自动启停和重启 / Auto start and restart |
+| 网站 | MkDocs + GitHub Pages | Latest | Landing page |
+| 版本控制 | Git | Built-in | 代码管理 / Code management |
 
 ---
 
-## ⚙️ 核心配置
+## 核心配置 | Core Configuration
 
-### LobeChat 环境变量 (`lobe-chat.env`)
+### LobeChat 环境变量 | LobeChat Environment
 
-```bash
-NODE_ENV=production          # 生产模式
-HOSTNAME=0.0.0.0           # 监听所有网卡
-PORT=3210                  # 容器内端口
+- NODE_ENV=production：生产模式 / production mode
+- HOSTNAME=0.0.0.0：监听所有网卡 / listen on all interfaces
+- PORT=3210：LobeChat 端口 / LobeChat port
+- *_API_KEY：用户或预配置的密钥 / user or preconfigured keys
+- *_MODEL_LIST：可留空，动态获取模型 / can be empty for dynamic model fetching
 
-# 54 个供应商的 API 密钥和模型列表
-# 用户在前端填入，或预配置在此
-OPENROUTER_API_KEY=        # 用户输入
-OPENROUTER_MODEL_LIST=     # 空 = 动态获取
-OPENAI_API_KEY=            # 用户输入
-OPENAI_MODEL_LIST=         # 空 = 动态获取
-ANTHROPIC_API_KEY=         # 用户输入
-...                        # (51 个其他供应商)
-```
+### Cloud Drive 服务 | Cloud Drive Service
 
-### Cloud Drive 服务配置 (`cloud-drive.service`)
+- 监听地址：127.0.0.1:8787
+- Listen address: 127.0.0.1:8787
+- 根目录：/home/azureuser/cloud-drive
+- Root directory: /home/azureuser/cloud-drive
+- systemd 负责后台常驻和自动重启。
+- systemd keeps the service running and restarts it automatically.
 
-```ini
-[Unit]
-Description=Cloud Drive API
-After=network.target
-Wants=network-online.target
+### Cloudflare 隧道 | Cloudflare Tunnel
 
-[Service]
-Type=simple
-User=azureuser
-WorkingDirectory=/home/azureuser
-Environment="CLOUD_DRIVE_ROOT=/home/azureuser/cloud-drive"
-ExecStart=/usr/bin/python3 /home/azureuser/bin/cloud_drive_server.py \
-          --host 127.0.0.1 --port 8787 --root /home/azureuser/cloud-drive
-Restart=always
-RestartSec=5
-StandardOutput=journal
-StandardError=journal
-SyslogIdentifier=cloud-drive
-
-[Install]
-WantedBy=multi-user.target
-```
-
-### Cloudflare 隧道服务 (`cloudflared.service`)
-
-```ini
-[Unit]
-Description=Cloudflare Tunnel for LobeChat + Cloud Drive
-After=network.target
-
-[Service]
-Type=simple
-User=azureuser
-ExecStart=/usr/bin/cloudflared tunnel --url http://localhost:3210
-Restart=always
-RestartSec=5
-
-[Install]
-WantedBy=multi-user.target
-```
+- 负责把本地服务转成公网可访问地址。
+- Exposes local services as public URLs.
+- 常用于 3210 端口和 /cloud-drive 路径。
+- Commonly used for port 3210 and the /cloud-drive path.
 
 ---
 
-## 📊 部署工作流
-
-### 5 阶段部署清单
+## 部署清单 | Deployment Checklist
 
 | 阶段 | 内容 | 状态 |
 |------|------|------|
-| **1. 基础设施** | Azure VM、Docker、SSH 密钥 | ✅ |
-| **2. LobeChat** | 拉取镜像、配置环境变量、启动容器 | ✅ |
-| **3. Cloud Drive** | Python 服务、systemd 配置、权限设置 | ✅ |
-| **4. Cloudflare** | cloudflared 隧道、systemd 服务 | ✅ |
-| **5. Landing Page** | MkDocs 项目介绍、GitHub Pages 部署 | ✅ |
-
-### 关键运维命令
-
-```bash
-# ========== LobeChat 命令 ==========
-# 查看 LobeChat 状态
-docker ps -f name=lobe-chat
-
-# 查看 LobeChat 日志
-docker logs -f lobe-chat
-
-# 重启 LobeChat
-docker restart lobe-chat
-
-# 进入容器调试
-docker exec -it lobe-chat /bin/bash
-
-# ========== Cloud Drive 命令 ==========
-# 查看 Cloud Drive 状态
-systemctl status cloud-drive.service
-
-# 查看 Cloud Drive 日志
-journalctl -u cloud-drive -f
-
-# 重启 Cloud Drive
-sudo systemctl restart cloud-drive.service
-
-# ========== Cloudflare 隧道命令 ==========
-# 查看隧道状态
-systemctl status cloudflared.service
-
-# 查看隧道日志和实时地址
-journalctl -u cloudflared -f
-
-# 重启隧道
-sudo systemctl restart cloudflared.service
-
-# 获取当前隧道 URL
-grep -Eo "https://.*\.trycloudflare\.com" /var/log/syslog | tail -1
-```
+| 1 | Azure VM、Docker、SSH 密钥 / Azure VM, Docker, SSH keys | 完成 / Done |
+| 2 | LobeChat 容器、环境变量、启动脚本 / LobeChat container, env, startup | 完成 / Done |
+| 3 | Cloud Drive Python 服务、systemd 配置 / Python service, systemd config | 完成 / Done |
+| 4 | Cloudflare 隧道、自动重启 / Cloudflare tunnel, auto restart | 完成 / Done |
+| 5 | MkDocs 介绍页、GitHub Pages 发布 / MkDocs landing page, GitHub Pages | 完成 / Done |
 
 ---
 
-## 🔐 模型供应商配置
+## 支持的供应商 | Supported Providers
 
-### 动态 API 获取原理
+主流模型源包括 OpenRouter、OpenAI、Anthropic、Google Gemini、Mistral AI、Groq、DeepSeek、Perplexity 和 Cohere。
 
-```
-容器启动
-    ↓
-读取环境变量 *_API_KEY 和 *_MODEL_LIST
-    ↓
-如果 API_KEY 为空 → 前端显示输入框
-    ↓
-如果 MODEL_LIST 为空 → 从 API 动态获取（推荐）
-    ↓
-前端显示最新的模型列表
-    ↓
-用户选择模型 → 发送到后端 → 调用对应 API
-```
+Main providers include OpenRouter, OpenAI, Anthropic, Google Gemini, Mistral AI, Groq, DeepSeek, Perplexity, and Cohere.
 
-### 已支持的供应商 (56 个)
+其他供应商还包括 AI21、Baichuan、Azure、Hugging Face、Ollama、Qwen、Wenxin、Spark 等。
 
-**主流模型源**:
-- OpenRouter (聚合)
-- OpenAI (GPT 系列)
-- Anthropic (Claude)
-- Google (Gemini)
-- Mistral AI
-- Groq
-- DeepSeek
-- Perplexity
-- Cohere
-
-**其他供应商**: AI21、Baichuan、Azure、Hugging Face、Ollama、Qwen、Wenxin、Spark 等...
+Other providers also include AI21, Baichuan, Azure, Hugging Face, Ollama, Qwen, Wenxin, Spark, and more.
 
 ---
 
-## ⚠️ 已知限制与优化方向
+## 相关链接 | Related Links
 
-### 现有限制
-
-| 限制 | 原因 | 影响 |
-|------|------|------|
-| **地址变化** | Quick Tunnel 免费方案 | 重启时隧道地址可能变化 |
-| **国际延迟** | Cloudflare 节点位置 | 100-300ms 延迟 |
-| **流量限制** | 免费方案限制 | 正常个人使用足够 |
-| **存储限制** | 单机存储 | 云盘大小受 Azure VM 磁盘限制 |
-
-### 优化方向
-
-- [ ] **自定义域名** - 升级到 Cloudflare 付费隧道
-- [ ] **国内加速** - Cpolar/Frp 方案到国内 VPS
-- [ ] **缓存优化** - CDN + 客户端缓存
-- [ ] **数据持久化** - 云数据库（Azure Cosmos DB）
-- [ ] **监控告警** - Prometheus + Grafana 统计
-- [ ] **备份策略** - 自动备份 cloud-drive 到 Azure Storage
-- [ ] **权限管理** - 多用户、权限控制
-- [ ] **API 文档** - OpenAPI / Swagger 规范
+- 项目主页 / Project home: https://sihan-bzwj.github.io/-sihan-bzwj-.github.io/
+- 仓库地址 / Repository: https://github.com/sihan-bzwj/-sihan-bzwj-.github.io
+- Cloud Drive 页面 / Cloud Drive page: https://raised-telling-ppm-notre.trycloudflare.com/cloud-drive
+- LobeChat 文档 / LobeChat docs: https://docs.lobehub.com/
 
 ---
 
-## 📁 项目目录结构
+## 编码说明 | Encoding Note
 
-```
-.
-├── .github/
-│   └── workflows/
-│       └── deploy.yml                 # MkDocs 自动部署
-│
-├── docs/                              # MkDocs 源文件
-│   ├── index.md                       # 首页（landing page）
-│   ├── cloud-drive.md                 # 云盘使用说明
-│   └── stylesheets/
-│       └── extra.css                  # 自定义样式
-│
-├── cloud_drive_server.py              # Cloud Drive Python 服务
-├── cloud-drive.service                # Cloud Drive systemd 配置
-├── cloud-drive-tunnel.service         # Cloud Drive 隧道配置
-│
-├── mkdocs.yml                         # MkDocs 配置
-├── README.md                          # 本文件
-└── .gitignore                         # Git 忽略规则
-```
-
----
-
-## 🤝 贡献和反馈
-
-Issues、PRs 欢迎！如有问题或建议，请在 GitHub Issues 中提出。
-
----
-
-## 📖 相关资源
-
-### 官方文档
-- **LobeChat** - https://docs.lobechat.com/
-- **Cloudflare Tunnel** - https://developers.cloudflare.com/cloudflare-one/connections/connect-networks/
-- **MkDocs** - https://www.mkdocs.org/
-
-### 模型供应商
-- **OpenRouter** - https://openrouter.ai/
-- **OpenAI** - https://openai.com/
-- **Anthropic** - https://www.anthropic.com/
-- **Google DeepMind** - https://deepmind.google/
-
----
-
-## 📝 更新日志
-
-最新更新信息见本 README
-
----
-
-## 📄 许可证
-
-MIT License
-
----
-
-**最近更新**: 2026年4月5日  
-**维护者**: @sihan-bzwj  
-**在线访问**: https://raised-telling-ppm-notre.trycloudflare.com
+本文件以 UTF-8 保存，用于尽量避免 Windows 和 PowerShell 下的乱码问题。
+This file is saved as UTF-8 to reduce mojibake issues on Windows and in PowerShell.
+‣뫤꾫䄠⁉꿥鶯맥낏⬠ꪸ뫤醺鯧඘ഊ㸊肸룤貮闦蒚䰠扯䍥慨⁴뫤ꢃ뷧릖ꇦ₈‫祐桴湯醺鯧趜諥貼铦膌ꓥꪸ䰠䵌鮾뫥蚕鋥螖믤颭若貼胩螿䌠潬摵汦牡⁥髩鎁㈠⼴‷藥醽껨꺗胣ංഊℊ卛慴畴嵳栨瑴獰⼺椯杭献楨汥獤椮⽯慢杤⽥瑓瑡獵䄭瑣癩ⵥ牢杩瑨牧敥⥮਍嬡汐瑡潦浲⡝瑨灴㩳⼯浩⹧桳敩摬⹳潩戯摡敧倯慬晴牯⵭穁牵╥〲䵖㈥┰䈲㈥䐰捯敫⵲汢敵ഩℊ呛湵敮嵬栨瑴獰⼺椯杭献楨汥獤椮⽯慢杤⽥畔湮汥䌭潬摵汦牡╥〲畑捩⵫牯湡敧ഩഊⴊⴭ਍਍⌣躟₯ꇩ꺛ꛦ袧਍਍뿨꾘룤ꪸ⨪껥뒕髧醺ꯧ趜諥뎹迥⪰貼迦鮾룤Ꞥꃦ莿鳦ꆊ볯කഊ⌊⌣꒟ₖ䥁릯꿨뎹迥₰䰨扯䍥慨⥴਍‭鳢₅⨪潌敢桃瑡⨪ⴠ骤꣦讞䄠⁉꿥鶯맥낏볯予硥⹴獪⬠丠摯⹥獪볯ඉⴊ薜⨠㔪⬶䰠䵌鮾뫥蚕⨪ⴠ传数剮畯整膀灏湥䥁胣䆁瑮牨灯捩胣䒁敥印敥⁫귧ඉⴊ薜⨠ꢊ胦ꆨ黥랎迥⪖‪‭蟨ꢊ郥ꖭ鳦낖꣦讞裥ꢡ਍‭鳢₅⨪偁⁉꿥ꖒ믤蚐⨪ⴠ覮藥蒚郥꾫믤蚐黦蒞਍਍⌣‣鿰뺒ꪸ뫤醺鯧ₘ䌨潬摵䐠楲敶ഩⴊ薜⨠螖믤ꆮ郧⪆‪‭룤ꂼ胣许뷨膀裥꒙胣趇釥趐雦뚻਍‭鳢₅⨪鯧閽ꃦ鎻黦⪄‪‭껥뒕髧螖믤릤껧蚐਍‭鳢₅⨪꿥膠뿤ꒊ⨪ⴠ꾔賦誸볤蚯ꃧ貪꿨ඁⴊ薜⨠圪扥趉ꯧ⪯‪‭뻧芧髧趓뫥込闧ꊝ਍਍⌣‣鿰邌뒕뷤릉胦ටⴊ薜⨠㈪⼴‷藥醽껨꺗⨪ⴠ䌠潬摵汦牡⁥髩鎁蟨ꢊ賥ꢃ뷧඲ⴊ薜⨠䰪湡楤杮倠条⩥‪‭楇䡴扵倠条獥⬠䴠䑫捯⁳ꇩ꺛믤趻਍‭鳢₅⨪껥ꢅ蟨ꢊ賥⪖‪‭祳瑳浥⁤鳦ꆊ蟨ꆮ郧膀潄正牥ꪇ諥趇郥දⴊ薜⨠貏鳦ꆊ菩늽⨪ⴠ䰠扯䍥慨⁴‫汃畯⁤牄癩⁥跥鲽뿨財਍਍⌣‣䥁릯꿨뢠뿥릉胦ටഊ簊릉胦₧⁼꿨躘簠਍⵼ⴭⴭ簭ⴭⴭⴭർ簊⨠骤꣦讞铦膌⨪簠肸룤貕鷩ꖎ藥₥〵‫룤₪䱌⁍꣦讞뫦ₐർ簊⨠ꢊ胦ꆨ黥랎迥⪖‪⁼蟨ꢊ믤鮾뫥蚕䄠䥐貐귦肜雦ꆨ黥鞈ꇨ₨ർ簊⨠覮藥뚞黦⪄‪⁼偁⁉꿥ꖒ鳥躐ꯧ蒤郧貼觥꾫韦閳껨꺗簠਍⁼⨪铧랈迥骮裥⪶‪⁼铧랈鳥趉ꯧ鎾藥₥偁⁉꿥ꖒ볯躐ꯧꎻ郧랯뇦₂ർ簊⨠ꪇ諥隌뿨뒻⨪簠猠獹整摭趜諥ꪇ諥ꆮ郧貼볥뢸蟨ꢊ蟩꾐簠਍⁼⨪鯥薙껨꺗⨪簠䌠潬摵汦牡⁥畑捩⁫畔湮汥볯超듨₹㐲㜯簠਍਍⌣‣뫤颛ꃦ莿觧Ꞁ਍਍⁼觧Ꞁ簠뒯飦₎ർ簊ⴭⴭⴭ⵼ⴭⴭ簭਍⁼⨪雦뚻룤ꂼ⨪簠圠扥貕鷩隋详隈苧뮇룤ꂼ볯꾔賦릉蟩趓뷤ₜർ簊⨠螖믤ꆮ郧⪆‪⁼裥못雦뚻ꓥ貼蟩붑郥貼裥꒙볯꺿铦莝駩ₐർ簊⨠蚯ꃧ鶿諦⪤‪⁼룤ꂼ鏦鲽鳩膦꿥膠ꫩ膯볯颻껨骼楳慨ㅮ㌲볯₉ർ簊⨠꺛뷥醠뇥몤⨪簠貮闦蒚雦뚻ꓥ鎻黦貒ꓥ辰飦몤簠਍⁼⨪鯧뺓룤붽⨪簠꾔賦螖믤뒛鏩뾮韩貒룤붽簠਍⁼⨪蟨ꢊ賥ꢃ뷧⪲‪⁼祳瑳浥⁤鳦ꆊ蟨ꢊ郥ꢊ鋥ꆮ郧₆ർഊⴊⴭ਍਍⌣骟₀뿥龀볥讧਍਍⌣‣껨꺗鳥肝਍਍⁼鳦ꆊ簠난鷥₀⁼꿨躘簠਍⵼ⴭⴭ簭ⴭⴭⴭ⵼ⴭⴭ簭਍⁼⨪䥁릯꿨뎹迥⪰‪⁼瑨灴㩳⼯慲獩摥琭汥楬杮瀭浰渭瑯敲琮祲汣畯晤慬敲挮浯簠䰠扯䍥慨⁴룤貕鷩₢ർ簊⨠醺鯧⪘‪⁼瑨灴㩳⼯慲獩摥琭汥楬杮瀭浰渭瑯敲琮祲汣畯晤慬敲挮浯振潬摵搭楲敶簠螖믤ꆮ郧₆ർ簊⨠릡鯧뮸ꇩ⪵‪⁼瑨灴㩳⼯楳慨⵮穢橷朮瑩畨⹢潩⴯楳慨⵮穢橷⸭楧桴扵椮⽯簠讻믧떡鷩₢ർഊ⌊⌣䄠⁉꿥鶯맥낏뷤ꢔ뗦讨਍਍⸱⨠뾮韩⪮‪蛢ₒ瑨灴㩳⼯慲獩摥琭汥楬杮瀭浰渭瑯敲琮祲汣畯晤慬敲挮浯਍⸲⨠뺮뷧⪮‪蛢ₒ럥许꟨ₒ敓瑴湩獧銆䴠摯汥倠潲楶敤獲਍⸳⨠覀详鮾뫥蚕⨪銆传数剮畯整⁲ 灏湥䥁⼠䄠瑮牨灯捩覭਍⸴⨠鎾藥₥偁⁉꿥ꖒ⨪銆랎迥릖볥膧룤릖਍⸵⨠肼꟥릯꿨⪝‪蛢ₒ胩ꦋ꣦讞銆肼꟥誁ꓥඩഊ⌊⌣醺鯧뾽铧膵꣧උഊㄊ‮⨪껨꺗⨪銆栠瑴獰⼺爯楡敳ⵤ整汬湩ⵧ灰⵭潮牴⹥牴捹潬摵汦牡⹥潣⽭汣畯ⵤ牤癩൥㈊‮⨪鿦讜雦뚻⨪銆뺘ꓧ릠鯧閽⼠汣畯ⵤ牤癩⁥룤蒚触覜雦뚻鋥螖믤릤਍⸳⨠誸볤螖믤⪶‪蛢ₒ苧뮇룤ꂼ賦꺒裦隋详螖믤袼鳩膦뻨ꖅ꿥膠볯ඉ㐊‮⨪裥못雦뚻ꓥ⪹‪蛢ₒ苧뮇낖믥螖믤릤覌鋩ථ㔊‮⨪껧蚐鏦鲽⨪銆ꂈ駩膀蟩붑郥膀룤붽雦뚻਍਍⌣‣軨随䄠䥐蚯鋩ඥഊ簊鮾뫥蚕簠醽鷥₀⁼觧릂簠਍⵼ⴭⴭⴭ簭ⴭⴭⴭ⵼ⴭⴭ簭਍⁼⨪灏湥潒瑵牥⨪簠栠瑴獰⼺漯数牮畯整⹲楡欯祥⁳⁼臨袐ꓥ뚮꣦讞볯ꢎ跨ₐർ簊⨠伪数䅮⩉‪⁼瑨灴㩳⼯汰瑡潦浲漮数慮⹩潣⽭灡⵩敫獹簠䜠呐㐭胣䞁呐㌭㔮簠਍⁼⨪湁桴潲楰⩣‪⁼瑨灴㩳⼯潣獮汯⹥湡桴潲楰⹣潣⽭簠䌠慬摵⁥껥辗簠਍⁼⨪潇杯敬䜠浥湩⩩‪⁼瑨灴㩳⼯楡朮潯汧⹥敤⽶簠䜠浥湩⁩꣦讞簠਍⁼⨪敄灥敓步⨪簠栠瑴獰⼺眯睷搮敥獰敥⹫潣⽭簠붛蛥Ꞥ꣦讞簠਍⁼⨪楍瑳慲⁬䥁⨪簠栠瑴獰⼺振湯潳敬洮獩牴污愮⽩簠肼뫦ꆨ黥₋ർ簊⨠䜪潲⩱‪⁼瑨灴㩳⼯潣獮汯⹥牧煯挮浯 ⁼ꯩ龀軦蚐簠਍਍鯦骤뻤钺闥꾔賦貼꟨许雦뚞黦뒯飦芀਍਍ⴭഭഊ⌊‣鿰鞏룯₏돧龻黦蒞਍਍恠ൠ貔铢肔铢肔铢肔铢肔铢肔铢肔铢肔铢肔铢肔铢肔铢肔铢肔铢肔铢肔铢肔铢肔铢肔铢肔铢肔铢肔铢肔铢肔铢肔铢肔铢肔铢肔铢肔铢肔铢邔਍铢₂††††††ꢔ裦辵꟨ꢙ⠠敗⁢껥랈ꯧ⦯†††††††††††铢ං芔†††††††鯥薙铧랈⼠붛蛥ꢔ裦₷††††††††††††铢ං钔铢肔铢肔铢肔铢肔铢肔铢肔铢肔铢肔铢肔铢肔铢肔铢肔铢肔铢肔铢肔铢肔铢肔铢肔铢肔铢肔铢肔铢肔铢肔铢肔铢肔铢肔铢肔铢肔铢颔਍†††††††††芔䠠呔卐랯뇦ං †††††††††離඼ †貔铢肔铢肔铢肔铢肔铢肔铢肔铢肔铢肔铢肔铢肔铢肔铢肔铢肔铢肔铢肔铢肔铢肔铢ඐ †芔†䌠潬摵汦牡⁥畑捩⁫畔湮汥††††铢ං †芔†붛駩Ꞛ臩ₓ‭藥릴볯㊌⼴⤷††††芔਍††铢₂慲獩摥琭汥楬杮瀭浰渭瑯敲⸮‮††芔਍††铢₂†琠祲汣畯晤慬敲挮浯††††††芔਍††铢肔铢肔铢肔铢肔铢肔铢肔铢肔铢겔铢肔铢肔铢肔铢肔铢肔铢肔铢肔铢肔铢肔铢颔਍†††††††††芔䠠呔⁐뷨醏਍†††††††††벖਍††铢肔铢肔铢肔铢肔铢肔铢肔铢肔铢肔铢肔铢肔铢肔铢肔铢肔铢肔铢肔铢肔铢肔铢肔铢肔铢肔铢肔铢肔铢肔铢肔铢肔铢肔铢肔铢肔铢ඐ †芔†††穁牵⁥楌畮⁸䵖⠠偉›〲ㄮ㘹ㄮ㌹㠮 †††††††铢ං †芔†††††††††††††††††††††††††††芔਍††铢₂貔铢肔铢肔铢肔铢肔铢肔铢肔铢肔铢肔铢肔铢肔铢肔铢肔铢肔铢肔铢肔铢肔铢肔铢肔铢肔铢肔铢肔铢肔铢肔铢肔铢ₐ芔਍††铢₂芔†䰠扯䍥慨⁴潄正牥릮駥₨††††††††††††铢₂芔਍††铢₂芔†丨硥⹴獪趉ꯧ₯‫潎敤樮⁳郥꾫 †††††††铢₂芔਍††铢₂芔†ꯧꎏ›㈳〱††††††††††††††††††铢₂芔਍††铢₂钔铢肔铢肔铢肔铢肔铢肔铢肔铢肔铢肔铢肔铢肔铢肔铢肔铢肔铢肔铢肔铢肔铢肔铢肔铢肔铢肔铢肔铢肔铢肔铢肔铢ₘ芔਍††铢₂†††††††††††††††††††††††††††铢ං †芔†铢肔铢肔铢肔铢肔铢肔铢肔铢肔铢肔铢肔铢肔铢肔铢肔铢肔铢肔铢肔铢肔铢肔铢肔铢肔铢肔铢肔铢肔铢肔铢肔铢邔†铢ං †芔†铢₂䌠潬摵䐠楲敶倠瑹潨⁮鳦ꆊ†††††††††††芔†铢ං †芔†铢₂⠠汆獡⽫呈偔趜諥ꢙ ††††††††††††芔†铢ං †芔†铢₂꾫迥㪣㠠㠷‷薆菩⦨††††††††††††††铢₂芔਍††铢₂芔†껨꺗›瑨灴㩳⼯⸮⼮汣畯ⵤ牤癩⁥†††††††芔†铢ං †芔†铢肔铢肔铢肔铢肔铢肔铢肔铢肔铢肔铢肔铢肔铢肔铢肔铢肔铢肔铢肔铢肔铢肔铢肔铢肔铢肔铢肔铢肔铢肔铢肔铢颔†铢ං †芔†††††††††††††††††††††††††††芔਍††铢₂貔铢肔铢肔铢肔铢肔铢肔铢肔铢肔铢肔铢肔铢肔铢肔铢肔铢肔铢肔铢肔铢肔铢肔铢肔铢肔铢肔铢肔铢肔铢肔铢肔铢ₐ芔਍††铢₂芔†汣畯晤慬敲⁤猨獹整摭趜諥⦡††††††††††铢₂芔਍††铢₂芔†蟨ꢊ蟩꾐胣ꖗ뿥ꆮ郧₆†††††††††††††芔†铢ං †芔†铢肔铢肔铢肔铢肔铢肔铢肔铢肔铢肔铢肔铢肔铢肔铢肔铢肔铢肔铢肔铢肔铢肔铢肔铢肔铢肔铢肔铢肔铢肔铢肔铢颔†铢ං †芔†††††††††††††††††††††††††††芔਍††铢₂낕跦颭若㪨†††††††††††††††††††††芔਍††铢₂ꊀ⼠潨敭愯畺敲獵牥氯扯ⵥ档瑡攮癮⠠軧莢迥辇 †††芔਍††铢₂ꊀ⼠潨敭愯畺敲獵牥振潬摵搭楲敶 螖믤뮳믧⦟††††铢ං †芔†††††††††††††††††††††††††††芔਍††铢肔铢肔铢肔铢肔铢肔铢肔铢肔铢肔铢肔铢肔铢肔铢肔铢肔铢肔铢肔铢肔铢肔铢肔铢肔铢肔铢肔铢肔铢肔铢肔铢肔铢肔铢肔铢肔铢඘ †††††††††離඲ †††貔铢肔铢肔铢肔铢肔铢肔铢肔铢肔铢肔铢肔铢肔铢肔铢肔铢肔铢肔铢肔铢ඐ †††芔†ꓥꢃ䰠䵌䄠䥐鮾뫥蚕†††††铢ං †††芔†灏湥潒瑵牥⼠传数䅮⁉ 瑥⁣†芔਍††††铢₂⠠㘵‫뻤钺闥⦆††††††††芔਍††††铢肔铢肔铢肔铢肔铢肔铢肔铢肔铢肔铢肔铢肔铢肔铢肔铢肔铢肔铢肔铢肔铢඘怊恠਍਍⌣‣䥁릯꿨ꖷ뷤龎郧ආഊ怊恠਍铧랈뻨ꖅ뛦꾁਍††蛢ඓ䰊扯䍥慨⁴觥꾫⠠慊慶捓楲瑰 飦몤਍††蛢ඓ倊协⁔振慨⁴裥躐ꯧ₯丨摯⹥獪ഩ †鎆਍郥꾫ꫩ膯䄠䥐蚯鋩ඥ †鎆਍냨ꢔ꿥钺뻤钺闥₆偁൉ †鎆਍뗦込뿨麛䄠⁉鏥钺਍††蛢ඓ趉ꯧ麮韦뺘ꓧය †鎆਍귥ꢂ裥겜鳥隈闦꺍뫥ඓ怊恠਍਍⌣‣뫤颛鏦鲽뗦讨਍਍恠ൠꢔ裦ꢜ뗦袧駥鎉볥醺鯧떡鷩ජ †鎆਍汃畯⁤牄癩⁥祐桴湯躐ꯧ鞈蟥₺振潬摵搭楲敶꺛뷥ඕ †鎆਍觥꾫룦鎟雦뚻ꃦඑ †鎆਍铧랈룤ꂼ雦뚻਍††蛢ඓ貪꿨誸볤蚯ꃧඁ †鎆਍雦뚻뿤颭裥₰栯浯⽥穡牵略敳⽲汣畯ⵤ牤癩⽥਍††蛢ඓ랈雦螖믤鞈ꇨ뺘ꓧ낖雦뚻਍恠ൠഊ⌊⌣몸믤袹䄠䥐蚯鋩薿ꇩꢜ郥꾫਍਍‭鷢₌⨪觥꾫髦늜꿥ꖒ⨪銆뮻뷤몺迥ꖻ鯧ꢔ뷤蒚듨랈਍‭鳢₅⨪郥꾫믤蚐⨪銆蚯鋩ꢜ鳦ꆊ駥貼觥躐ꯧ骀뿤ꂊ꿥ආⴊ薜⨠覮藥Ꞁꯩ⪘‪蛢ₒ铧랈냥꒮꿨ꆿ臦覮藥钧触馻鳦ꆊ駥ඨഊⴊⴭ਍਍⌣钟₧諦꾜ꃦඈഊ簊花뫧₧⁼諦꾜簠袉鳦€⁼铧钀簠਍⵼ⴭⴭ簭ⴭⴭⴭ⵼ⴭⴭ簭ⴭⴭⴭർ簊⨠趉ꯧ⪯‪⁼敎瑸樮⁳⁼㔱㌮㠮簠䄠⁉꿥鶯唠⁉ർ簊⨠躐ꯧ⶯䥁⨪簠丠摯⹥獪簠䈠極瑬椭⁮⁼偁⁉믤蚐簠਍⁼⨪郥꾫醺鯧⪘‪⁼祐桴湯簠㌠ㄮ⬱簠螖믤ꆮ郧₆ർ簊⨠릮駥⪨‪⁼潄正牥簠瘠㘲‫⁼뫥ꢔ髩뮦鋥ꢃ뷧₲ർ簊⨠Ꞛ臩⪓‪⁼汃畯晤慬敲簠瘠〲㘲㌮〮簠겅뷧뾮韩₮ർ簊⨠趜諥ꆮ郧⪆‪⁼祳瑳浥⁤⁼楌畮⁸慮楴敶簠ꪇ諥꾐臥貒蟩꾐簠਍⁼⨪뷧馫⨪簠䴠䑫捯⁳‫楇䡴扵倠条獥簠䰠瑡獥⁴⁼慌摮湩⁧慰敧簠਍⁼⨪觧겜軦뚈⨪簠䜠瑩簠䈠極瑬椭⁮⁼믤膠껧蚐簠਍਍ⴭഭഊ⌊‣髢辸뢠뿥超뷧ථഊ⌊⌣䰠扯䍥慨⁴軧莢迥辇⠠池扯ⵥ档瑡攮癮⥠਍਍恠扠獡൨上䑏彅久㵖牰摯捵楴湯†††††‣铧Ꞻ꣦込਍佈呓䅎䕍〽〮〮〮†††††⌠醛郥肉鳦醽跥ඡ倊剏㵔㈳〱†††††††††‣껥ꢙ蛥꾫迥ඣഊ⌊㔠‴룤鮾뫥蚕髧₄偁⁉꿥ꖒ鋥ꆨ黥鞈ꇨඨ⌊ꢔ裦ꢜ觥꾫ꇥꖅ볯隈ꋩ超뷧ꢜ귦ඤ伊䕐剎問䕔归偁彉䕋㵙††††‣铧랈뻨ꖅ਍偏久佒呕剅䵟䑏䱅䱟卉㵔††⌠목㴠ꢊ胦랎迥ඖ伊䕐䅎彉偁彉䕋㵙††††††‣铧랈뻨ꖅ਍偏久䥁䵟䑏䱅䱟卉㵔††††⌠목㴠ꢊ胦랎迥ඖ䄊呎剈偏䍉䅟䥐䭟奅‽††††‣铧랈뻨ꖅ਍⸮‮†††††††††††⌠⠠ㄵꪸ藥隻뻤钺闥⦆਍恠ൠഊ⌊⌣䌠潬摵䐠楲敶趜諥超뷧₮怨汣畯ⵤ牤癩⹥敳癲捩恥ഩഊ怊恠湩൩嬊湕瑩൝䐊獥牣灩楴湯䌽潬摵䐠楲敶䄠䥐਍晁整㵲敮睴牯⹫慴杲瑥਍慗瑮㵳敮睴牯⵫湯楬敮琮牡敧൴ഊ嬊敓癲捩嵥਍祔数猽浩汰൥唊敳㵲穡牵略敳൲圊牯楫杮楄敲瑣牯㵹栯浯⽥穡牵略敳൲䔊癮物湯敭瑮∽䱃問彄剄噉彅佒呏⼽潨敭愯畺敲獵牥振潬摵搭楲敶ഢ䔊數卣慴瑲⼽獵⽲楢⽮祰桴湯″栯浯⽥穡牵略敳⽲楢⽮汣畯彤牤癩彥敳癲牥瀮⁹൜ ††††ⴠ栭獯⁴㈱⸷⸰⸰‱ⴭ潰瑲㠠㠷‷ⴭ潲瑯⼠潨敭愯畺敲獵牥振潬摵搭楲敶਍敒瑳牡㵴污慷獹਍敒瑳牡却捥㔽਍瑓湡慤摲畏灴瑵樽畯湲污਍瑓湡慤摲牅潲㵲潪牵慮൬匊獹潬䥧敤瑮晩敩㵲汣畯ⵤ牤癩൥ഊ嬊湉瑳污嵬਍慗瑮摥祂洽汵楴甭敳⹲慴杲瑥਍恠ൠഊ⌊⌣䌠潬摵汦牡⁥髩鎁鳦ꆊ⠠捠潬摵汦牡摥献牥楶散⥠਍਍恠楠楮਍啛楮嵴਍敄捳楲瑰潩㵮汃畯晤慬敲吠湵敮⁬潦⁲潌敢桃瑡⬠䌠潬摵䐠楲敶਍晁整㵲敮睴牯⹫慴杲瑥਍਍卛牥楶散൝吊灹㵥楳灭敬਍獕牥愽畺敲獵牥਍硅捥瑓牡㵴甯牳戯湩振潬摵汦牡摥琠湵敮⁬ⴭ牵⁬瑨灴⼺氯捯污潨瑳㌺ㄲര刊獥慴瑲愽睬祡൳刊獥慴瑲敓㵣വഊ嬊湉瑳污嵬਍慗瑮摥祂洽汵楴甭敳⹲慴杲瑥਍恠ൠഊⴊⴭ਍਍⌣鎟₊菩늽럥鲽뗦ඁഊ⌊⌣㔠뚘껦ꢃ뷧薸跥ඕഊ簊뚘껦₵⁼蛥릮簠뚊胦₁ർ簊ⴭⴭⴭ⵼ⴭⴭ簭ⴭⴭⴭർ簊⨠ㄪ‮鿥股껨붖⨪簠䄠畺敲嘠膀潄正牥胣厁䡓蚯鋩₥⁼鳢₅ർ簊⨠㈪‮潌敢桃瑡⨪簠見迥鲕菥膀藩꺽軧莢迥辇胣꾐諥릮駥₨⁼鳢₅ർ簊⨠㌪‮汃畯⁤牄癩⩥‪⁼祐桴湯趜諥膀祳瑳浥⁤藩꺽胣莝駩뺮뷧₮⁼鳢₅ർ簊⨠㐪‮汃畯晤慬敲⨪簠挠潬摵汦牡摥Ꞛ臩膀祳瑳浥⁤鳦ꆊ簠薜簠਍⁼⨪⸵䰠湡楤杮倠条⩥‪⁼歍潄獣릡鯧讻믧膀楇䡴扵倠条獥ꢃ뷧₲⁼鳢₅ർഊ⌊⌣뎅铩邿믧붑믤ඤഊ怊恠慢桳਍‣㴽㴽㴽㴽㴽䰠扯䍥慨⁴釥꒻㴠㴽㴽㴽㴽ഽ⌊ꖟ鳧₋潌敢桃瑡뚊胦ඁ搊捯敫⁲獰ⴠ⁦慮敭氽扯ⵥ档瑡਍਍‣鿦讜䰠扯䍥慨⁴韦鞿਍潤正牥氠杯⁳昭氠扯ⵥ档瑡਍਍‣蟩꾐䰠扯䍥慨൴搊捯敫⁲敲瑳牡⁴潬敢挭慨൴ഊ⌊鮿藥릮駥莰꿨ඕ搊捯敫⁲硥捥ⴠ瑩氠扯ⵥ档瑡⼠楢⽮慢桳਍਍‣㴽㴽㴽㴽㴽䌠潬摵䐠楲敶붑믤₤㴽㴽㴽㴽㴽਍‣鿦讜䌠潬摵䐠楲敶뚊胦ඁ猊獹整捭汴猠慴畴⁳汣畯ⵤ牤癩⹥敳癲捩൥ഊ⌊ꖟ鳧₋汃畯⁤牄癩⁥韦鞿਍潪牵慮捬汴ⴠ⁵汣畯ⵤ牤癩⁥昭਍਍‣蟩꾐䌠潬摵䐠楲敶਍畳潤猠獹整捭汴爠獥慴瑲挠潬摵搭楲敶献牥楶散਍਍‣㴽㴽㴽㴽㴽䌠潬摵汦牡⁥髩鎁釥꒻㴠㴽㴽㴽㴽ഽ⌊ꖟ鳧Ꞛ臩뚊胦ඁ猊獹整捭汴猠慴畴⁳汣畯晤慬敲⹤敳癲捩൥ഊ⌊ꖟ鳧Ꞛ臩ꖗ뿥貒껥뚗鳥肝਍潪牵慮捬汴ⴠ⁵汣畯晤慬敲⁤昭਍਍‣蟩꾐髩鎁਍畳潤猠獹整捭汴爠獥慴瑲挠潬摵汦牡摥献牥楶散਍਍‣軨随뷥趉髩鎁唠䱒਍牧灥ⴠ潅∠瑨灴㩳⼯⨮⹜牴捹潬摵汦牡履挮浯•瘯牡氯杯猯獹潬⁧⁼慴汩ⴠറ怊恠਍਍ⴭഭഊ⌊‣鿰邔ꆨ黥鮾뫥蚕藩꺽਍਍⌣‣諥膀䄠䥐랎迥龎郧ආഊ怊恠਍껥ꢙ郥ꢊ਍††蛢ඓ뮯迥꾎ꋥ颏蟩₏弪偁彉䕋⁙鋥₌弪位䕄彌䥌呓਍††蛢ඓ芦黦ₜ偁彉䕋⁙룤목銆趉ꯧ뺘ꓧ鎾藥蚡਍††蛢ඓ芦黦ₜ位䕄彌䥌呓몸ꧧ₺蛢ₒ믤₎偁⁉諥膀軨随볯ꢎ跨覼਍††蛢ඓ趉ꯧ뺘ꓧ肜雦蒚꣦讞裥ꢡ਍††蛢ඓꢔ裦覀详ꆨ黥₋蛢ₒ迥膀裥躐ꯧ₯蛢ₒ냨ꢔ꿥钺䄠䥐਍恠ൠഊ⌊⌣늷铦膌髧鮾뫥蚕⠠㘵ꪸഩഊ⨊뮸뗦ꆨ黥邺⨪ഺⴊ传数剮畯整⁲骁郥⦈਍‭灏湥䥁⠠假⁔돧鞈ഩⴊ䄠瑮牨灯捩⠠汃畡敤ഩⴊ䜠潯汧⁥䜨浥湩⥩਍‭楍瑳慲⁬䥁਍‭片煯਍‭敄灥敓步਍‭敐灲敬楸祴਍‭潃敨敲਍਍⨪藥隻뻤钺闥⪆㨪䄠㉉膀慂捩畨湡胣䆁畺敲胣䢁杵楧杮䘠捡膀汏慬慭胣冁敷膀敗确湩胣厁慰歲覭⸮മഊⴊⴭ਍਍⌣ꂚ룯₏럥ꖟ駩뚈룤颼賥릖郥එഊ⌊⌣낎鳦邙裥බഊ簊邙裥₶⁼軥ꂛ簠놽鏥₍ർ簊ⴭⴭⴭ⵼ⴭⴭ簭ⴭⴭⴭർ簊⨠난鷥颏賥⪖‪⁼畑捩⁫畔湮汥超듨릖ꇦ₈⁼蟩꾐韦Ꞛ臩난鷥꾏菨颏賥ₖർ簊⨠붛駩뚻뿨⪟‪⁼汃畯晤慬敲芊苧趽뷧₮⁼〱ⴰ〳洰⁳믥龿簠਍⁼⨪뗦辇駩뚈⨪簠超듨릖ꇦ邙裥₶⁼귦뢸룤몺뷤ꢔ뛨龤簠਍⁼⨪귥ꢂ駩뚈⨪簠閍鳦颭若₨⁼뫤颛ꓥ辰迥ₗ穁牵⁥䵖膣鯧邙裥₶ർഊ⌊⌣颼賥릖郥එഊⴊ嬠崠⨠ꪇ껥覹鿥趐⨪ⴠ融뫧낈䌠潬摵汦牡⁥믤릴髩鎁਍‭⁛⁝⨪鯥薆諥龀⨪ⴠ䌠潰慬⽲牆⁰雦袡裥붛蛥₅偖൓ⴊ嬠崠⨠鎼귥颼賥⪖‪‭䑃⁎‫껥랈ꯧ鎼귥඘ⴊ嬠崠⨠낕跦膌매隌⨪ⴠ醺闦꺍뫥袼穁牵⁥潃浳獯䐠覼਍‭⁛⁝⨪鯧ꞎ釥ꚭ⨪ⴠ倠潲敭桴略⁳‫片晡湡⁡믧ꆮ਍‭⁛⁝⨪ꓥ붻귧ꖕ⨪ⴠꪇ諥螤믤₽汣畯ⵤ牤癩⁥裥₰穁牵⁥瑓牯条൥ⴊ嬠崠⨠莝駩ꆮ郧⪆‪‭ꓥꢔ裦膀鷦邙軦뚈਍‭⁛⁝⨪偁⁉雦ꎡ⨪ⴠ传数䅮䥐⼠匠慷杧牥蒧賨ඃഊⴊⴭ਍਍⌣鎟₁ꇩ꺛鯧閽믧蒞਍਍恠ൠ⸊਍铢肔铢₀朮瑩畨⽢਍铢₂†铢肔铢₀潷歲汦睯⽳਍铢₂†††铢肔铢₀敤汰祯礮汭††††††††⌠䴠䑫捯⁳蟨ꢊ菩늽਍铢ං鲔铢肔搠捯⽳†††††††††††††††‣歍潄獣邺雦뚻਍铢₂†铢肔铢₀湩敤⹸摭†††††††††††⌠隦ꇩ袼慬摮湩⁧慰敧볯ඉ芔†鲔铢肔挠潬摵搭楲敶洮⁤††††††††‣뫤颛뷤ꢔ꿨躘਍铢₂†铢肔铢₀瑳汹獥敨瑥⽳਍铢₂†††铢肔铢₀硥牴⹡獣⁳††††††††⌠ꪇ껥覹ꃦ込਍铢ං鲔铢肔挠潬摵摟楲敶獟牥敶⹲祰†††††††‣汃畯⁤牄癩⁥祐桴湯趜諥ඡ鲔铢肔挠潬摵搭楲敶献牥楶散††††††††‣汃畯⁤牄癩⁥祳瑳浥⁤藩꺽਍铢肔铢₀汣畯ⵤ牤癩ⵥ畴湮汥献牥楶散††††⌠䌠潬摵䐠楲敶Ꞛ臩超뷧ථ芔਍铢肔铢₀歭潤獣礮汭††††††††††††⌠䴠䑫捯⁳藩꺽਍铢肔铢₀䕒䑁䕍洮⁤††††††††††††⌠겜雦뚻਍铢肔铢₀朮瑩杩潮敲††††††††††††⌠䜠瑩붿闧蒧裥඙怊恠਍਍ⴭഭഊ⌊‣鿰鶤ꆴ賧貒迥袦਍਍獉畳獥胣傁獒ꊬ뿨膼ꛥ覜韩颢裦못껨貼꿨ꢜ䜠瑩畈⁢獉畳獥궸迦몇胣ංഊⴊⴭ਍਍⌣鎟ₖ鯧뎅뗨邺਍਍⌣‣껥릖雦ꎡ਍‭⨪潌敢桃瑡⨪ⴠ栠瑴獰⼺搯捯⹳潬敢档瑡挮浯യⴊ⨠䌪潬摵汦牡⁥畔湮汥⨪ⴠ栠瑴獰⼺搯癥汥灯牥⹳汣畯晤慬敲挮浯振潬摵汦牡ⵥ湯⽥潣湮捥楴湯⽳潣湮捥⵴敮睴牯獫യⴊ⨠䴪䑫捯⩳‪‭瑨灴㩳⼯睷⹷歭潤獣漮杲യഊ⌊⌣ꆨ黥鮾뫥蚕਍‭⨪灏湥潒瑵牥⨪ⴠ栠瑴獰⼺漯数牮畯整⹲楡യⴊ⨠伪数䅮⩉‪‭瑨灴㩳⼯灯湥楡挮浯യⴊ⨠䄪瑮牨灯捩⨪ⴠ栠瑴獰⼺眯睷愮瑮牨灯捩挮浯യⴊ⨠䜪潯汧⁥敄灥楍摮⨪ⴠ栠瑴獰⼺搯敥浰湩⹤潧杯敬യഊⴊⴭ਍਍⌣鎟₝鯦낖韦鞿਍਍鳦낖鯦낖뿤꾁꟨겜删䅅䵄൅ഊⴊⴭ਍਍⌣鎟₄껨꾏꿨ඁഊ䴊呉䰠捩湥敳਍਍ⴭഭഊ⨊肜뿨뒛雦⪰㨪㈠㈰뒹袜ꖗ†਍⨪믧ꒊ胨⪅㨪䀠楳慨⵮穢橷†਍⨪鳥뾺껨꺗⨪›瑨灴㩳⼯慲獩摥琭汥楬杮瀭浰渭瑯敲琮祲汣畯晤慬敲挮浯਍
