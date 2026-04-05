@@ -34,7 +34,9 @@ jobs:
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
       - name: Install MkDocs and dependencies
-        run: pip install mkdocs mkdocs-material pymdown-extensions
+        run: |
+          cd ./my-project
+          pip install -r requirements.txt
 
       - name: Deploy to gh-pages
         working-directory: ./my-project
