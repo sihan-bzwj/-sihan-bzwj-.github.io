@@ -4,8 +4,7 @@
 		<nav class="nav-pills" aria-label="Top navigation">
 			<a class="pill" href="../">Home | 首页</a>
 			<a class="pill" href="#drive">Drive | 云盘</a>
-			<a class="pill" href="https://raised-telling-ppm-notre.trycloudflare.com/cloud-drive" target="_blank" rel="noreferrer noopener">Cloud Drive</a>
-			<a class="pill" href="https://raised-telling-ppm-notre.trycloudflare.com" target="_blank" rel="noreferrer noopener">AI</a>
+			<a class="pill" href="#features">Features | 功能</a>
 			<a class="social-link" href="https://github.com/sihan-bzwj/-sihan-bzwj-.github.io" target="_blank" rel="noreferrer noopener">GitHub</a>
 		</nav>
 	</header>
@@ -22,8 +21,8 @@
 				<span class="meta-chip">cloud</span>
 			</div>
 			<div class="hero-actions">
-				<a class="button" href="https://raised-telling-ppm-notre.trycloudflare.com/cloud-drive" target="_blank" rel="noreferrer noopener">打开云盘 | Open Drive</a>
-				<a class="button-secondary" href="https://raised-telling-ppm-notre.trycloudflare.com" target="_blank" rel="noreferrer noopener">AI 站点 | AI Chat</a>
+					<a class="button" href="#drive">浏览入口 | Browse Entry</a>
+					<a class="button-secondary" href="#features">查看功能 | View Features</a>
 				<a class="button-secondary" href="../">回到首页 | Back Home</a>
 			</div>
 		</div>
@@ -32,8 +31,8 @@
 			<h2>使用说明 | Instructions</h2>
 			<p>文件存储在远程云服务器上，适合大文件和长期保存。上传需要密码保护，下载不需要。| Files stored on remote cloud servers, suitable for large files and long-term storage. Uploads require password, downloads are unrestricted.</p>
 			<div class="card-actions">
-				<a class="button" href="https://raised-telling-ppm-notre.trycloudflare.com/cloud-drive" target="_blank" rel="noreferrer noopener">打开云盘 | Open</a>
-				<a class="button-secondary" href="https://raised-telling-ppm-notre.trycloudflare.com" target="_blank" rel="noreferrer noopener">AI 站点 | AI</a>
+					<a class="button" href="#drive">浏览入口 | Browse</a>
+					<a class="button-secondary" href="#features">查看功能 | View Features</a>
 				<a class="button-secondary" href="https://github.com/sihan-bzwj/-sihan-bzwj-.github.io" target="_blank" rel="noreferrer noopener">GitHub 源码 | Code</a>
 			</div>
 		</aside>
@@ -42,16 +41,24 @@
 	<section class="section" id="drive">
 		<div class="section-header">
 			<div>
-				<h2>界面预览 | Interface Preview</h2>
-				<p>下面直接显示远程文件界面，桌面浏览器会更方便一点。| Cloud drive interface below, works best on desktop browsers.</p>
+					<h2>访问说明 | Access</h2>
+					<p>这里保留云盘的入口索引与说明，避免把你带到别的服务页面。| This page keeps the cloud-drive entry index and notes local so you don't get sent to another service page.</p>
 			</div>
 		</div>
 
-		<div class="frame-panel">
-			<div class="frame-box">
-				<iframe src="https://raised-telling-ppm-notre.trycloudflare.com/cloud-drive" title="Cloud Drive | 云盘" loading="lazy"></iframe>
-			</div>
-			<p class="frame-note">如果内嵌加载不稳定，可以直接用上面的按钮打开。| If embedded loading is unstable, use the button above to open directly.</p>
+			<div class="cards">
+				<div class="card info-panel">
+					<div class="card-header">
+						<span class="kicker">Entry · 入口</span>
+						<h3>云盘入口 | Cloud Drive Entry</h3>
+					</div>
+					<p>如果你要继续浏览云盘内容，可以先从上面的页面内跳转开始；当前页面专注于说明和功能概览。| Use the in-page navigation above to continue browsing the cloud-drive content; this page focuses on guidance and overview.</p>
+					<div class="tag-list">
+						<span class="tag">entry</span>
+						<span class="tag">docs</span>
+						<span class="tag">navigation</span>
+					</div>
+				</div>
 		</div>
 
 	</section>

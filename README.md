@@ -44,7 +44,7 @@ The goal is not just to run a web page, but to keep the frontend, backend, tunne
 | 服务 | 地址 | 说明 |
 |------|------|------|
 | AI 对话平台 | https://raised-telling-ppm-notre.trycloudflare.com | LobeChat 主界面 / Main interface |
-| 云盘 | https://raised-telling-ppm-notre.trycloudflare.com/cloud-drive | 文件管理 / File management |
+| 云盘页面 | https://sihan-bzwj.github.io/-sihan-bzwj-.github.io/cloud-drive/ | 云盘说明页 / Cloud Drive page |
 | 项目主页 | https://sihan-bzwj.github.io/-sihan-bzwj-.github.io/ | 介绍页面 / Landing page |
 | 仓库地址 | https://github.com/sihan-bzwj/-sihan-bzwj-.github.io | 源码与文档 / Source and docs |
 
@@ -242,7 +242,7 @@ You usually need to rebuild the MkDocs site and confirm the latest commit has be
 
 - 项目主页 / Project home: https://sihan-bzwj.github.io/-sihan-bzwj-.github.io/
 - 仓库地址 / Repository: https://github.com/sihan-bzwj/-sihan-bzwj-.github.io
-- Cloud Drive 页面 / Cloud Drive page: https://raised-telling-ppm-notre.trycloudflare.com/cloud-drive
+- Cloud Drive 页面 / Cloud Drive page: https://sihan-bzwj.github.io/-sihan-bzwj-.github.io/cloud-drive/
 - LobeChat 文档 / LobeChat docs: https://docs.lobehub.com/
 
 ---

@@ -61,7 +61,7 @@
 | 服务 | 地址 | 说明 |
 |------|------|------|
 | **AI 对话平台** | https://raised-telling-ppm-notre.trycloudflare.com | LobeChat 主界面 |
-| **云盘** | https://raised-telling-ppm-notre.trycloudflare.com/cloud-drive | 文件管理 |
+| **云盘页面** | https://sihan-bzwj.github.io/-sihan-bzwj-.github.io/cloud-drive/ | 云盘说明页 |
 | **项目主页** | https://sihan-bzwj.github.io/-sihan-bzwj-.github.io/ | 介绍页面 |
 
 ### AI 对话平台使用流程
@@ -74,10 +74,10 @@
 
 ### 云盘使用流程
 
-1. **访问** → https://raised-telling-ppm-notre.trycloudflare.com/cloud-drive
-2. **查看文件** → 显示根目录 /cloud-drive 下的所有文件和文件夹
-3. **上传文件** → 点击上传按钮或拖拽文件（需要输入密码）
-4. **创建文件夹** → 点击"新建文件夹"按钮
+1. **访问** → https://sihan-bzwj.github.io/-sihan-bzwj-.github.io/cloud-drive/
+2. **查看说明** → 浏览云盘功能、目录结构和使用约定
+3. **进入实际服务** → 按部署环境中的云盘后端地址访问
+4. **上传文件** → 在后端页面完成上传和管理
 5. **管理操作** → 删除、重命名、下载文件
 
 ### 获取 API 密钥
