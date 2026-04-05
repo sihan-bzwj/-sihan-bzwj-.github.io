@@ -164,10 +164,11 @@ a {
 
 .hero-title {
     margin: 0.9rem 0 0.65rem;
-    font-size: clamp(2rem, 4.3vw, 4rem);
-    line-height: 1.02;
-    letter-spacing: -0.05em;
+    font-size: clamp(1.8rem, 3.8vw, 3.2rem);
+    line-height: 1.05;
+    letter-spacing: -0.03em;
     color: #f8fafc;
+    word-break: break-word;
 }
 
 .hero-lead,

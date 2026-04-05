@@ -12,8 +12,8 @@
 	<section class="hero">
 		<div class="hero-panel">
 			<span class="kicker">Home / Notes | 首页 / 笔记</span>
-			<h1 class="hero-title">记录学习，也记录项目 | Learning & Projects</h1>
-			<p class="hero-lead">我的个人站点 | My Personal Website</p>
+			<h1 class="hero-title">学习与项目 | Learning & Projects</h1>
+			<p class="hero-lead">我的个人站点 - 记录学习，也记录项目 | My Personal Website - Learning notes & projects</p>
 			<div class="hero-meta">
 				<span class="meta-chip">learning notes</span>
 				<span class="meta-chip">projects</span>

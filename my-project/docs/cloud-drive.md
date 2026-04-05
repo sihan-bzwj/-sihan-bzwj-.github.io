@@ -12,9 +12,9 @@
 
 	<section class="hero">
 		<div class="hero-panel">
-			<span class="kicker">Project / Cloud Drive | 项目 / 云盘</span>
-			<h1 class="hero-title">个人云盘 | Cloud Drive</h1>
-			<p class="hero-lead">远程文件存储入口，用于上传, 下载和日常文件保管。| Remote file storage portal for uploading, downloading and daily file management. Desktop browsers work best.</p>
+			<span class="kicker">Project / Service | 项目 / 服务</span>
+			<h1 class="hero-title">云盘服务 | Cloud Drive</h1>
+			<p class="hero-lead">远程文件存储和管理 - 上传、下载、分享文件 | Remote storage - Upload, download & share files</p>
 			<div class="hero-meta">
 				<span class="meta-chip">storage</span>
 				<span class="meta-chip">upload</span>
