@@ -748,7 +748,7 @@ APP_HTML = """<!doctype html>
             Drop files here or click to select them.
           </div>
           <input id="file-input" type="file" multiple hidden>
-          <p class="hint">只有上传需要密码，下载不需要。请使用你自己的上传密码后再开始上传。</p>
+          <p class="hint">上传和删除都需要密码，下载不需要。请先保存密码后再执行上传或删除。</p>
         </div>
 
         <div class="field">
@@ -1004,10 +1004,19 @@ APP_HTML = """<!doctype html>
             : `确定删除文件「${entry.name}」吗？`);
           if (!confirmed) return;
 
+          const uploadPassword = elements.uploadPassword.value.trim();
+          if (!uploadPassword) {
+            setStatus("请输入上传密码后再删除 / Enter upload password before deleting", "error");
+            return;
+          }
+
           try {
             await apiRequest(withMount("/api/delete"), {
               method: "POST",
-              headers: { "Content-Type": "application/json" },
+              headers: {
+                "Content-Type": "application/json",
+                "X-Upload-Password": uploadPassword,
+              },
               body: JSON.stringify({ path: fullPath }),
             });
             setStatus(`已删除: ${escapeHtml(entry.name || "")}`, "success");
@@ -1307,6 +1316,11 @@ class CloudDriveHandler(BaseHTTPRequestHandler):
 
         if path == "/api/delete":
             try:
+                provided_password = self.headers.get("X-Upload-Password", "")
+                if provided_password != UPLOAD_PASSWORD:
+                    send_json(self, HTTPStatus.UNAUTHORIZED, {"ok": False, "error": "删除密码错误"})
+                    return
+
                 payload = request_json(self)
                 target = resolve_inside_root(str(payload.get("path", "")))
                 if target == ROOT:
