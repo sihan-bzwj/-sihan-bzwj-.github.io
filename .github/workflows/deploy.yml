@@ -33,8 +33,8 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
-      - name: Install MkDocs
-        run: pip install mkdocs
+      - name: Install MkDocs and dependencies
+        run: pip install mkdocs mkdocs-material pymdown-extensions
 
       - name: Deploy to gh-pages
         working-directory: ./my-project
