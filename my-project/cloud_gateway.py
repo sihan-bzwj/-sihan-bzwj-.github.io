@@ -5,12 +5,13 @@ from __future__ import annotations
 import argparse
 import http.client
 import json
+import mimetypes
 import os
 import threading
 from dataclasses import dataclass
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
-from urllib.parse import urlsplit, urlunsplit
+from urllib.parse import urlsplit, unquote, urlunsplit
 
 
 HOP_BY_HOP_HEADERS = {
@@ -125,6 +126,7 @@ def rewrite_location(location: str, upstream: Upstream) -> str:
 class GatewayHandler(BaseHTTPRequestHandler):
     protocol_version = "HTTP/1.1"
     visitor_counter: IPVisitorCounter | None = None
+    site_directory: Path | None = None
 
     def _get_client_ip(self) -> str:
         """Extract real client IP, handling Cloudflare headers."""
@@ -171,6 +173,72 @@ class GatewayHandler(BaseHTTPRequestHandler):
                 self.end_headers()
                 return True
         return False
+
+    def _serve_static_file(self) -> bool:
+        """Serve static files from site/ directory. Return True if served."""
+        if self.site_directory is None or not self.site_directory.exists():
+            return False
+        
+        # Parse the requested path
+        parsed = urlsplit(self.path)
+        file_path = unquote(parsed.path)
+        
+        # Prevent directory traversal attacks
+        if ".." in file_path or file_path.startswith("/."):
+            return False
+        
+        # Map root to index.html
+        if file_path == "/" or file_path == "":
+            file_path = "/index.html"
+        
+        # Try to find the file
+        full_path = (self.site_directory / file_path.lstrip("/")).resolve()
+        
+        # Security: ensure the resolved path is still within site_directory
+        try:
+            full_path.relative_to(self.site_directory)
+        except ValueError:
+            return False
+        
+        # Check if file exists
+        if not full_path.exists():
+            # Try index.html for directories
+            if full_path.is_dir():
+                index_path = full_path / "index.html"
+                if index_path.exists():
+                    full_path = index_path
+                else:
+                    return False
+            else:
+                return False
+        
+        if not full_path.is_file():
+            return False
+        
+        # Serve the file
+        try:
+            mime_type, _ = mimetypes.guess_type(str(full_path))
+            if mime_type is None:
+                mime_type = "application/octet-stream"
+            
+            with open(full_path, "rb") as f:
+                content = f.read()
+            
+            self.send_response(200)
+            self.send_header("Content-Type", mime_type)
+            self.send_header("Content-Length", str(len(content)))
+            
+            # Cache static assets but not HTML
+            if mime_type not in {"text/html", "application/json"}:
+                self.send_header("Cache-Control", "public, max-age=3600")
+            else:
+                self.send_header("Cache-Control", "no-cache, must-revalidate")
+            
+            self.end_headers()
+            self.wfile.write(content)
+            return True
+        except (IOError, OSError):
+            return False
 
     def _proxy(self) -> None:
         parsed = urlsplit(self.path)
@@ -235,8 +303,23 @@ class GatewayHandler(BaseHTTPRequestHandler):
             connection.close()
 
     def do_GET(self) -> None:
+        # Priority: API > Cloud Drive > Static files > AI proxy
         if self._handle_visitor_count():
             return
+        
+        parsed = urlsplit(self.path)
+        drive_prefix = self.server.drive_prefix
+        
+        # Check if it's a cloud drive request
+        if drive_prefix and (parsed.path == drive_prefix or parsed.path.startswith(drive_prefix + "/")):
+            self._proxy()
+            return
+        
+        # Try to serve static files (for website)
+        if self._serve_static_file():
+            return
+        
+        # Fall back to AI proxy (LobeChat)
         self._proxy()
 
     def do_POST(self) -> None:
@@ -264,7 +347,7 @@ class GatewayHandler(BaseHTTPRequestHandler):
 
 
 def main() -> int:
-    parser = argparse.ArgumentParser(description="Gateway for LobeChat and Cloud Drive")
+    parser = argparse.ArgumentParser(description="Gateway for LobeChat, Cloud Drive, and Website")
     parser.add_argument("--host", default=os.environ.get("GATEWAY_HOST", "127.0.0.1"))
     parser.add_argument("--port", default=int(os.environ.get("GATEWAY_PORT", "8080")), type=int)
     parser.add_argument("--ai-host", default=os.environ.get("GATEWAY_AI_HOST", "127.0.0.1"))
@@ -272,10 +355,14 @@ def main() -> int:
     parser.add_argument("--drive-host", default=os.environ.get("GATEWAY_DRIVE_HOST", "127.0.0.1"))
     parser.add_argument("--drive-port", default=int(os.environ.get("GATEWAY_DRIVE_PORT", "8787")), type=int)
     parser.add_argument("--drive-prefix", default=os.environ.get("GATEWAY_DRIVE_PREFIX", "/cloud-drive"))
+    parser.add_argument("--site-dir", default=os.environ.get("GATEWAY_SITE_DIR", "./site"))
     args = parser.parse_args()
 
     # Initialize visitor counter
     counter = IPVisitorCounter()
+    
+    # Set up site directory
+    site_dir = Path(args.site_dir).resolve()
 
     server = ThreadingHTTPServer((args.host, args.port), GatewayHandler)
     server.ai_host = args.ai_host
@@ -284,10 +371,12 @@ def main() -> int:
     server.drive_port = args.drive_port
     server.drive_prefix = normalize_mount_prefix(args.drive_prefix)
     GatewayHandler.visitor_counter = counter
+    GatewayHandler.site_directory = site_dir
 
     print(f"Gateway listening on http://{args.host}:{args.port}")
     print(f"AI upstream: http://{server.ai_host}:{server.ai_port}")
     print(f"Cloud Drive upstream: http://{server.drive_host}:{server.drive_port}{server.drive_prefix}")
+    print(f"Static site directory: {site_dir}")
     print(f"Visitor counter: {counter.get_count()} unique visitors")
 
     try:
