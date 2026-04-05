@@ -1,6 +1,6 @@
-# 云端 AI 对话平台 + Landing Page
+# 云端 AI 对话平台 + 个人云盘
 
-> 一个完整的 LobeChat 云部署方案，支持多个 LLM 供应商，通过 Cloudflare 隧道 24/7 公网访问。
+> 一个完整的 LobeChat 云部署方案 + Python 云盘服务，支持多个 LLM 供应商和文件存储，通过 Cloudflare 隧道 24/7 公网访问。
 
 ![Status](https://img.shields.io/badge/Status-Active-brightgreen)
 ![Platform](https://img.shields.io/badge/Platform-Azure%20VM%20%2B%20Docker-blue)
@@ -10,15 +10,27 @@
 
 ## 🎯 项目概览
 
-这是一个**完整的云端 AI 聊天系统**，包含：
+这是一个**完整的云端服务平台**，提供两大核心服务：
 
+### 🤖 AI 对话平台 (LobeChat)
 - ✅ **LobeChat** - 多模型 AI 对话平台（Next.js + Node.js）
 - ✅ **56+ LLM 供应商** - OpenRouter、OpenAI、Anthropic、DeepSeek 等
+- ✅ **动态模型获取** - 自动同步最新模型列表
+- ✅ **API 密钥代理** - 安全的后端代理架构
+
+### 💾 个人云盘 (Cloud Drive)
+- ✅ **文件管理** - 上传、下载、删除、重命名文件
+- ✅ **目录树结构** - 完整的文件夹管理
+- ✅ **密码保护** - 支持上传密码验证
+- ✅ **Web 前端** - 美观的响应式界面
+
+### 🌐 整体特性
 - ✅ **24/7 公网访问** - Cloudflare 隧道自动化部署
 - ✅ **Landing Page** - GitHub Pages + MkDocs 项目介绍
 - ✅ **完全自动化** - systemd 服务自管理、Docker 自动重启
+- ✅ **双服务部署** - LobeChat + Cloud Drive 协作运行
 
-### 核心特性
+### AI 对话核心特性
 
 | 特性 | 说明 |
 |------|------|
@@ -29,23 +41,44 @@
 | **自动化运维** | systemd 服务自动管理，异常自动重启 |
 | **国际访问** | Cloudflare Quick Tunnel，免费 24/7 |
 
+### 云盘核心特性
+
+| 特性 | 说明 |
+|------|------|
+| **文件上传** | Web 界面拖拽或点击上传，支持批量操作 |
+| **文件管理** | 创建文件夹，重命名，删除，修改权限 |
+| **密码保护** | 上传操作需要密码验证（默认：sihan123） |
+| **目录树展示** | 完整的文件夹结构和大小显示 |
+| **直链下载** | 支持文件直链访问和下载 |
+| **自动化部署** | systemd 服务自动启动和管理 |
+
 ---
 
 ## 🚀 快速开始
 
 ### 访问地址
 
-**在线访问**: https://raised-telling-ppm-notre.trycloudflare.com
+| 服务 | 地址 | 说明 |
+|------|------|------|
+| **AI 对话平台** | https://raised-telling-ppm-notre.trycloudflare.com | LobeChat 主界面 |
+| **云盘** | https://raised-telling-ppm-notre.trycloudflare.com/cloud-drive | 文件管理 |
+| **项目主页** | https://sihan-bzwj.github.io/-sihan-bzwj-.github.io/ | 介绍页面 |
 
-**项目主页**: https://sihan-bzwj.github.io/-sihan-bzwj-.github.io/
-
-### 使用流程
+### AI 对话平台使用流程
 
 1. **访问** → https://raised-telling-ppm-notre.trycloudflare.com
 2. **设置** → 左下角 Settings → Model Providers
 3. **选择供应商** → OpenRouter / OpenAI / Anthropic 等
 4. **输入 API 密钥** → 获取方式见下方
 5. **开始对话** → 选择模型 → 开始聊天
+
+### 云盘使用流程
+
+1. **访问** → https://raised-telling-ppm-notre.trycloudflare.com/cloud-drive
+2. **查看文件** → 显示根目录 /cloud-drive 下的所有文件和文件夹
+3. **上传文件** → 点击上传按钮或拖拽文件（需要输入密码）
+4. **创建文件夹** → 点击"新建文件夹"按钮
+5. **管理操作** → 删除、重命名、下载文件
 
 ### 获取 API 密钥
 
@@ -66,43 +99,55 @@
 ## 🏗️ 系统架构
 
 ```
-┌─────────────────────────────────────────┐
-│          用户浏览器 (Web 客户端)          │
-└──────────────────┬──────────────────────┘
+┌─────────────────────────────────────────────────────────┐
+│              用户浏览器 (Web 客户端)                      │
+│              国际用户 / 国内用户                         │
+└──────────────────┬──────────────────────────────────────┘
                    │ HTTPS 请求
                    ▼
-    ┌──────────────────────────────┐
-    │   Cloudflare Quick Tunnel    │
-    │  (国际隧道 - 免费，24/7)     │
-    │ raised-telling-ppm-notre...  │
-    │       trycloudflare.com      │
-    └──────────────┬───────────────┘
+    ┌──────────────────────────────────┐
+    │   Cloudflare Quick Tunnel        │
+    │  (国际隧道 - 免费，24/7)         │
+    │ raised-telling-ppm-notre...      │
+    │    trycloudflare.com             │
+    └──────────────┬───────────────────┘
                    │ HTTP 转发
                    ▼
-    ┌──────────────────────────────────────┐
-    │    Azure Linux VM (IP: 20.196.193.8) │
-    │                                      │
-    │  ┌────────────────────────────────┐ │
-    │  │   LobeChat Docker 容器         │ │
-    │  │ (Next.js 前端 + Node 后端)    │ │
-    │  │ 端口: 3210                     │ │
-    │  └────────────────────────────────┘ │
-    │                                      │
-    │  ┌────────────────────────────────┐ │
-    │  │  cloudflared (systemd 服务)   │ │
-    │  │  自动重启、日志管理            │ │
-    │  └────────────────────────────────┘ │
-    │                                      │
-    └──────────────────────────────────────┘
-                   │
-        ┌──────────┴──────────┐
-        ▼                     ▼
-    OpenRouter            OpenAI
-    Claude              DeepSeek
-    Gemini          (50+ 供应商)
+    ┌───────────────────────────────────────────────────────┐
+    │      Azure Linux VM (IP: 20.196.193.8)               │
+    │                                                       │
+    │  ┌────────────────────────────────────────────────┐  │
+    │  │   LobeChat Docker 容器                         │  │
+    │  │  (Next.js 前端 + Node.js 后端)               │  │
+    │  │  端口: 3210                                    │  │
+    │  └────────────────────────────────────────────────┘  │
+    │                                                       │
+    │  ┌────────────────────────────────────────────────┐  │
+    │  │  Cloud Drive Python 服务                       │  │
+    │  │  (Flask/HTTP 服务器)                          │  │
+    │  │  端口: 8787 (内部)                            │  │
+    │  │  访问: https://.../cloud-drive                │  │
+    │  └────────────────────────────────────────────────┘  │
+    │                                                       │
+    │  ┌────────────────────────────────────────────────┐  │
+    │  │  cloudflared (systemd 服务)                    │  │
+    │  │  自动重启、日志管理                            │  │
+    │  └────────────────────────────────────────────────┘  │
+    │                                                       │
+    │  数据存储:                                           │
+    │  • /home/azureuser/lobe-chat.env (环境变量)        │
+    │  • /home/azureuser/cloud-drive/ (文件系统)        │
+    │                                                       │
+    └───────────────────────────────────────────────────────┘
+                   ▲
+        ┌──────────┴───────────────────┐
+        │  外部 LLM API 供应商          │
+        │  OpenRouter / OpenAI / etc    │
+        │  (56+ 供应商)                 │
+        └───────────────────────────────┘
 ```
 
-### 工作原理
+### AI 对话工作原理
 
 ```
 用户输入消息
@@ -122,6 +167,24 @@ POST /chat 到后端 (Node.js)
 存储到本地或数据库
 ```
 
+### 云盘操作流程
+
+```
+用户在浏览器打开云盘页面
+    ↓
+Cloud Drive Python 后端列出 /cloud-drive 目录
+    ↓
+前端渲染文件树
+    ↓
+用户上传文件
+    ↓
+验证上传密码
+    ↓
+文件保存到 /home/azureuser/cloud-drive/
+    ↓
+刷新文件列表显示新文件
+```
+
 ### 为什么 API 密钥必须在后端
 
 - ❌ **前端暴露密钥** → 任何人可以盗用你的账户
@@ -134,45 +197,73 @@ POST /chat 到后端 (Node.js)
 
 | 层级 | 技术 | 版本 | 用途 |
 |------|------|------|------|
-| **前端** | Next.js | 15.3.8 | UI 和响应式设计 |
-| **后端** | Node.js | Built-in | API 处理和代理 |
-| **容器** | Docker | v26+ | 隔离和便捷部署 |
-| **隧道** | Cloudflare | v2026.3.0 | 国际公网访问 |
-| **服务** | systemd | Linux native | 自动管理和重启 |
+| **前端** | Next.js | 15.3.8 | AI 对话 UI |
+| **后端-AI** | Node.js | Built-in | API 代理 |
+| **后端-云盘** | Python | 3.11+ | 文件管理 |
+| **容器** | Docker | v26+ | 应用隔离和部署 |
+| **隧道** | Cloudflare | v2026.3.0 | 公网访问 |
+| **服务管理** | systemd | Linux native | 自动启停和重启 |
 | **网站** | MkDocs + GitHub Pages | Latest | Landing page |
 | **版本控制** | Git | Built-in | 代码管理 |
 
 ---
 
-## 📋 核心配置
+## ⚙️ 核心配置
 
-### 环境变量 (`lobe-chat.env`)
+### LobeChat 环境变量 (`lobe-chat.env`)
 
 ```bash
 NODE_ENV=production          # 生产模式
 HOSTNAME=0.0.0.0           # 监听所有网卡
 PORT=3210                  # 容器内端口
 
-# 56 个供应商的 API 密钥和模型列表
-OPENROUTER_API_KEY=        # 用户在前端填入
+# 54 个供应商的 API 密钥和模型列表
+# 用户在前端填入，或预配置在此
+OPENROUTER_API_KEY=        # 用户输入
 OPENROUTER_MODEL_LIST=     # 空 = 动态获取
-OPENAI_API_KEY=            # 用户在前端填入
+OPENAI_API_KEY=            # 用户输入
 OPENAI_MODEL_LIST=         # 空 = 动态获取
-...                        # (54 个其他供应商)
+ANTHROPIC_API_KEY=         # 用户输入
+...                        # (51 个其他供应商)
 ```
 
-### systemd 服务 (`cloudflared.service`)
+### Cloud Drive 服务配置 (`cloud-drive.service`)
 
 ```ini
 [Unit]
-Description=Cloudflare Tunnel for LobeChat
+Description=Cloud Drive API
+After=network.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=azureuser
+WorkingDirectory=/home/azureuser
+Environment="CLOUD_DRIVE_ROOT=/home/azureuser/cloud-drive"
+ExecStart=/usr/bin/python3 /home/azureuser/bin/cloud_drive_server.py \
+          --host 127.0.0.1 --port 8787 --root /home/azureuser/cloud-drive
+Restart=always
+RestartSec=5
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=cloud-drive
+
+[Install]
+WantedBy=multi-user.target
+```
+
+### Cloudflare 隧道服务 (`cloudflared.service`)
+
+```ini
+[Unit]
+Description=Cloudflare Tunnel for LobeChat + Cloud Drive
 After=network.target
 
 [Service]
 Type=simple
 User=azureuser
-ExecStart=/home/azureuser/bin/cloudflared tunnel --url http://localhost:3210
-Restart=always              # 异常自动重启
+ExecStart=/usr/bin/cloudflared tunnel --url http://localhost:3210
+Restart=always
 RestartSec=5
 
 [Install]
@@ -183,33 +274,54 @@ WantedBy=multi-user.target
 
 ## 📊 部署工作流
 
-### 5 阶段部署
+### 5 阶段部署清单
 
 | 阶段 | 内容 | 状态 |
 |------|------|------|
 | **1. 基础设施** | Azure VM、Docker、SSH 密钥 | ✅ |
-| **2. LobeChat 容器** | 拉取镜像、配置环境、启动容器 | ✅ |
-| **3. 隧道配置** | cloudflared systemd 服务 | ✅ |
-| **4. Landing Page** | MkDocs 项目介绍页面 | ✅ |
-| **5. 模型配置** | 56 个供应商动态 API 获取 | ✅ |
+| **2. LobeChat** | 拉取镜像、配置环境变量、启动容器 | ✅ |
+| **3. Cloud Drive** | Python 服务、systemd 配置、权限设置 | ✅ |
+| **4. Cloudflare** | cloudflared 隧道、systemd 服务 | ✅ |
+| **5. Landing Page** | MkDocs 项目介绍、GitHub Pages 部署 | ✅ |
 
-### 关键命令
+### 关键运维命令
 
 ```bash
+# ========== LobeChat 命令 ==========
 # 查看 LobeChat 状态
 docker ps -f name=lobe-chat
 
-# 查看隧道日志
-journalctl -u cloudflared -f
-
-# 查看隧道地址
-grep -Eo "https://.*\.trycloudflare\.com" /home/azureuser/cloudflared.log | tail -1
+# 查看 LobeChat 日志
+docker logs -f lobe-chat
 
 # 重启 LobeChat
 docker restart lobe-chat
 
+# 进入容器调试
+docker exec -it lobe-chat /bin/bash
+
+# ========== Cloud Drive 命令 ==========
+# 查看 Cloud Drive 状态
+systemctl status cloud-drive.service
+
+# 查看 Cloud Drive 日志
+journalctl -u cloud-drive -f
+
+# 重启 Cloud Drive
+sudo systemctl restart cloud-drive.service
+
+# ========== Cloudflare 隧道命令 ==========
+# 查看隧道状态
+systemctl status cloudflared.service
+
+# 查看隧道日志和实时地址
+journalctl -u cloudflared -f
+
 # 重启隧道
-systemctl restart cloudflared.service
+sudo systemctl restart cloudflared.service
+
+# 获取当前隧道 URL
+grep -Eo "https://.*\.trycloudflare\.com" /var/log/syslog | tail -1
 ```
 
 ---
@@ -249,79 +361,88 @@ systemctl restart cloudflared.service
 
 ---
 
-## ⚠️ 已知限制 & 未来优化
+## ⚠️ 已知限制与优化方向
 
 ### 现有限制
 
 | 限制 | 原因 | 影响 |
 |------|------|------|
-| **地址变化** | Quick Tunnel 免费方案特性 | 每次重启地址变化 |
-| **国际延迟** | Cloudflare 美国节点 | 100-300ms 延迟 |
-| **流量限制** | 免费方案限制 | 正常使用足够 |
+| **地址变化** | Quick Tunnel 免费方案 | 重启时隧道地址可能变化 |
+| **国际延迟** | Cloudflare 节点位置 | 100-300ms 延迟 |
+| **流量限制** | 免费方案限制 | 正常个人使用足够 |
+| **存储限制** | 单机存储 | 云盘大小受 Azure VM 磁盘限制 |
 
 ### 优化方向
 
-- [ ] 自定义域名 (升级 Cloudflare 付费)
-- [ ] 国内隧道加速 (Cpolar/Frp 到国内 VPS)
-- [ ] 缓存优化 (CDN + 客户端缓存)
-- [ ] 数据持久化 (云数据库)
-- [ ] 监控告警 (Prometheus + Grafana)
+- [ ] **自定义域名** - 升级到 Cloudflare 付费隧道
+- [ ] **国内加速** - Cpolar/Frp 方案到国内 VPS
+- [ ] **缓存优化** - CDN + 客户端缓存
+- [ ] **数据持久化** - 云数据库（Azure Cosmos DB）
+- [ ] **监控告警** - Prometheus + Grafana 统计
+- [ ] **备份策略** - 自动备份 cloud-drive 到 Azure Storage
+- [ ] **权限管理** - 多用户、权限控制
+- [ ] **API 文档** - OpenAPI / Swagger 规范
 
 ---
 
-## 📁 项目结构
+## 📁 项目目录结构
 
 ```
-my-project/
-├── docs/                          # MkDocs 源文件
-│   ├── index.md                   # 首页 (landing page)
-│   ├── cloud-drive.md             # 云盘介绍
+.
+├── .github/
+│   └── workflows/
+│       └── deploy.yml                 # MkDocs 自动部署
+│
+├── docs/                              # MkDocs 源文件
+│   ├── index.md                       # 首页（landing page）
+│   ├── cloud-drive.md                 # 云盘使用说明
 │   └── stylesheets/
-│       └── extra.css              # 自定义样式
-├── site/                          # MkDocs 构建输出
-│   ├── index.html
-│   └── ...
-├── mkdocs.yml                     # MkDocs 配置
-├── UPDATE_LOG.md                  # 项目完整说明和更新日志
-├── README.md                      # 本文件
-├── cpolar.service                 # Cpolar systemd 配置 (可选)
-├── frpc.service                   # Frp systemd 配置 (可选)
-└── CPOLAR_DOWNLOAD_DIRECT.md      # Cpolar 部署指南 (可选)
+│       └── extra.css                  # 自定义样式
+│
+├── cloud_drive_server.py              # Cloud Drive Python 服务
+├── cloud-drive.service                # Cloud Drive systemd 配置
+├── cloud-drive-tunnel.service         # Cloud Drive 隧道配置
+│
+├── mkdocs.yml                         # MkDocs 配置
+├── README.md                          # 本文件
+└── .gitignore                         # Git 忽略规则
 ```
 
 ---
 
 ## 🤝 贡献和反馈
 
-Issues、PRs 欢迎！
-
-如有问题或建议，请在 GitHub Issues 中提出。
+Issues、PRs 欢迎！如有问题或建议，请在 GitHub Issues 中提出。
 
 ---
 
-## 📝 许可
+## 📖 相关资源
+
+### 官方文档
+- **LobeChat** - https://docs.lobechat.com/
+- **Cloudflare Tunnel** - https://developers.cloudflare.com/cloudflare-one/connections/connect-networks/
+- **MkDocs** - https://www.mkdocs.org/
+
+### 模型供应商
+- **OpenRouter** - https://openrouter.ai/
+- **OpenAI** - https://openai.com/
+- **Anthropic** - https://www.anthropic.com/
+- **Google DeepMind** - https://deepmind.google/
+
+---
+
+## 📝 更新日志
+
+最新更新信息见本 README
+
+---
+
+## 📄 许可证
 
 MIT License
 
 ---
 
-## 🔗 相关链接
-
-- **LobeChat 主仓库**: https://github.com/lobehub/lobe-chat
-- **Cloudflare 文档**: https://developers.cloudflare.com/
-- **MkDocs 文档**: https://www.mkdocs.org/
-- **Azure 文档**: https://docs.microsoft.com/azure/
-
----
-
-**Last Updated**: 2026-04-05  
-**Deployment Status**: ✅ Active  
-**Public URL**: https://raised-telling-ppm-notre.trycloudflare.com
-
----
-
-<div align="center">
-
-**Made with ❤️ for AI enthusiasts**
-
-</div>
+**最近更新**: 2026年4月5日  
+**维护者**: @sihan-bzwj  
+**在线访问**: https://raised-telling-ppm-notre.trycloudflare.com
