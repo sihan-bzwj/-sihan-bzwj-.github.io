@@ -30,8 +30,6 @@
 			<h2>站点说明 | About</h2>
 			<p>这个首页只保留最常用的入口，后续内容会继续按需补充。 | Quick access to the main services, with more content added as needed.</p>
 			<div class="card-actions">
-				<a class="button" href="cloud-drive/">打开云盘 | Open Drive</a>
-				<a class="button-secondary" href="https://raised-telling-ppm-notre.trycloudflare.com" target="_blank" rel="noreferrer noopener">打开 AI 站点 | AI Chat</a>
 				<a class="button-secondary" href="https://github.com/sihan-bzwj/-sihan-bzwj-.github.io" target="_blank" rel="noreferrer noopener">GitHub 源码 | Source Code</a>
 			</div>
 		</aside>
