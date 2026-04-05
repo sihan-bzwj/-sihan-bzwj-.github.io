@@ -113,5 +113,16 @@
 			</div>
 		</div>
 
+		<footer class="site-footer" aria-label="网站统计">
+			<div class="site-footer__item">
+				<span class="site-footer__label">浏览人数统计 | Visitors</span>
+				<strong class="site-footer__value" data-visitor-count>加载中</strong>
+			</div>
+			<div class="site-footer__item">
+				<span class="site-footer__label">更新时间 | Updated</span>
+				<strong class="site-footer__value">2026-04-05</strong>
+			</div>
+		</footer>
+
 	</section>
 </div>

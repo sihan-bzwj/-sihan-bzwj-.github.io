@@ -19,6 +19,9 @@ markdown_extensions:
 extra_css:
   - stylesheets/extra.css
 
+extra_javascript:
+  - javascripts/site-footer.js
+
 nav:
   - 首页 / Home: index.md
   - 云盘 / Cloud Drive: cloud-drive.md
