@@ -4,6 +4,7 @@
 		<nav class="nav-pills" aria-label="Top navigation">
 			<a class="pill" href="../">Home</a>
 			<a class="pill" href="#drive">Drive</a>
+			<a class="pill" href="https://raised-telling-ppm-notre.trycloudflare.com/cloud-drive" target="_blank" rel="noreferrer noopener">Drive</a>
 			<a class="pill" href="https://raised-telling-ppm-notre.trycloudflare.com" target="_blank" rel="noreferrer noopener">AI</a>
 			<a class="social-link" href="https://github.com/sihan-bzwj/-sihan-bzwj-.github.io" target="_blank" rel="noreferrer noopener">GitHub</a>
 		</nav>
@@ -20,7 +21,7 @@
 				<span class="meta-chip">download</span>
 			</div>
 			<div class="hero-actions">
-				<a class="button" href="https://always-secrets-browsers-flights.trycloudflare.com" target="_blank" rel="noreferrer noopener">打开云盘</a>
+				<a class="button" href="https://raised-telling-ppm-notre.trycloudflare.com/cloud-drive" target="_blank" rel="noreferrer noopener">打开云盘</a>
 				<a class="button-secondary" href="https://raised-telling-ppm-notre.trycloudflare.com" target="_blank" rel="noreferrer noopener">AI 站点</a>
 				<a class="button-secondary" href="../">回到首页</a>
 			</div>
@@ -30,7 +31,7 @@
 			<h2>使用说明</h2>
 			<p>文件放在远程服务器上，比较适合大文件和长期存放。上传需要密码，下载不需要。</p>
 			<div class="card-actions">
-				<a class="button" href="https://always-secrets-browsers-flights.trycloudflare.com" target="_blank" rel="noreferrer noopener">直接打开</a>
+				<a class="button" href="https://raised-telling-ppm-notre.trycloudflare.com/cloud-drive" target="_blank" rel="noreferrer noopener">直接打开</a>
 				<a class="button-secondary" href="https://raised-telling-ppm-notre.trycloudflare.com" target="_blank" rel="noreferrer noopener">AI 站点</a>
 				<a class="button-secondary" href="https://github.com/sihan-bzwj/-sihan-bzwj-.github.io" target="_blank" rel="noreferrer noopener">GitHub</a>
 			</div>
@@ -47,7 +48,7 @@
 
 		<div class="frame-panel">
 			<div class="frame-box">
-				<iframe src="https://always-secrets-browsers-flights.trycloudflare.com" title="Cloud Drive" loading="lazy"></iframe>
+				<iframe src="https://raised-telling-ppm-notre.trycloudflare.com/cloud-drive" title="Cloud Drive" loading="lazy"></iframe>
 			</div>
 			<p class="frame-note">如果内嵌加载不稳定，可以直接用上面的按钮打开。</p>
 		</div>
