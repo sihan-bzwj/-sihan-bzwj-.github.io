@@ -1,0 +1,18 @@
+[Unit]
+Description=Cloud Drive Cloudflared Tunnel
+After=network-online.target cloud-drive.service
+Wants=network-online.target cloud-drive.service
+
+[Service]
+Type=simple
+User=azureuser
+WorkingDirectory=/home/azureuser
+ExecStart=/home/azureuser/cloudflared-linux-amd64 tunnel --url http://127.0.0.1:8787
+Restart=always
+RestartSec=5
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=cloud-drive-tunnel
+
+[Install]
+WantedBy=multi-user.target

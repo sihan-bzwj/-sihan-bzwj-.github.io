@@ -1,1 +1,4 @@
-site_name: 我的页面 / My Page
+site_name: LobeChat 入口 / LobeChat Home
+nav:
+  - 首页 / Home: index.md
+  - 云盘 / Cloud Drive: cloud-drive.md
