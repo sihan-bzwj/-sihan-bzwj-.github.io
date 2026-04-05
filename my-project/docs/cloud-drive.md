@@ -1,240 +1,73 @@
-# 云盘 / Cloud Drive
+<div class="site-shell">
+	<header class="topbar">
+		<div class="brand">Axi's Blog</div>
+		<nav class="nav-pills" aria-label="Top navigation">
+			<a class="pill" href="../">Home</a>
+			<a class="pill" href="#drive">Drive</a>
+			<a class="pill" href="https://raised-telling-ppm-notre.trycloudflare.com" target="_blank" rel="noreferrer noopener">AI</a>
+			<a class="social-link" href="https://github.com/sihan-bzwj/-sihan-bzwj-.github.io" target="_blank" rel="noreferrer noopener">GitHub</a>
+		</nav>
+	</header>
 
-这个页面直接嵌入远程服务器上的云盘界面。文件会存到 Azure VM 的磁盘里，适合大文件上传、下载和长期保存。上传需要密码，下载不需要。  
-This page embeds the cloud drive running on the remote server. Files are stored on the Azure VM disk, which is suitable for large uploads, downloads, and long-term storage. Uploading requires a password, while downloads do not.
+	<section class="hero">
+		<div class="hero-panel">
+			<span class="kicker">Project / Drive</span>
+			<h1 class="hero-title">远程文件入口</h1>
+			<p class="hero-lead">这里放的是我的远程文件入口，主要用于上传、下载和日常保存。页面和首页保持同一套视觉语言，切换起来会更自然。</p>
+			<div class="hero-meta">
+				<span class="meta-chip">storage</span>
+				<span class="meta-chip">upload</span>
+				<span class="meta-chip">download</span>
+			</div>
+			<div class="hero-actions">
+				<a class="button" href="https://always-secrets-browsers-flights.trycloudflare.com" target="_blank" rel="noreferrer noopener">打开云盘</a>
+				<a class="button-secondary" href="https://raised-telling-ppm-notre.trycloudflare.com" target="_blank" rel="noreferrer noopener">AI 站点</a>
+				<a class="button-secondary" href="../">回到首页</a>
+			</div>
+		</div>
 
-<style>
-.drive-page {
-  position: relative;
-  margin: 1.5rem 0 0;
-  padding: 0;
-}
+		<aside class="side-panel">
+			<h2>使用说明</h2>
+			<p>文件放在远程服务器上，比较适合大文件和长期存放。上传需要密码，下载不需要。</p>
+			<p>以后如果地址变化，只要替换这个链接就行，页面结构可以继续保留。</p>
+			<div class="card-actions">
+				<a class="button" href="https://always-secrets-browsers-flights.trycloudflare.com" target="_blank" rel="noreferrer noopener">直接打开</a>
+				<a class="button-secondary" href="https://raised-telling-ppm-notre.trycloudflare.com" target="_blank" rel="noreferrer noopener">AI 站点</a>
+				<a class="button-secondary" href="https://github.com/sihan-bzwj/-sihan-bzwj-.github.io" target="_blank" rel="noreferrer noopener">GitHub</a>
+			</div>
+		</aside>
+	</section>
 
-.drive-page::before {
-  content: "";
-  position: fixed;
-  inset: 0;
-  z-index: -2;
-  background:
-    radial-gradient(circle at 15% 15%, rgba(70, 140, 255, 0.24), transparent 32%),
-    radial-gradient(circle at 85% 10%, rgba(39, 196, 180, 0.18), transparent 26%),
-    radial-gradient(circle at 80% 86%, rgba(245, 158, 11, 0.12), transparent 24%),
-    linear-gradient(180deg, #06111e 0%, #08131f 48%, #050b14 100%);
-}
+	<section class="section" id="drive">
+		<div class="section-header">
+			<div>
+				<h2>界面预览</h2>
+				<p>下面直接显示远程文件界面，桌面浏览器会更方便一点。</p>
+			</div>
+		</div>
 
-.drive-page::after {
-  content: "";
-  position: fixed;
-  inset: 0;
-  z-index: -1;
-  background-image:
-    linear-gradient(rgba(148, 163, 184, 0.06) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(148, 163, 184, 0.06) 1px, transparent 1px);
-  background-size: 48px 48px;
-  mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0.8), transparent 85%);
-}
+		<div class="frame-panel">
+			<div class="frame-box">
+				<iframe src="https://always-secrets-browsers-flights.trycloudflare.com" title="Cloud Drive" loading="lazy"></iframe>
+			</div>
+			<p class="frame-note">如果内嵌加载不稳定，可以直接用上面的按钮打开。</p>
+		</div>
 
-.drive-hero {
-  display: grid;
-  gap: 1.5rem;
-  grid-template-columns: 1.4fr 0.9fr;
-  align-items: start;
-  margin-bottom: 1.25rem;
-  padding: 1.8rem;
-  border: 1px solid rgba(148, 163, 184, 0.18);
-  border-radius: 28px;
-  background: rgba(7, 14, 27, 0.78);
-  backdrop-filter: blur(24px);
-  box-shadow: 0 28px 70px rgba(0, 0, 0, 0.32);
-}
+		<div class="cards" style="margin-top: 1rem;">
+			<article class="card">
+				<h3>为什么这样排</h3>
+				<p>首页和这里共用同一套排版，所以切换时会更顺，不会显得像跳到了另一个站。</p>
+			</article>
+			<article class="card">
+				<h3>适合的使用方式</h3>
+				<p>它主要就是给自己和别人一个稳定入口，适合上传、下载和日常保存文件。</p>
+			</article>
+			<article class="card">
+				<h3>维护方式</h3>
+				<p>后面如果要换地址或者新增入口，只改链接就行，样式不用重新设计。</p>
+			</article>
+		</div>
 
-.drive-kicker {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.35rem 0.8rem;
-  border-radius: 999px;
-  border: 1px solid rgba(96, 165, 250, 0.28);
-  color: #b7d4ff;
-  background: rgba(96, 165, 250, 0.09);
-  font-size: 0.86rem;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-}
-
-.drive-hero h1 {
-  margin: 0.85rem 0 0.7rem;
-  font-size: clamp(2.2rem, 5vw, 4.8rem);
-  line-height: 0.95;
-  letter-spacing: -0.04em;
-  color: #f5f7fb;
-}
-
-.drive-hero p {
-  margin: 0;
-  max-width: 66ch;
-  color: rgba(226, 232, 240, 0.78);
-  font-size: 1.02rem;
-  line-height: 1.7;
-}
-
-.drive-tags {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.65rem;
-  margin-top: 1rem;
-}
-
-.drive-tag {
-  padding: 0.42rem 0.78rem;
-  border-radius: 999px;
-  background: rgba(148, 163, 184, 0.08);
-  color: rgba(226, 232, 240, 0.88);
-  border: 1px solid rgba(148, 163, 184, 0.15);
-  font-size: 0.88rem;
-}
-
-.drive-note {
-  display: grid;
-  gap: 0.8rem;
-  padding: 1.1rem;
-  border-radius: 22px;
-  background: linear-gradient(180deg, rgba(12, 20, 35, 0.96), rgba(8, 15, 28, 0.92));
-  border: 1px solid rgba(148, 163, 184, 0.16);
-}
-
-.drive-note strong {
-  display: block;
-  font-size: 1rem;
-  color: #f8fafc;
-}
-
-.drive-note span {
-  color: rgba(226, 232, 240, 0.74);
-  line-height: 1.65;
-}
-
-.drive-note a {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: fit-content;
-  margin-top: 0.3rem;
-  padding: 0.8rem 1.1rem;
-  border-radius: 14px;
-  background: linear-gradient(135deg, #38bdf8, #0ea5e9);
-  color: white !important;
-  font-weight: 700;
-  text-decoration: none !important;
-  box-shadow: 0 16px 36px rgba(14, 165, 233, 0.35);
-}
-
-.drive-grid {
-  display: grid;
-  gap: 1rem;
-  grid-template-columns: 1fr 1fr;
-}
-
-.drive-card {
-  padding: 1.2rem;
-  border-radius: 24px;
-  background: rgba(8, 15, 28, 0.82);
-  border: 1px solid rgba(148, 163, 184, 0.16);
-  backdrop-filter: blur(16px);
-  box-shadow: 0 20px 48px rgba(0, 0, 0, 0.22);
-}
-
-.drive-card h2 {
-  margin: 0 0 0.8rem;
-  font-size: 1.2rem;
-  color: #f8fafc;
-}
-
-.drive-card ul {
-  margin: 0;
-  padding-left: 1.25rem;
-  color: rgba(226, 232, 240, 0.76);
-  line-height: 1.75;
-}
-
-.drive-frame {
-  overflow: hidden;
-  min-height: 78vh;
-  border-radius: 20px;
-  border: 1px solid rgba(148, 163, 184, 0.18);
-  background: #08111d;
-}
-
-.drive-frame iframe {
-  width: 100%;
-  height: 78vh;
-  border: 0;
-  display: block;
-  background: white;
-}
-
-.drive-card--wide {
-  grid-column: 1 / -1;
-}
-
-@media (max-width: 960px) {
-  .drive-hero,
-  .drive-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .drive-frame,
-  .drive-frame iframe {
-    min-height: 68vh;
-    height: 68vh;
-  }
-}
-</style>
-
-<div class="drive-page">
-  <section class="drive-hero">
-    <div>
-      <span class="drive-kicker">Remote server backed storage</span>
-      <h1>云盘 / Cloud Drive</h1>
-      <p>上传、下载和文件管理都直接连接到你的远程服务器。这样空间更大，传输也更直接，适合备份、素材和大文件。</p>
-      <div class="drive-tags">
-        <span class="drive-tag">大空间 / More space</span>
-        <span class="drive-tag">快速传输 / Fast transfers</span>
-        <span class="drive-tag">远程服务器 / Remote VM</span>
-      </div>
-    </div>
-
-    <aside class="drive-note">
-      <strong>入口已就绪</strong>
-      <span>下面的窗口会直接打开云盘界面。如果嵌入加载失败，可以用单独打开按钮进入。文件都保存在 Azure VM 上，不占用本地空间。上传需要密码，下载不需要密码。</span>
-      <a href="https://always-secrets-browsers-flights.trycloudflare.com" target="_blank" rel="noreferrer noopener">打开云盘 / Open Cloud Drive</a>
-    </aside>
-  </section>
-
-  <section class="drive-grid">
-    <article class="drive-card">
-      <h2>使用方式 / How it works</h2>
-      <ul>
-        <li>云盘由远程服务器提供存储，适合更大的文件容量。</li>
-        <li>上传和下载会直接走远程服务器，避免绕回本地。</li>
-        <li>如果你需要更高安全性，后续可以再加登录口令。</li>
-      </ul>
-    </article>
-
-    <article class="drive-card">
-      <h2>访问提示 / Access tips</h2>
-      <ul>
-        <li>建议优先在桌面浏览器使用，拖拽上传更顺手。</li>
-        <li>上传时请输入你设置的密码；下载不需要密码。</li>
-        <li>如果你更新了隧道地址，只需要替换这一页里的链接。</li>
-        <li>这页是入口，真正的文件管理界面在远程服务器上运行。</li>
-      </ul>
-    </article>
-
-    <article class="drive-card drive-card--wide">
-      <div class="drive-frame">
-        <iframe src="https://always-secrets-browsers-flights.trycloudflare.com" title="Cloud Drive" loading="lazy"></iframe>
-      </div>
-    </article>
-  </section>
+		<p class="footer-note">如果你愿意，我还可以把其他页面也继续统一成同样的文字风格。</p>
+	</section>
 </div>

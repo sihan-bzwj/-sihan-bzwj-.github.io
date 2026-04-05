@@ -1,4 +1,7 @@
-site_name: LobeChat 入口 / LobeChat Home
+site_name: Axi's Blog
+extra_css:
+  - stylesheets/extra.css
 nav:
   - 首页 / Home: index.md
   - 云盘 / Cloud Drive: cloud-drive.md
+  - AI 站点 / AI: https://raised-telling-ppm-notre.trycloudflare.com
