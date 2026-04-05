@@ -206,7 +206,7 @@ This page embeds the cloud drive running on the remote server. Files are stored 
 
     <aside class="drive-note">
       <strong>入口已就绪</strong>
-      <span>下面的窗口会直接打开云盘界面。如果嵌入加载失败，可以用单独打开按钮进入。文件都保存在 Azure VM 上，不占用本地空间。上传密码是 sihan123，下载不需要密码。</span>
+      <span>下面的窗口会直接打开云盘界面。如果嵌入加载失败，可以用单独打开按钮进入。文件都保存在 Azure VM 上，不占用本地空间。上传需要密码，下载不需要密码。</span>
       <a href="https://always-secrets-browsers-flights.trycloudflare.com" target="_blank" rel="noreferrer noopener">打开云盘 / Open Cloud Drive</a>
     </aside>
   </section>
@@ -225,7 +225,7 @@ This page embeds the cloud drive running on the remote server. Files are stored 
       <h2>访问提示 / Access tips</h2>
       <ul>
         <li>建议优先在桌面浏览器使用，拖拽上传更顺手。</li>
-        <li>上传时请输入密码 sihan123；下载不需要密码。</li>
+        <li>上传时请输入你设置的密码；下载不需要密码。</li>
         <li>如果你更新了隧道地址，只需要替换这一页里的链接。</li>
         <li>这页是入口，真正的文件管理界面在远程服务器上运行。</li>
       </ul>

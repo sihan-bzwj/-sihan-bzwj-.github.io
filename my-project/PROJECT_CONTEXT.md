@@ -10,7 +10,7 @@ Build a simple documentation site that acts as a landing page for LobeChat and a
 - systemd units added for the cloud drive API and the Cloudflare tunnel.
 - Deployment script added in deploy-cloud-drive.sh.
 - MkDocs navigation now includes the cloud drive page.
-- Uploads on the cloud drive now require the password `sihan123`; downloads remain public.
+- Uploads on the cloud drive require a password; downloads remain public.
 
 ## Remote Deployment Notes
 - Remote VM: 20.196.193.8
@@ -24,7 +24,7 @@ Build a simple documentation site that acts as a landing page for LobeChat and a
 - The cloud drive page uses a large embedded frame and bold landing-page styling to make the frontend change obvious.
 - The backend stores files under /home/azureuser/cloud-drive on the VM.
 - The homepage should keep a direct cloud-drive entry in the hero actions area so the link is visible without scrolling.
-- Upload authentication is enforced server-side with the `X-Upload-Password` header and the default password `sihan123`.
+- Upload authentication is enforced server-side with the `X-Upload-Password` header.
 
 ## Files To Check First Next Time
 - docs/index.md

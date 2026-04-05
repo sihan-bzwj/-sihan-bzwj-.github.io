@@ -692,7 +692,7 @@ APP_HTML = """<!doctype html>
           <div class="field" style="margin-bottom: 0.7rem;">
             <label for="upload-password">上传密码 / Upload password</label>
             <div class="row">
-              <input id="upload-password" type="password" placeholder="sihan123">
+              <input id="upload-password" type="password" placeholder="请输入上传密码 / Enter upload password">
               <button id="save-upload-password" class="button-secondary" type="button">保存</button>
             </div>
           </div>
@@ -701,7 +701,7 @@ APP_HTML = """<!doctype html>
             Drop files here or click to select them.
           </div>
           <input id="file-input" type="file" multiple hidden>
-          <p class="hint">只有上传需要密码，下载不需要。请使用你设置的上传密码后再开始上传。</p>
+          <p class="hint">只有上传需要密码，下载不需要。请使用你自己的上传密码后再开始上传。</p>
         </div>
 
         <div class="field">
