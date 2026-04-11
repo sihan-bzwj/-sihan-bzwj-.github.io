@@ -25,7 +25,7 @@
 
 		<aside class="side-panel">
 			<h2>站点说明 | About</h2>
-			<p>首页只保留当前仍可持续维护的公开入口。AI 服务仍在服务器本地运行，但已从公开导航中移除。| The homepage keeps only the public entrypoints that can be maintained. The AI service still runs locally on the server, but it has been removed from public navigation.</p>
+			<p>首页只保留当前仍可持续维护的公开入口。AI 相关入口和服务均已移除，仅保留删除原因记录。| The homepage keeps only the public entrypoints that can be maintained. AI entrypoints and service have been removed, leaving only the removal record.</p>
 			<div class="card-actions">
 				<a class="button-secondary" href="https://github.com/sihan-bzwj/sihan-bzwj.github.io" target="_blank" rel="noreferrer noopener">GitHub 源码 | Source Code</a>
 			</div>
@@ -59,7 +59,7 @@
 				<div class="post-body">
 					<div class="post-meta">Status · 状态记录</div>
 					<div class="post-title">AI 入口已移除 | AI Entry Removed</div>
-					<p class="post-summary">AI 服务仍在服务器本地运行，但由于没有稳定固定域名，公开 AI 入口已从首页和文档中移除。| The AI service still runs locally on the server, but the public AI entry has been removed from the homepage and docs because there is no stable fixed domain.</p>
+					<p class="post-summary">由于没有稳定固定域名，公开 AI 入口和服务均已移除；这里仅保留原因记录。| Because there is no stable fixed domain, the public AI entry and service have been removed; only the reason record is kept here.</p>
 					<div class="tag-list">
 						<span class="tag">record</span>
 						<span class="tag">ai local only</span>
@@ -73,7 +73,7 @@
 				<div class="post-body">
 					<div class="post-meta">Source · 源码库</div>
 					<div class="post-title">项目源码 | Repository</div>
-					<p class="post-summary">完整的项目源代码和部署配置，包括本地 AI 运行、云盘服务和文档。| Full source code and deployment config including local AI runtime, the cloud drive service, and docs.</p>
+					<p class="post-summary">完整的项目源代码和部署配置，包括云盘服务、网关和文档。| Full source code and deployment config including the cloud drive service, gateway, and docs.</p>
 					<div class="tag-list">
 						<span class="tag">open source</span>
 						<span class="tag">repository</span>
