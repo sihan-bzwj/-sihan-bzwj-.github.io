@@ -18,7 +18,7 @@
 Public cloud-drive traffic
   -> clouddrive.ccwu.cc
   -> Azure VM public IP
-  -> Caddy (:443)
+  -> Caddy (:80)
   -> cloud_drive_server.py on 127.0.0.1:8787
 
 Public docs
@@ -39,13 +39,13 @@ Based on the actual server checks performed on `2026-04-11`:
 - `caddy.service`: `active`
 - `cloud-gateway.service`: `active`
 - `lobe-chat.service`: `stopped`
-- `https://clouddrive.ccwu.cc/health`: live
+- `http://clouddrive.ccwu.cc/health`: live
 
 ## Principles
 
 - Public docs should only show URLs that are already live.
 - Cloud-drive storage stays on the Azure VM.
-- HTTPS termination happens on the VM via Caddy.
+- Caddy currently serves the drive over HTTP because Azure inbound `443` is still blocked externally.
 - Repo docs should match the deployed architecture.
 
 ## Tech Stack
@@ -53,7 +53,7 @@ Based on the actual server checks performed on `2026-04-11`:
 | Component | Technology | Notes |
 |---|---|---|
 | Drive service | Python stdlib HTTP server | Directory browsing, upload, download, deletion |
-| Reverse proxy / TLS | Caddy | Public HTTPS for `clouddrive.ccwu.cc` |
+| Reverse proxy | Caddy | Public HTTP for `clouddrive.ccwu.cc` |
 | Gateway | Python stdlib HTTP server | Project routing and static content support |
 | Docs | MkDocs + GitHub Pages | Docs site and landing pages |
 | Service manager | systemd | Keeps services ordered and running |
@@ -70,16 +70,16 @@ python -m unittest discover -s tests
 sudo systemctl status cloud-drive.service --no-pager
 sudo systemctl status caddy.service --no-pager
 sudo systemctl status cloud-gateway.service --no-pager
-curl -I https://clouddrive.ccwu.cc/
-curl https://clouddrive.ccwu.cc/health
+curl -I http://clouddrive.ccwu.cc/
+curl http://clouddrive.ccwu.cc/health
 ```
 
 ## Update Log
 
 ### 2026-04-11
 
-- Switched the public cloud-drive entry to `https://clouddrive.ccwu.cc/`
-- Deployed HTTPS on the Azure VM with Caddy
+- Switched the public cloud-drive entry to `http://clouddrive.ccwu.cc/`
+- Switched Caddy to temporary HTTP-only serving because Azure inbound `443` is still blocked externally
 - Kept file storage on the Azure VM instead of moving it to a hosted platform
 - Removed outdated deployment artifacts and placeholder-domain references
 - Added `HEAD` support to the cloud-drive HTTP service
