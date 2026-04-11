@@ -21,8 +21,8 @@
 				<span class="meta-chip">folders</span>
 			</div>
 			<div class="hero-actions">
-				<a class="button" href="https://procurement-trying-beside-beginning.trycloudflare.com/cloud-drive" target="_blank" rel="noreferrer noopener">打开云盘 | Open Drive</a>
-				<a class="button-secondary" href="https://procurement-trying-beside-beginning.trycloudflare.com/" target="_blank" rel="noreferrer noopener">AI 站点 | AI Chat</a>
+				<a class="button" href="https://drive.example.com/" target="_blank" rel="noreferrer noopener">打开云盘 | Open Drive</a>
+				<a class="button-secondary" href="https://ai.example.com/" target="_blank" rel="noreferrer noopener">AI 站点 | AI Chat</a>
 				<a class="button-secondary" href="../">回到首页 | Back Home</a>
 			</div>
 		</div>
@@ -31,7 +31,7 @@
 			<h2>当前能力 | Current Scope</h2>
 			<p>当前版本聚焦基础文件管理：目录浏览、上传、下载、建目录和删除。上传与删除都需要服务端密码。| The current version focuses on core file management: browsing, upload, download, folder creation, and deletion. Upload and delete actions require the server-side password.</p>
 			<div class="card-actions">
-				<a class="button" href="https://procurement-trying-beside-beginning.trycloudflare.com/cloud-drive" target="_blank" rel="noreferrer noopener">打开云盘 | Open</a>
+				<a class="button" href="https://drive.example.com/" target="_blank" rel="noreferrer noopener">打开云盘 | Open</a>
 				<a class="button-secondary" href="https://github.com/sihan-bzwj/sihan-bzwj.github.io" target="_blank" rel="noreferrer noopener">GitHub 源码 | Code</a>
 			</div>
 		</aside>
@@ -47,7 +47,7 @@
 
 		<div class="frame-panel">
 			<div class="frame-box">
-				<iframe src="https://procurement-trying-beside-beginning.trycloudflare.com/cloud-drive" title="Cloud Drive | 云盘" loading="lazy"></iframe>
+				<iframe src="https://drive.example.com/" title="Cloud Drive | 云盘" loading="lazy"></iframe>
 			</div>
 			<p class="frame-note">上传和删除需要输入密码，普通浏览和下载无需密码。| Upload and delete require a password, while browsing and downloading do not.</p>
 		</div>
