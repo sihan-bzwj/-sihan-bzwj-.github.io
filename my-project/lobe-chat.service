@@ -5,15 +5,14 @@ Requires=docker.service
 Wants=network-online.target
 
 [Service]
-Type=simple
+Type=oneshot
+RemainAfterExit=yes
 User=azureuser
 WorkingDirectory=/home/azureuser
+ExecStartPre=-/usr/bin/docker rm -f lobe-chat
 ExecStartPre=/usr/bin/docker compose -f /home/azureuser/docker-compose.lobechat.yml pull
-ExecStart=/usr/bin/docker compose -f /home/azureuser/docker-compose.lobechat.yml up --remove-orphans
+ExecStart=/usr/bin/docker compose -f /home/azureuser/docker-compose.lobechat.yml up -d --remove-orphans
 ExecStop=/usr/bin/docker compose -f /home/azureuser/docker-compose.lobechat.yml down
-Restart=always
-RestartSec=10
-TimeoutStartSec=0
 
 [Install]
 WantedBy=multi-user.target
