@@ -83,3 +83,6 @@ curl https://clouddrive.ccwu.cc/health
 - Kept file storage on the Azure VM instead of moving it to a hosted platform
 - Removed outdated deployment artifacts and placeholder-domain references
 - Added `HEAD` support to the cloud-drive HTTP service
+- Refactored `HEAD` handling into small helper methods with targeted comments
+- Added a regression test for `HEAD /`
+- Re-published the docs site so the cloud-drive page no longer points at `drive.example.com`

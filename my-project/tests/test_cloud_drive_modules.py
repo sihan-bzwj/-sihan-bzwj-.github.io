@@ -2,12 +2,17 @@ from __future__ import annotations
 
 import unittest
 from io import BytesIO
+from http.client import HTTPConnection
+from http.server import ThreadingHTTPServer
 from pathlib import Path
 from tempfile import TemporaryDirectory
+from threading import Thread
 
+from cloud_drive_app.config import CloudDriveConfig
 from cloud_drive_app.service import delete_entry, list_directory_payload, store_uploads
 from cloud_drive_app.storage import make_unique_path, resolve_inside_root
 from cloud_drive_app.uploads import UploadedFile
+from cloud_drive_server import CloudDriveHandler
 
 
 class CloudDriveModuleTests(unittest.TestCase):
@@ -58,6 +63,27 @@ class CloudDriveModuleTests(unittest.TestCase):
             root = Path(temp_dir)
             with self.assertRaises(ValueError):
                 delete_entry(root, "")
+
+    def test_head_root_returns_ok(self) -> None:
+        with TemporaryDirectory() as temp_dir:
+            server = ThreadingHTTPServer(("127.0.0.1", 0), CloudDriveHandler)
+            server.config = CloudDriveConfig(root=Path(temp_dir), upload_password="testpass")
+            thread = Thread(target=server.serve_forever, daemon=True)
+            thread.start()
+
+            try:
+                connection = HTTPConnection("127.0.0.1", server.server_address[1], timeout=5)
+                connection.request("HEAD", "/")
+                response = connection.getresponse()
+
+                self.assertEqual(response.status, 200)
+                self.assertEqual(response.getheader("Content-Type"), "text/html; charset=utf-8")
+                self.assertIsNotNone(response.getheader("Content-Length"))
+            finally:
+                connection.close()
+                server.shutdown()
+                server.server_close()
+                thread.join(timeout=2)
 
 
 if __name__ == "__main__":

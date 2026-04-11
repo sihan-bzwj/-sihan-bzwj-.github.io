@@ -94,3 +94,6 @@ curl https://clouddrive.ccwu.cc/health
 - Kept cloud-drive storage on the Azure VM under `/home/azureuser/cloud-drive`
 - Removed outdated Render and Quick Tunnel references from the repository
 - Added `HEAD` handling to the cloud-drive service so `curl -I /` works
+- Refactored the new `HEAD` response path into helper methods and added regression coverage
+- Fixed the embedded frontend path-normalization warning caused by escaped regex literals
+- Updated the MkDocs cloud-drive page and redeployed GitHub Pages content

@@ -663,7 +663,7 @@ APP_HTML = """<!doctype html>
       .replaceAll("'", "&#39;");
 
     const normalizePath = (value) => {
-      const cleaned = String(value || "").replace(/^\/+/, "").replace(/\/+$/, "");
+      const cleaned = String(value || "").replace(/^\\/+/, "").replace(/\\/+$/, "");
       return cleaned === "." ? "" : cleaned;
     };
 
@@ -1034,9 +1034,28 @@ class CloudDriveHandler(BaseHTTPRequestHandler):
         self.end_headers()
 
     def _send_head_response(self, status: HTTPStatus, content_type: str, content_length: int) -> None:
+        """Send headers for HEAD responses while mirroring GET metadata."""
         self.send_response(status)
         self.send_header("Content-Type", content_type)
         self.send_header("Content-Length", str(content_length))
+        self.send_header("Access-Control-Allow-Origin", "*")
+        self.send_header("Cache-Control", "no-store")
+        self.end_headers()
+
+    def _json_head_payload(self, status: HTTPStatus, payload: dict[str, object]) -> None:
+        """Serialize a JSON response just to compute accurate HEAD headers."""
+        body = json.dumps(payload, ensure_ascii=False).encode("utf-8")
+        self._send_head_response(status, "application/json; charset=utf-8", len(body))
+
+    def _head_download(self, root: object, query: dict[str, list[str]]) -> None:
+        """Mirror download headers without streaming the file body."""
+        file_path = download_path(root, get_query_value(query, "path"))
+        guessed_type = mimetypes.guess_type(file_path.name)[0] or "application/octet-stream"
+        encoded_name = quote(file_path.name)
+        self.send_response(HTTPStatus.OK)
+        self.send_header("Content-Type", guessed_type)
+        self.send_header("Content-Disposition", f"attachment; filename*=UTF-8''{encoded_name}")
+        self.send_header("Content-Length", str(file_path.stat().st_size))
         self.send_header("Access-Control-Allow-Origin", "*")
         self.send_header("Cache-Control", "no-store")
         self.end_headers()
@@ -1051,47 +1070,31 @@ class CloudDriveHandler(BaseHTTPRequestHandler):
             return
 
         if path == "/health":
-            payload = json.dumps(health_payload(root), ensure_ascii=False).encode("utf-8")
-            self._send_head_response(HTTPStatus.OK, "application/json; charset=utf-8", len(payload))
+            self._json_head_payload(HTTPStatus.OK, health_payload(root))
             return
 
         if path == "/api/list":
             try:
-                payload = json.dumps(
+                self._json_head_payload(
+                    HTTPStatus.OK,
                     list_directory_payload(root, get_query_value(query, "path")),
-                    ensure_ascii=False,
-                ).encode("utf-8")
-                self._send_head_response(HTTPStatus.OK, "application/json; charset=utf-8", len(payload))
+                )
             except FileNotFoundError as error:
-                payload = json.dumps({"ok": False, "error": str(error)}, ensure_ascii=False).encode("utf-8")
-                self._send_head_response(HTTPStatus.NOT_FOUND, "application/json; charset=utf-8", len(payload))
+                self._json_head_payload(HTTPStatus.NOT_FOUND, {"ok": False, "error": str(error)})
             except Exception as error:
-                payload = json.dumps({"ok": False, "error": str(error)}, ensure_ascii=False).encode("utf-8")
-                self._send_head_response(HTTPStatus.BAD_REQUEST, "application/json; charset=utf-8", len(payload))
+                self._json_head_payload(HTTPStatus.BAD_REQUEST, {"ok": False, "error": str(error)})
             return
 
         if path == "/api/download":
             try:
-                file_path = download_path(root, get_query_value(query, "path"))
-                guessed_type = mimetypes.guess_type(file_path.name)[0] or "application/octet-stream"
-                encoded_name = quote(file_path.name)
-                self.send_response(HTTPStatus.OK)
-                self.send_header("Content-Type", guessed_type)
-                self.send_header("Content-Disposition", f"attachment; filename*=UTF-8''{encoded_name}")
-                self.send_header("Content-Length", str(file_path.stat().st_size))
-                self.send_header("Access-Control-Allow-Origin", "*")
-                self.send_header("Cache-Control", "no-store")
-                self.end_headers()
+                self._head_download(root, query)
             except FileNotFoundError as error:
-                payload = json.dumps({"ok": False, "error": str(error)}, ensure_ascii=False).encode("utf-8")
-                self._send_head_response(HTTPStatus.NOT_FOUND, "application/json; charset=utf-8", len(payload))
+                self._json_head_payload(HTTPStatus.NOT_FOUND, {"ok": False, "error": str(error)})
             except Exception as error:
-                payload = json.dumps({"ok": False, "error": str(error)}, ensure_ascii=False).encode("utf-8")
-                self._send_head_response(HTTPStatus.BAD_REQUEST, "application/json; charset=utf-8", len(payload))
+                self._json_head_payload(HTTPStatus.BAD_REQUEST, {"ok": False, "error": str(error)})
             return
 
-        payload = json.dumps({"ok": False, "error": "未找到资源"}, ensure_ascii=False).encode("utf-8")
-        self._send_head_response(HTTPStatus.NOT_FOUND, "application/json; charset=utf-8", len(payload))
+        self._json_head_payload(HTTPStatus.NOT_FOUND, {"ok": False, "error": "未找到资源"})
 
     def do_GET(self) -> None:
         path, query = parse_query(self.path)
