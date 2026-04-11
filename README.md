@@ -74,6 +74,8 @@
 - 给新模块补充了函数级注释和类说明，便于后续维护和排错。
 - 新增标准库单元测试，覆盖云盘路径安全、唯一文件名生成、上传落盘、目录排序、代理路由和访客计数持久化。
 - 重写了 `my-project/README.md` 和 `my-project/docs/cloud-drive.md`，删除未实现的“重命名、分享链接、压缩下载、10GB 限制、批量/断点下载”等描述。
+- 补充了远程云服务器启动 AI 平台所需的 `docker-compose.lobechat.yml`、`lobe-chat.service` 和 `.env.lobechat.example`。
+- 网关现在会在 AI 上游 `127.0.0.1:3210` 不可达时直接返回明确的 `502 Bad Gateway` 提示，方便远程排障。
 
 ## 当前实现边界
 
@@ -90,6 +92,20 @@ python cloud_drive_server.py --host 127.0.0.1 --port 8787
 python cloud_gateway.py --host 127.0.0.1 --port 8080
 python -m unittest discover -s tests
 ```
+
+云服务器上新增的 AI 平台启动步骤：
+
+```bash
+cp my-project/.env.lobechat.example /home/azureuser/.env.lobechat
+cp my-project/docker-compose.lobechat.yml /home/azureuser/docker-compose.lobechat.yml
+sudo cp my-project/lobe-chat.service /etc/systemd/system/lobe-chat.service
+sudo systemctl daemon-reload
+sudo systemctl enable --now lobe-chat.service
+sudo systemctl restart cloud-gateway.service
+sudo journalctl -u lobe-chat -n 50 --no-pager
+```
+
+启动前至少需要编辑 `/home/azureuser/.env.lobechat`，填入有效的 `ACCESS_CODE`，以及至少一组可用的模型提供商配置。
 
 当前已完成的本地验证命令：
 

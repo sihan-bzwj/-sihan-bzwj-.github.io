@@ -4,6 +4,7 @@ import unittest
 from pathlib import Path
 from tempfile import TemporaryDirectory
 
+from cloud_gateway_app.proxy import build_upstream_unavailable_message
 from cloud_gateway_app.routing import Upstream, choose_upstream, normalize_mount_prefix, rewrite_location
 from cloud_gateway_app.visitors import IPVisitorCounter
 
@@ -28,6 +29,15 @@ class CloudGatewayModuleTests(unittest.TestCase):
         rewritten = rewrite_location("http://127.0.0.1:8787/login", upstream)
 
         self.assertEqual(rewritten, "/cloud-drive/login")
+
+    def test_unavailable_ai_upstream_message_is_explicit(self) -> None:
+        upstream = Upstream("127.0.0.1", 3210, "")
+
+        message = build_upstream_unavailable_message(upstream, ConnectionRefusedError("connection refused"))
+
+        self.assertIn("AI platform upstream is unavailable", message)
+        self.assertIn("127.0.0.1:3210", message)
+        self.assertIn("Start the service and retry", message)
 
     def test_visitor_counter_deduplicates_and_persists(self) -> None:
         with TemporaryDirectory() as temp_dir:

@@ -1,7 +1,7 @@
 [Unit]
 Description=Gateway for LobeChat, Cloud Drive, and Website
-After=network.target
-Wants=network-online.target
+After=network.target network-online.target lobe-chat.service
+Wants=network-online.target lobe-chat.service
 
 [Service]
 Type=simple

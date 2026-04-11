@@ -1,0 +1,9 @@
+services:
+  lobe-chat:
+    image: lobehub/lobe-chat:latest
+    container_name: lobe-chat
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:3210:3210"
+    env_file:
+      - ./.env.lobechat

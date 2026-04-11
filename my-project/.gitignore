@@ -26,6 +26,7 @@ Thumbs.db
 
 # 5. 忽略环境配置与密钥文件
 .env
+.env.lobechat
 .env.local
 .env.*.local
 

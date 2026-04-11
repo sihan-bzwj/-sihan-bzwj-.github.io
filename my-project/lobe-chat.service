@@ -1,0 +1,19 @@
+[Unit]
+Description=LobeChat AI Platform
+After=network.target network-online.target docker.service
+Requires=docker.service
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=azureuser
+WorkingDirectory=/home/azureuser
+ExecStartPre=/usr/bin/docker compose -f /home/azureuser/docker-compose.lobechat.yml pull
+ExecStart=/usr/bin/docker compose -f /home/azureuser/docker-compose.lobechat.yml up --remove-orphans
+ExecStop=/usr/bin/docker compose -f /home/azureuser/docker-compose.lobechat.yml down
+Restart=always
+RestartSec=10
+TimeoutStartSec=0
+
+[Install]
+WantedBy=multi-user.target
