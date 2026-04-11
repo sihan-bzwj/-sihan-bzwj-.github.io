@@ -1,7 +1,10 @@
-/* Theme overrides: remove the stock chrome and let the custom editorial pages lead. */
+/* Base overrides for the darker public site. */
 html,
 body {
-  background: var(--color-parchment);
+  background:
+    radial-gradient(circle at top right, var(--page-glow-1), transparent 28%),
+    radial-gradient(circle at bottom left, var(--page-glow-2), transparent 30%),
+    var(--color-parchment);
 }
 
 body {
@@ -63,7 +66,7 @@ body {
 }
 
 .md-typeset a {
-  color: inherit;
+  color: var(--color-warm-silver);
 }
 
 .md-typeset code,
@@ -77,5 +80,5 @@ body {
 }
 
 ::selection {
-  background: rgba(201, 100, 66, 0.18);
+  background: rgba(201, 100, 66, 0.26);
 }

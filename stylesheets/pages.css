@@ -1,14 +1,12 @@
-/* Page-level styling for illustrations, hero panels, and alternating sections. */
+/* Page-level styling for the simplified blog-like homepage and docs pages. */
 .hero-art {
   position: relative;
   min-height: 24rem;
   overflow: hidden;
   padding: 1.5rem;
   border-radius: calc(var(--radius-xl) - 0.25rem);
-  background:
-    linear-gradient(180deg, rgba(255, 253, 247, 0.96), rgba(239, 228, 207, 0.72)),
-    var(--color-paper);
-  box-shadow: inset 0 0 0 1px rgba(240, 238, 230, 0.95);
+  background: var(--color-paper);
+  box-shadow: inset 0 0 0 1px rgba(64, 61, 54, 0.95);
 }
 
 .hero-art__panel,
@@ -18,7 +16,7 @@
   max-width: 18rem;
   padding: 1rem 1.1rem;
   border-radius: var(--radius-md);
-  background: rgba(250, 249, 245, 0.86);
+  background: var(--surface-soft-bg);
   box-shadow: var(--shadow-ring);
 }
 
@@ -58,7 +56,7 @@
   inset: auto auto 1.5rem 1.5rem;
   width: min(22rem, 72%);
   color: var(--color-terracotta);
-  opacity: 0.95;
+  opacity: 0.92;
 }
 
 .hero-art__shape--drive {
@@ -67,39 +65,110 @@
   color: var(--color-moss);
 }
 
-.section-card--dark .hero-art {
-  background:
-    linear-gradient(180deg, rgba(48, 48, 46, 0.94), rgba(35, 35, 32, 0.98)),
-    var(--color-dark-surface);
-  box-shadow: inset 0 0 0 1px rgba(67, 66, 61, 0.85);
-}
-
-.section-card--dark .hero-art__panel,
-.section-card--dark .hero-art__note {
-  background: rgba(36, 35, 32, 0.92);
-  box-shadow: 0 0 0 1px rgba(67, 66, 61, 0.85);
-}
-
-.section-card--dark .hero-art__title,
-.section-card--dark .hero-art__text,
-.section-card--dark .hero-art__label {
-  color: var(--color-warm-silver);
-}
-
 .chapter-divider {
   width: 100%;
   height: 1px;
   margin: var(--space-lg) 0;
-  background: linear-gradient(90deg, rgba(223, 215, 201, 0), rgba(223, 215, 201, 0.95), rgba(223, 215, 201, 0));
+  background: linear-gradient(90deg, rgba(64, 61, 54, 0), rgba(64, 61, 54, 0.95), rgba(64, 61, 54, 0));
 }
 
-.section-card--dark .chapter-divider {
-  background: linear-gradient(90deg, rgba(67, 66, 61, 0), rgba(109, 123, 98, 0.95), rgba(67, 66, 61, 0));
+.home-intro {
+  display: grid;
+  gap: 1rem;
+  padding: 1.4rem 1.5rem;
+}
+
+.home-intro__text {
+  max-width: 24rem;
+  margin: 0;
+  font-family: var(--font-serif);
+  font-size: clamp(1.6rem, 3vw, 2.2rem);
+  line-height: 1.4;
+  color: var(--color-warm-silver);
+}
+
+.home-intro__text-sub {
+  color: var(--color-stone);
+  font-family: var(--font-sans);
+  font-size: 0.92em;
+  letter-spacing: 0.04em;
+}
+
+.story-list {
+  display: grid;
+  gap: 1rem;
+}
+
+.story-list--compact {
+  margin-top: 1rem;
+}
+
+.story-card {
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(13rem, 0.85fr);
+  gap: 1rem;
+  align-items: stretch;
+  padding: 1.3rem;
+  border-radius: var(--radius-lg);
+  background: var(--panel-strong-bg);
+  box-shadow: var(--shadow-ring);
+  text-decoration: none !important;
+  transition:
+    transform var(--transition-soft),
+    box-shadow var(--transition-soft),
+    border-color var(--transition-soft);
+}
+
+.story-card--compact {
+  grid-template-columns: 1fr;
+  padding: 1.15rem 1.25rem;
+}
+
+.story-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-ring-deep), var(--shadow-whisper);
+}
+
+.story-card__copy {
+  display: grid;
+  align-content: center;
+  gap: 0.55rem;
+  min-width: 0;
+}
+
+.story-card__meta {
+  margin: 0;
+}
+
+.story-card__media {
+  min-height: 16rem;
+  border-radius: calc(var(--radius-lg) - 0.25rem);
+  box-shadow: inset 0 0 0 1px rgba(64, 61, 54, 0.85);
+}
+
+.story-card__media--drive,
+.story-card__media--notes,
+.story-card__media--source {
+  background: var(--color-paper);
+}
+
+.closing-note {
+  max-width: 48rem;
+  margin-top: 0.5rem;
+  padding: 0 0.25rem 1rem;
+}
+
+.closing-note__text {
+  margin: 0;
+  color: var(--color-olive-gray);
+  font-family: var(--font-serif);
+  font-size: clamp(1.15rem, 2vw, 1.5rem);
+  line-height: 1.7;
 }
 
 .home-entry-card .surface-card__title,
 .drive-feature-card .surface-card__title {
-  font-size: 1.5rem;
+  font-size: 1.45rem;
 }
 
 .inline-link {
@@ -111,6 +180,12 @@
   text-decoration: underline;
 }
 
+@media (max-width: 960px) {
+  .story-card {
+    grid-template-columns: 1fr;
+  }
+}
+
 @media (max-width: 720px) {
   .hero-art {
     min-height: 18rem;
@@ -119,5 +194,18 @@
 
   .hero-art__note {
     margin-top: 4rem;
+  }
+
+  .home-intro {
+    padding: 1.2rem;
+  }
+
+  .home-intro__text {
+    max-width: none;
+    font-size: clamp(1.4rem, 8vw, 2rem);
+  }
+
+  .story-card__media {
+    min-height: 12rem;
   }
 }
