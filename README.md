@@ -3,7 +3,7 @@
 
 ![Status](https://img.shields.io/badge/Status-Cloud%20Drive%20Live-brightgreen)
 ![Platform](https://img.shields.io/badge/Platform-Azure%20VM%20%2B%20Python-blue)
-![HTTP](https://img.shields.io/badge/HTTP-Caddy-orange)
+![HTTPS](https://img.shields.io/badge/HTTPS-Caddy%20%2B%20Let's%20Encrypt-green)
 
 ## Current State
 
@@ -12,20 +12,20 @@ The following state is based on the repository and server checks performed on `2
 | Item | Status | Notes |
 |---|---|---|
 | `cloud-drive.service` | `active` | Cloud drive runs locally on the Azure VM. |
-| `caddy.service` | `active` | Serves the public cloud-drive domain over HTTP. |
+| `caddy.service` | `active` | Terminates HTTPS for the public cloud-drive domain. |
 | `cloud-gateway.service` | `active` | Still available on the VM for project routing and docs-related use. |
 | `lobe-chat.service` | `stopped` | Public AI access has been removed and the service is offline. |
 | GitHub Pages | `200 OK` | `https://sihan-bzwj.github.io/` |
-| Cloud drive public URL | `live` | `http://clouddrive.ccwu.cc/` |
+| Cloud drive public URL | `live` | `https://clouddrive.ccwu.cc/` |
 
 ## Public Endpoints
 
 | Service | URL | Description |
 |---|---|---|
-| Cloud drive | `http://clouddrive.ccwu.cc/` | Public cloud-drive entry backed by the Azure VM. |
+| Cloud drive | `https://clouddrive.ccwu.cc/` | Public cloud-drive entry backed by the Azure VM. |
 | Docs site | `https://sihan-bzwj.github.io/` | Public documentation on GitHub Pages. |
 
-The cloud-drive domain points to the Azure VM public IP and is currently served over HTTP by Caddy. As of `2026-04-11`, external port `443` is not reachable, so HTTPS is temporarily disabled until the Azure inbound rule is opened.
+The cloud-drive domain points to the Azure VM public IP and is served over HTTPS by Caddy with Let's Encrypt.
 
 ## AI Removal Record
 
@@ -47,9 +47,9 @@ Current handling:
 
 ```text
 Public browser
-  -> http://clouddrive.ccwu.cc/
+  -> https://clouddrive.ccwu.cc/
     -> DNSHE A record
-    -> Caddy on Azure VM (:80)
+    -> Caddy on Azure VM (:443)
     -> cloud_drive_server.py (127.0.0.1:8787)
 
 Public browser
@@ -62,7 +62,7 @@ Public browser
 | Layer | Technology | State / Version | Purpose |
 |---|---|---|---|
 | OS | Ubuntu | `22.04.5 LTS` | Azure VM runtime environment |
-| Reverse proxy | Caddy | live on server | Public HTTP routing for the cloud-drive domain |
+| Reverse proxy / TLS | Caddy | live on server | HTTPS termination and domain routing |
 | Drive service | Python stdlib HTTP service | custom | File browsing, upload, download, deletion |
 | Gateway | Python 3 | `3.10.12` | Additional project routing on the VM |
 | Service manager | systemd | Ubuntu native | Startup, restart, and logs |
@@ -81,16 +81,16 @@ Public browser
 ```bash
 sudo systemctl status cloud-drive.service --no-pager
 sudo systemctl status caddy.service --no-pager
-curl -I http://clouddrive.ccwu.cc/
-curl http://clouddrive.ccwu.cc/health
+curl -I https://clouddrive.ccwu.cc/
+curl https://clouddrive.ccwu.cc/health
 ```
 
 ## Update Log
 
 ### 2026-04-11
 
-- Bound the public cloud-drive domain to `http://clouddrive.ccwu.cc/`
-- Switched Caddy to temporary HTTP-only serving because Azure inbound `443` is still blocked externally
+- Bound the public cloud-drive domain to `https://clouddrive.ccwu.cc/`
+- Restored HTTPS after opening Azure inbound `443`
 - Kept cloud-drive storage on the Azure VM under `/home/azureuser/cloud-drive`
 - Removed outdated Render and Quick Tunnel references from the repository
 - Added `HEAD` handling to the cloud-drive service so `curl -I /` works
