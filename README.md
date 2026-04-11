@@ -1,82 +1,89 @@
-# Sihan's Blog | 思涵的个人网站
-> A personal project on an Azure VM, now focused publicly on the cloud drive and documentation site.
+# Sihan's Cloud Notes
+> Personal cloud-drive services, deployment files, and a redesigned GitHub Pages documentation site.
 
 ![Status](https://img.shields.io/badge/Status-Cloud%20Drive%20Live-brightgreen)
 ![Platform](https://img.shields.io/badge/Platform-Azure%20VM%20%2B%20Python-blue)
-![HTTPS](https://img.shields.io/badge/HTTPS-Caddy%20%2B%20Let's%20Encrypt-green)
+![Docs](https://img.shields.io/badge/Docs-MkDocs%20%2B%20GitHub%20Pages-8c6f4a)
 
 ## Current State
 
-The following state is based on the repository and server checks performed on `2026-04-11`.
+The following state reflects the repository and server checks aligned with the current public setup on `2026-04-11`.
 
 | Item | Status | Notes |
 |---|---|---|
-| `cloud-drive.service` | `active` | Cloud drive runs locally on the Azure VM. |
-| `caddy.service` | `active` | Terminates HTTPS for the public cloud-drive domain. |
-| `cloud-gateway.service` | `active` | Still available on the VM for project routing and docs-related use. |
-| `lobe-chat.service` | `stopped` | Public AI access has been removed and the service is offline. |
+| `cloud-drive.service` | `active` | Public file service on the Azure VM. |
+| `caddy.service` | `active` | Terminates HTTPS for the drive domain. |
+| `cloud-gateway.service` | `active` | Available for project routing and related service glue. |
+| `lobe-chat.service` | `stopped` | No longer exposed publicly. |
 | GitHub Pages | `200 OK` | `https://sihan-bzwj.github.io/` |
-| Cloud drive public URL | `live` | `https://clouddrive.ccwu.cc/` |
+| Cloud drive URL | `live` | `https://clouddrive.ccwu.cc/` |
 
 ## Public Endpoints
 
 | Service | URL | Description |
 |---|---|---|
-| Cloud drive | `https://clouddrive.ccwu.cc/` | Public cloud-drive entry backed by the Azure VM. |
-| Docs site | `https://sihan-bzwj.github.io/` | Public documentation on GitHub Pages. |
-
-The cloud-drive domain points to the Azure VM public IP and is served over HTTPS by Caddy with Let's Encrypt.
-
-## AI Removal Record
-
-Starting on `2026-04-11`, the repository and public docs no longer expose a public AI entry, and the server-side AI service has been stopped.
-
-Reasons:
-
-- The public project is now centered on the cloud drive and docs, not on keeping an unstable public AI endpoint.
-- The old AI entry created stale links and maintenance overhead.
-- The drive now has a stable public hostname, so public docs should only keep endpoints that are actually live.
-
-Current handling:
-
-- Public AI entry removed
-- `lobe-chat.service` stopped and disabled
-- Public docs keep only the cloud-drive and documentation entrypoints
+| Cloud drive | `https://clouddrive.ccwu.cc/` | Public file browser and transfer entry. |
+| Docs site | `https://sihan-bzwj.github.io/` | GitHub Pages site for project notes and service guidance. |
+| Source repo | `https://github.com/sihan-bzwj/sihan-bzwj.github.io` | Canonical source for docs, service code, and deployment files. |
 
 ## Architecture
 
 ```text
 Public browser
   -> https://clouddrive.ccwu.cc/
-    -> DNSHE A record
+    -> DNS A record
     -> Caddy on Azure VM (:443)
     -> cloud_drive_server.py (127.0.0.1:8787)
 
 Public browser
   -> https://sihan-bzwj.github.io/
-    -> GitHub Pages docs
+    -> GitHub Pages
+    -> MkDocs static site generated from my-project/docs/
 ```
+
+## Docs Site Modules
+
+The GitHub Pages site was redesigned around `DESIGN.md` and split into small front-end modules:
+
+| Path | Responsibility |
+|---|---|
+| `my-project/mkdocs.yml` | Site metadata, page navigation, and asset registration |
+| `my-project/docs/index.md` | New editorial-style homepage |
+| `my-project/docs/cloud-drive.md` | Cloud-drive service page |
+| `my-project/docs/stylesheets/fonts.css` | Purposeful font stacks for serif, sans, and mono text |
+| `my-project/docs/stylesheets/tokens.css` | Shared design tokens from `DESIGN.md` |
+| `my-project/docs/stylesheets/base.css` | Theme resets and MkDocs/Material overrides |
+| `my-project/docs/stylesheets/components.css` | Reusable cards, grids, buttons, and reveal states |
+| `my-project/docs/stylesheets/pages.css` | Page-specific hero and illustration treatment |
+| `my-project/docs/javascripts/reveal.js` | Lightweight reveal-on-scroll behavior |
+
+Removed from the docs site during this cleanup:
+
+- The previous cold dark theme
+- The unused visitor-count fetch logic
+- The old iframe-driven cloud-drive preview
+- Garbled bilingual labels and broken metadata text
+- Redundant homepage sections that no longer matched the live services
 
 ## Tech Stack
 
-| Layer | Technology | State / Version | Purpose |
-|---|---|---|---|
-| OS | Ubuntu | `22.04.5 LTS` | Azure VM runtime environment |
-| Reverse proxy / TLS | Caddy | live on server | HTTPS termination and domain routing |
-| Drive service | Python stdlib HTTP service | custom | File browsing, upload, download, deletion |
-| Gateway | Python 3 | `3.10.12` | Additional project routing on the VM |
-| Service manager | systemd | Ubuntu native | Startup, restart, and logs |
-| Docs | MkDocs + GitHub Pages | repo-managed | Public docs site |
+| Layer | Technology | Purpose |
+|---|---|---|
+| Runtime OS | Ubuntu 22.04.5 LTS | Azure VM host environment |
+| Reverse proxy / TLS | Caddy | HTTPS termination and domain routing |
+| Drive service | Python stdlib HTTP server | File browsing, upload, download, folder management |
+| Gateway | Python 3.10.12 | Routing and static-site support on the VM |
+| Docs | MkDocs Material + GitHub Pages | Public documentation site |
+| Front-end docs assets | Modular CSS + small vanilla JS | Page layout, styling, and scroll reveal |
 
-## Key Repo Files
+## Common Commands
 
-- `my-project/cloud_drive_server.py`: cloud-drive HTTP server
-- `my-project/cloud-drive.service`: `systemd` unit for the drive service
-- `my-project/cloud_gateway.py`: project gateway entrypoint
-- `my-project/cloud-gateway.service`: `systemd` unit for the gateway
-- `my-project/docs/cloud-drive.md`: public docs page for the cloud drive
-
-## Troubleshooting
+```bash
+python my-project/cloud_drive_server.py --host 127.0.0.1 --port 8787
+python my-project/cloud_gateway.py --host 127.0.0.1 --port 8080
+python -m unittest discover -s my-project/tests
+python -m mkdocs build -f my-project/mkdocs.yml
+```
 
 ```bash
 sudo systemctl status cloud-drive.service --no-pager
@@ -89,14 +96,11 @@ curl https://clouddrive.ccwu.cc/health
 
 ### 2026-04-11
 
-- Bound the public cloud-drive domain to `https://clouddrive.ccwu.cc/`
-- Restored HTTPS after opening Azure inbound `443`
-- Kept cloud-drive storage on the Azure VM under `/home/azureuser/cloud-drive`
-- Removed outdated Render and Quick Tunnel references from the repository
-- Added `HEAD` handling to the cloud-drive service so `curl -I /` works
-- Refactored the new `HEAD` response path into helper methods and added regression coverage
-- Fixed the embedded frontend path-normalization warning caused by escaped regex literals
-- Updated the MkDocs cloud-drive page and redeployed GitHub Pages content
-- Removed public AI references from the docs site while keeping the record only in README
-- Replaced the slow cloud-drive iframe preview with a direct domain link
-- Cleaned the garbled MkDocs site title and navigation labels
+- Rebuilt the GitHub Pages site to match the warm editorial design direction in `DESIGN.md`
+- Rewrote the homepage and cloud-drive page with clean bilingual copy and a reduced information hierarchy
+- Split docs styling into `fonts.css`, `tokens.css`, `base.css`, `components.css`, and `pages.css`
+- Replaced the visitor-count script with a single-purpose `reveal.js` interaction module
+- Removed the leftover visitor-count UI, old dark-tech presentation, and iframe preview scaffolding
+- Corrected broken site metadata, navigation labels, and other garbled text in the docs source
+- Kept the public docs focused on the live cloud-drive and repository entrypoints only
+- Preserved the existing Azure VM + Caddy + Python deployment model for the actual file service

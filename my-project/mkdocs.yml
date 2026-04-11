@@ -1,13 +1,14 @@
-site_name: Sihan's Blog | 思涵的个人网站
-site_description: Personal Cloud Drive + Project Notes | 个人云盘与项目说明
+site_name: Sihan's Cloud Notes
+site_description: Warm editorial docs for the cloud drive, deployment notes, and repository entrypoints.
 site_author: Sihan
 site_url: https://sihan-bzwj.github.io/
 repo_url: https://github.com/sihan-bzwj/sihan-bzwj.github.io
-repo_name: GitHub
+repo_name: sihan-bzwj.github.io
 
 theme:
   name: material
   language: zh
+  font: false
 
 markdown_extensions:
   - pymdownx.emoji
@@ -18,10 +19,14 @@ markdown_extensions:
   - tables
 
 extra_css:
-  - stylesheets/extra.css
+  - stylesheets/fonts.css
+  - stylesheets/tokens.css
+  - stylesheets/base.css
+  - stylesheets/components.css
+  - stylesheets/pages.css
 
 extra_javascript:
-  - javascripts/site-footer.js
+  - javascripts/reveal.js
 
 nav:
   - 首页 / Home: index.md

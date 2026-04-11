@@ -1,0 +1,42 @@
+/* Design tokens derived from DESIGN.md so every page shares one warm visual system. */
+:root {
+  color-scheme: light;
+
+  --color-parchment: #f5f4ed;
+  --color-ivory: #faf9f5;
+  --color-paper: #fffdf7;
+  --color-warm-sand: #e8e6dc;
+  --color-border-cream: #f0eee6;
+  --color-border-warm: #dfd7c9;
+  --color-ink: #141413;
+  --color-dark-surface: #30302e;
+  --color-dark-surface-soft: #232320;
+  --color-olive-gray: #5e5d59;
+  --color-stone: #87867f;
+  --color-warm-silver: #d4d0c6;
+  --color-terracotta: #c96442;
+  --color-terracotta-soft: #d97757;
+  --color-moss: #6d7b62;
+  --color-amber-wash: #efe4cf;
+
+  --shadow-ring: 0 0 0 1px rgba(209, 207, 197, 0.9);
+  --shadow-ring-deep: 0 0 0 1px rgba(194, 192, 182, 0.95);
+  --shadow-whisper: 0 18px 48px rgba(22, 20, 19, 0.08);
+
+  --radius-sm: 10px;
+  --radius-md: 16px;
+  --radius-lg: 24px;
+  --radius-xl: 32px;
+
+  --space-2xs: 0.375rem;
+  --space-xs: 0.5rem;
+  --space-sm: 0.75rem;
+  --space-md: 1rem;
+  --space-lg: 1.5rem;
+  --space-xl: 2rem;
+  --space-2xl: 3rem;
+  --space-3xl: 5rem;
+
+  --content-width: min(72rem, calc(100vw - 1.5rem));
+  --transition-soft: 220ms ease;
+}

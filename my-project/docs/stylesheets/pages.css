@@ -1,0 +1,123 @@
+/* Page-level styling for illustrations, hero panels, and alternating sections. */
+.hero-art {
+  position: relative;
+  min-height: 24rem;
+  overflow: hidden;
+  padding: 1.5rem;
+  border-radius: calc(var(--radius-xl) - 0.25rem);
+  background:
+    linear-gradient(180deg, rgba(255, 253, 247, 0.96), rgba(239, 228, 207, 0.72)),
+    var(--color-paper);
+  box-shadow: inset 0 0 0 1px rgba(240, 238, 230, 0.95);
+}
+
+.hero-art__panel,
+.hero-art__note {
+  position: relative;
+  z-index: 1;
+  max-width: 18rem;
+  padding: 1rem 1.1rem;
+  border-radius: var(--radius-md);
+  background: rgba(250, 249, 245, 0.86);
+  box-shadow: var(--shadow-ring);
+}
+
+.hero-art__panel {
+  margin-left: auto;
+}
+
+.hero-art__note {
+  margin-top: 6.5rem;
+}
+
+.hero-art__label {
+  display: block;
+  margin-bottom: 0.45rem;
+  color: var(--color-stone);
+  font-size: 0.78rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.hero-art__title {
+  margin: 0 0 0.5rem;
+  font-family: var(--font-serif);
+  font-size: 1.4rem;
+  line-height: 1.2;
+}
+
+.hero-art__text {
+  margin: 0;
+  color: var(--color-olive-gray);
+  font-size: 0.95rem;
+  line-height: 1.7;
+}
+
+.hero-art__shape {
+  position: absolute;
+  inset: auto auto 1.5rem 1.5rem;
+  width: min(22rem, 72%);
+  color: var(--color-terracotta);
+  opacity: 0.95;
+}
+
+.hero-art__shape--drive {
+  inset: auto 1.5rem 1.5rem auto;
+  width: min(20rem, 64%);
+  color: var(--color-moss);
+}
+
+.section-card--dark .hero-art {
+  background:
+    linear-gradient(180deg, rgba(48, 48, 46, 0.94), rgba(35, 35, 32, 0.98)),
+    var(--color-dark-surface);
+  box-shadow: inset 0 0 0 1px rgba(67, 66, 61, 0.85);
+}
+
+.section-card--dark .hero-art__panel,
+.section-card--dark .hero-art__note {
+  background: rgba(36, 35, 32, 0.92);
+  box-shadow: 0 0 0 1px rgba(67, 66, 61, 0.85);
+}
+
+.section-card--dark .hero-art__title,
+.section-card--dark .hero-art__text,
+.section-card--dark .hero-art__label {
+  color: var(--color-warm-silver);
+}
+
+.chapter-divider {
+  width: 100%;
+  height: 1px;
+  margin: var(--space-lg) 0;
+  background: linear-gradient(90deg, rgba(223, 215, 201, 0), rgba(223, 215, 201, 0.95), rgba(223, 215, 201, 0));
+}
+
+.section-card--dark .chapter-divider {
+  background: linear-gradient(90deg, rgba(67, 66, 61, 0), rgba(109, 123, 98, 0.95), rgba(67, 66, 61, 0));
+}
+
+.home-entry-card .surface-card__title,
+.drive-feature-card .surface-card__title {
+  font-size: 1.5rem;
+}
+
+.inline-link {
+  color: var(--color-terracotta) !important;
+  text-decoration: none;
+}
+
+.inline-link:hover {
+  text-decoration: underline;
+}
+
+@media (max-width: 720px) {
+  .hero-art {
+    min-height: 18rem;
+    padding: 1rem;
+  }
+
+  .hero-art__note {
+    margin-top: 4rem;
+  }
+}

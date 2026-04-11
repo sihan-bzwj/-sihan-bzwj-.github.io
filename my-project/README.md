@@ -1,15 +1,15 @@
-# my-project | 实现与部署说明
-> This directory contains the service code, deployment files, and documentation source.
+# my-project
+> Service code, deployment files, and the MkDocs source for the public site.
 
 ## What Lives Here
 
-- `cloud_drive_app/`: config, path handling, upload parsing, and business logic for the drive service
-- `cloud_gateway_app/`: gateway config, reverse proxying, static-site serving, and visitor counting
+- `cloud_drive_app/`: cloud-drive configuration, storage, uploads, and service helpers
+- `cloud_gateway_app/`: gateway configuration, routing, proxying, and static-site helpers
 - `cloud_drive_server.py`: cloud-drive entrypoint
 - `cloud_gateway.py`: gateway entrypoint
 - `cloud-drive.service`: `systemd` unit for the drive service
 - `cloud-gateway.service`: `systemd` unit for the gateway
-- `docs/`: MkDocs documentation source
+- `docs/`: GitHub Pages documentation source
 - `tests/`: standard-library unit tests
 
 ## Current Deployment Model
@@ -23,40 +23,35 @@ Public cloud-drive traffic
 
 Public docs
   -> GitHub Pages
+  -> MkDocs build output generated from docs/
 ```
 
-Key points:
+## Docs Front-End Layout
 
-- The public cloud-drive domain terminates on Caddy, not on Render.
-- Uploaded files remain on the Azure VM.
-- The AI service is no longer part of the public deployment.
+The documentation site was reorganized into small, easier-to-maintain front-end modules:
 
-## Server-Verified State
+- `docs/index.md`: redesigned homepage
+- `docs/cloud-drive.md`: redesigned cloud-drive page
+- `docs/stylesheets/fonts.css`: font imports and shared font-family variables
+- `docs/stylesheets/tokens.css`: warm palette, spacing, radii, and shadows from `DESIGN.md`
+- `docs/stylesheets/base.css`: MkDocs/Material overrides and global defaults
+- `docs/stylesheets/components.css`: shared cards, buttons, grids, and reveal states
+- `docs/stylesheets/pages.css`: hero illustrations and page-only styling
+- `docs/javascripts/reveal.js`: small intersection-observer animation helper
 
-Based on the actual server checks performed on `2026-04-11`:
+Removed as part of the cleanup:
 
-- `cloud-drive.service`: `active`
-- `caddy.service`: `active`
-- `cloud-gateway.service`: `active`
-- `lobe-chat.service`: `stopped`
-- `https://clouddrive.ccwu.cc/health`: live
+- Old single-file docs stylesheet
+- Visitor-count script and UI dependency
+- Legacy iframe preview scaffolding
+- Garbled labels in page content and MkDocs metadata
 
 ## Principles
 
-- Public docs should only show URLs that are already live.
-- Cloud-drive storage stays on the Azure VM.
-- HTTPS termination happens on the VM via Caddy.
-- Repo docs should match the deployed architecture.
-
-## Tech Stack
-
-| Component | Technology | Notes |
-|---|---|---|
-| Drive service | Python stdlib HTTP server | Directory browsing, upload, download, deletion |
-| Reverse proxy / TLS | Caddy | Public HTTPS for `clouddrive.ccwu.cc` |
-| Gateway | Python stdlib HTTP server | Project routing and static content support |
-| Docs | MkDocs + GitHub Pages | Docs site and landing pages |
-| Service manager | systemd | Keeps services ordered and running |
+- Public docs should show only live, supportable endpoints.
+- Static site code should stay modular instead of growing in one CSS file.
+- Upload and delete actions remain protected by the server-side password.
+- The docs site explains the deployed architecture; it does not emulate the service UI.
 
 ## Common Commands
 
@@ -64,28 +59,15 @@ Based on the actual server checks performed on `2026-04-11`:
 python cloud_drive_server.py --host 127.0.0.1 --port 8787
 python cloud_gateway.py --host 127.0.0.1 --port 8080
 python -m unittest discover -s tests
-```
-
-```bash
-sudo systemctl status cloud-drive.service --no-pager
-sudo systemctl status caddy.service --no-pager
-sudo systemctl status cloud-gateway.service --no-pager
-curl -I https://clouddrive.ccwu.cc/
-curl https://clouddrive.ccwu.cc/health
+python -m mkdocs build
 ```
 
 ## Update Log
 
 ### 2026-04-11
 
-- Switched the public cloud-drive entry to `https://clouddrive.ccwu.cc/`
-- Restored HTTPS after opening Azure inbound `443`
-- Kept file storage on the Azure VM instead of moving it to a hosted platform
-- Removed outdated deployment artifacts and placeholder-domain references
-- Added `HEAD` support to the cloud-drive HTTP service
-- Refactored `HEAD` handling into small helper methods with targeted comments
-- Added a regression test for `HEAD /`
-- Re-published the docs site so the cloud-drive page no longer points at `drive.example.com`
-- Removed public AI mentions from the docs site pages
-- Replaced the embedded cloud-drive iframe with a direct access section
-- Cleaned `mkdocs.yml` site metadata and navigation labels
+- Rebuilt the docs site around the warm editorial system described in `../DESIGN.md`
+- Replaced the previous dark front-end with two focused pages: home and cloud drive
+- Split the docs styles into five CSS modules and replaced the old JS with a dedicated reveal module
+- Removed visitor-count and iframe-related dead code from the public docs
+- Rewrote page copy so it matches the currently deployed cloud-drive service
