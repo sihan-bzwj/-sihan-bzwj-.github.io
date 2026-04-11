@@ -97,3 +97,6 @@ curl https://clouddrive.ccwu.cc/health
 - Refactored the new `HEAD` response path into helper methods and added regression coverage
 - Fixed the embedded frontend path-normalization warning caused by escaped regex literals
 - Updated the MkDocs cloud-drive page and redeployed GitHub Pages content
+- Removed public AI references from the docs site while keeping the record only in README
+- Replaced the slow cloud-drive iframe preview with a direct domain link
+- Cleaned the garbled MkDocs site title and navigation labels

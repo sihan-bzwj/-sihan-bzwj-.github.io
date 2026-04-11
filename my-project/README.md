@@ -86,3 +86,6 @@ curl https://clouddrive.ccwu.cc/health
 - Refactored `HEAD` handling into small helper methods with targeted comments
 - Added a regression test for `HEAD /`
 - Re-published the docs site so the cloud-drive page no longer points at `drive.example.com`
+- Removed public AI mentions from the docs site pages
+- Replaced the embedded cloud-drive iframe with a direct access section
+- Cleaned `mkdocs.yml` site metadata and navigation labels
