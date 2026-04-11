@@ -1,27 +1,36 @@
-/* Design tokens derived from DESIGN.md so every page shares one warm visual system. */
+/* Darker public-facing tokens, while keeping the warm accent palette from DESIGN.md. */
 :root {
-  color-scheme: light;
+  color-scheme: dark;
 
-  --color-parchment: #f5f4ed;
-  --color-ivory: #faf9f5;
-  --color-paper: #fffdf7;
-  --color-warm-sand: #e8e6dc;
-  --color-border-cream: #f0eee6;
-  --color-border-warm: #dfd7c9;
-  --color-ink: #141413;
-  --color-dark-surface: #30302e;
-  --color-dark-surface-soft: #232320;
-  --color-olive-gray: #5e5d59;
-  --color-stone: #87867f;
-  --color-warm-silver: #d4d0c6;
+  --color-parchment: #11110f;
+  --color-ivory: #171714;
+  --color-paper: #1c1b18;
+  --color-warm-sand: #292824;
+  --color-border-cream: #2b2a26;
+  --color-border-warm: #403d36;
+  --color-ink: #f3eee2;
+  --color-dark-surface: #141412;
+  --color-dark-surface-soft: #1f1e1b;
+  --color-olive-gray: #c1bcaf;
+  --color-stone: #968f82;
+  --color-warm-silver: #ddd7ca;
   --color-terracotta: #c96442;
-  --color-terracotta-soft: #d97757;
-  --color-moss: #6d7b62;
-  --color-amber-wash: #efe4cf;
+  --color-terracotta-soft: #de7e5a;
+  --color-moss: #80906f;
+  --color-amber-wash: #312720;
 
-  --shadow-ring: 0 0 0 1px rgba(209, 207, 197, 0.9);
-  --shadow-ring-deep: 0 0 0 1px rgba(194, 192, 182, 0.95);
-  --shadow-whisper: 0 18px 48px rgba(22, 20, 19, 0.08);
+  --page-glow-1: rgba(201, 100, 66, 0.08);
+  --page-glow-2: rgba(128, 144, 111, 0.08);
+  --nav-bg: rgba(20, 20, 18, 0.82);
+  --panel-bg: rgba(23, 23, 20, 0.94);
+  --panel-strong-bg: rgba(20, 20, 18, 0.9);
+  --surface-soft-bg: rgba(28, 27, 24, 0.9);
+  --status-bg: rgba(41, 40, 36, 0.92);
+  --chip-bg: rgba(41, 40, 36, 0.96);
+
+  --shadow-ring: 0 0 0 1px rgba(64, 61, 54, 0.92);
+  --shadow-ring-deep: 0 0 0 1px rgba(96, 89, 79, 0.96);
+  --shadow-whisper: 0 24px 64px rgba(0, 0, 0, 0.34);
 
   --radius-sm: 10px;
   --radius-md: 16px;
@@ -39,4 +48,38 @@
 
   --content-width: min(72rem, calc(100vw - 1.5rem));
   --transition-soft: 220ms ease;
+}
+
+:root[data-theme="light"] {
+  color-scheme: light;
+
+  --color-parchment: #f3efe6;
+  --color-ivory: #f8f4ec;
+  --color-paper: #fffcf7;
+  --color-warm-sand: #e7dfd1;
+  --color-border-cream: #e5dccd;
+  --color-border-warm: #d5c6b2;
+  --color-ink: #181613;
+  --color-dark-surface: #26231e;
+  --color-dark-surface-soft: #f1ebe1;
+  --color-olive-gray: #5f584e;
+  --color-stone: #81786d;
+  --color-warm-silver: #2a241e;
+  --color-terracotta: #c96442;
+  --color-terracotta-soft: #d77452;
+  --color-moss: #6d7b62;
+  --color-amber-wash: #efe3d0;
+
+  --page-glow-1: rgba(201, 100, 66, 0.06);
+  --page-glow-2: rgba(109, 123, 98, 0.06);
+  --nav-bg: rgba(255, 252, 247, 0.84);
+  --panel-bg: rgba(255, 252, 247, 0.94);
+  --panel-strong-bg: rgba(248, 244, 236, 0.94);
+  --surface-soft-bg: rgba(241, 235, 225, 0.92);
+  --status-bg: rgba(231, 223, 209, 0.92);
+  --chip-bg: rgba(231, 223, 209, 0.96);
+
+  --shadow-ring: 0 0 0 1px rgba(203, 190, 169, 0.95);
+  --shadow-ring-deep: 0 0 0 1px rgba(177, 160, 137, 0.98);
+  --shadow-whisper: 0 24px 48px rgba(38, 31, 23, 0.08);
 }

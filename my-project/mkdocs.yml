@@ -1,5 +1,5 @@
-site_name: Sihan's Cloud Notes
-site_description: Warm editorial docs for the cloud drive, deployment notes, and repository entrypoints.
+site_name: Sihan's Blog
+site_description: Notes, tools, and the cloud drive I keep online | 个人笔记、工具与云盘入口
 site_author: Sihan
 site_url: https://sihan-bzwj.github.io/
 repo_url: https://github.com/sihan-bzwj/sihan-bzwj.github.io
@@ -26,6 +26,7 @@ extra_css:
   - stylesheets/pages.css
 
 extra_javascript:
+  - javascripts/theme-toggle.js
   - javascripts/reveal.js
 
 nav:
