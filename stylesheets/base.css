@@ -1,0 +1,81 @@
+/* Theme overrides: remove the stock chrome and let the custom editorial pages lead. */
+html,
+body {
+  background: var(--color-parchment);
+}
+
+body {
+  margin: 0;
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  line-height: 1.6;
+}
+
+.md-header,
+.md-tabs,
+.md-sidebar,
+.md-sidebar--primary,
+.md-sidebar--secondary,
+.md-footer,
+.md-top {
+  display: none;
+}
+
+.md-main__inner,
+.md-content,
+.md-content__inner,
+.md-grid {
+  max-width: none;
+  margin: 0;
+}
+
+.md-main__inner {
+  padding-top: 0;
+}
+
+.md-content {
+  width: 100%;
+}
+
+.md-content__inner {
+  padding: 0;
+}
+
+.md-typeset {
+  color: var(--color-ink);
+  font-size: 1rem;
+}
+
+.md-typeset h1,
+.md-typeset h2,
+.md-typeset h3,
+.md-typeset h4 {
+  margin: 0;
+  color: inherit;
+  font-family: var(--font-serif);
+  font-weight: 500;
+  line-height: 1.15;
+}
+
+.md-typeset p,
+.md-typeset li {
+  color: inherit;
+}
+
+.md-typeset a {
+  color: inherit;
+}
+
+.md-typeset code,
+.md-typeset pre code {
+  font-family: var(--font-mono);
+}
+
+.md-typeset pre > code {
+  padding: 0;
+  background: transparent;
+}
+
+::selection {
+  background: rgba(201, 100, 66, 0.18);
+}
