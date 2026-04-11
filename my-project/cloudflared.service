@@ -1,12 +1,13 @@
 [Unit]
-Description=Cloudflare Named Tunnel for Gateway
+Description=Cloudflare Tunnel for Gateway (Token Managed)
 After=network.target network-online.target cloud-gateway.service
 Wants=network-online.target cloud-gateway.service
 
 [Service]
 Type=simple
 User=azureuser
-ExecStart=/usr/bin/cloudflared --config /home/azureuser/.cloudflared/config.yml tunnel run
+EnvironmentFile=-/home/azureuser/.cloudflared/cloudflared-token.env
+ExecStart=/usr/bin/cloudflared tunnel run --token ${TUNNEL_TOKEN}
 Restart=always
 RestartSec=5
 StandardOutput=journal

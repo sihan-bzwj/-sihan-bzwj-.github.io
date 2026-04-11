@@ -15,13 +15,13 @@ The following state is based on the repo and server checks performed on `2026-04
 |---|---|---|
 | `lobe-chat.service` | `active` | AI 容器由 `systemd + docker compose` 托管。 |
 | `cloud-gateway.service` | `active` | 网关已更新到仓库当前版本。 |
-| `cloudflared.service` | `migration pending` | 仓库已切换到 Named Tunnel 模板，服务器待完成凭据和 DNS 绑定。 |
+| `cloudflared.service` | `active` | 服务器已切到 Cloudflare dashboard 管理的 token tunnel。 |
 | 本地 AI Local AI | `200 OK` | `http://127.0.0.1:3210/chat` |
 | 本地网关 Local gateway | `200 OK` | `http://127.0.0.1:8080/chat` |
 | GitHub Pages | `200 OK` | `https://sihan-bzwj.github.io/` |
 
-当前不再把 Cloudflare Quick Tunnel 当正式入口。原因是 Quick Tunnel 地址会漂移，而且手机和外网访问稳定性不足。  
-Quick Tunnel is no longer treated as the official entrypoint because its URL drifts and its reliability is not good enough for mobile and public access.
+当前不再把 Cloudflare Quick Tunnel 当正式入口。服务器已切到 Cloudflare dashboard 管理的 token tunnel，避免 Quick Tunnel 地址漂移。  
+Quick Tunnel is no longer treated as the official entrypoint. The server now uses a dashboard-managed token tunnel to avoid Quick Tunnel URL drift.
 
 ## 目标入口 | Target Public Endpoints
 
@@ -31,8 +31,8 @@ Quick Tunnel is no longer treated as the official entrypoint because its URL dri
 | 云盘 Cloud drive | `https://drive.example.com/` | 独立固定子域名。 / Separate fixed subdomain. |
 | 文档站点 Docs site | `https://sihan-bzwj.github.io/` | GitHub Pages 公开文档。 / Public docs on GitHub Pages. |
 
-`ai.example.com` 和 `drive.example.com` 目前是占位符。切换完成前，需要先在 Cloudflare 托管真实域名，并在服务器上完成 Named Tunnel 登录、创建和 DNS 路由。  
-`ai.example.com` and `drive.example.com` are placeholders. Before cutover, a real domain must be managed in Cloudflare and the server must complete Named Tunnel login, creation, and DNS routing.
+`ai.example.com` 和 `drive.example.com` 目前仍是占位符。运行层已经切到 token tunnel，但公开主机名仍需在 Cloudflare Zero Trust Dashboard 里绑定到真实域名。  
+`ai.example.com` and `drive.example.com` are still placeholders. The runtime has been moved to a token tunnel, but public hostnames still need to be bound to a real domain in the Cloudflare Zero Trust Dashboard.
 
 ## 架构与原理 | Architecture and Principles
 
@@ -53,8 +53,8 @@ Browser / Mobile Client
   Gateway-first routing: AI, drive, and static content all hit the Python gateway first and are then dispatched by host or path.
 - 服务边界清晰：AI、网关、云盘、隧道分别由独立进程或容器承载，便于排障。  
   Clear service boundaries: AI, gateway, drive, and tunnel run as separate units for easier troubleshooting.
-- 固定域名优先：Named Tunnel 比 Quick Tunnel 更适合作为正式入口，因为地址稳定，可持久绑定 DNS。  
-  Fixed hostnames first: Named Tunnel is a better production entrypoint than Quick Tunnel because it supports stable DNS binding.
+- 固定域名优先：dashboard 管理的 tunnel 比 Quick Tunnel 更适合作为正式入口，因为地址稳定，可持久绑定 DNS。  
+  Fixed hostnames first: a dashboard-managed tunnel is a better production entrypoint than Quick Tunnel because it supports stable DNS binding.
 
 ## 技术栈 | Tech Stack
 
@@ -71,12 +71,12 @@ Browser / Mobile Client
 
 ## 仓库重点文件 | Key Repo Files
 
-- `my-project/cloudflared.service`：Named Tunnel 的 `systemd` 单元。  
-  `systemd` unit for the Named Tunnel.
+- `my-project/cloudflared.service`：token 管理模式的 Cloudflare Tunnel `systemd` 单元。  
+  `systemd` unit for the token-managed Cloudflare Tunnel.
 - `my-project/cloudflared.quick-tunnel.service`：旧 Quick Tunnel 兼容参考。  
   Legacy Quick Tunnel unit kept for reference.
-- `my-project/cloudflared-config.example.yml`：Named Tunnel 配置模板。  
-  Example configuration for the Named Tunnel.
+- `my-project/cloudflared-config.example.yml`：本地管理 tunnel 的可选参考模板。  
+  Optional reference template for locally managed tunnels.
 - `my-project/cloud-gateway.service`：统一网关服务。  
   Unified gateway service.
 - `my-project/lobe-chat.service`：LobeChat 容器托管服务。  
@@ -86,16 +86,17 @@ Browser / Mobile Client
 
 ## 服务器切换步骤 | Server Cutover Steps
 
-1. 在本地或服务器执行 `cloudflared tunnel login`，拿到 `~/.cloudflared/cert.pem`。  
-   Run `cloudflared tunnel login` locally or on the server to obtain `~/.cloudflared/cert.pem`.
-2. 执行 `cloudflared tunnel create <name>` 创建 Named Tunnel。  
-   Run `cloudflared tunnel create <name>` to create the Named Tunnel.
-3. 把生成的 tunnel ID 和凭据文件路径写入 `my-project/cloudflared-config.example.yml`，保存为服务器上的 `/home/azureuser/.cloudflared/config.yml`。  
-   Fill the tunnel ID and credential path in `my-project/cloudflared-config.example.yml`, then save it as `/home/azureuser/.cloudflared/config.yml` on the server.
-4. 执行 `cloudflared tunnel route dns <name> ai.<your-domain>` 和 `cloudflared tunnel route dns <name> drive.<your-domain>`。  
-   Run `cloudflared tunnel route dns <name> ai.<your-domain>` and `cloudflared tunnel route dns <name> drive.<your-domain>`.
-5. 用仓库里的 `my-project/cloudflared.service` 覆盖服务器上的 `/etc/systemd/system/cloudflared.service`，然后 `daemon-reload` 并重启服务。  
+1. 在 Cloudflare Zero Trust Dashboard 创建 tunnel。  
+   Create a tunnel in the Cloudflare Zero Trust Dashboard.
+2. 在 tunnel 页面复制 `cloudflared service install ...` 里的 token。  
+   Copy the token from the `cloudflared service install ...` command shown in the tunnel page.
+3. 在服务器写入 `/home/azureuser/.cloudflared/cloudflared-token.env`：  
+   Write `/home/azureuser/.cloudflared/cloudflared-token.env` on the server:
+   `TUNNEL_TOKEN=...`
+4. 用仓库里的 `my-project/cloudflared.service` 覆盖服务器上的 `/etc/systemd/system/cloudflared.service`，然后 `daemon-reload` 并重启服务。  
    Replace `/etc/systemd/system/cloudflared.service` on the server with `my-project/cloudflared.service`, then run `daemon-reload` and restart the service.
+5. 在 Dashboard 里为 tunnel 绑定 `ai.<your-domain>` 和 `drive.<your-domain>` 这两个 public hostnames。  
+   Bind `ai.<your-domain>` and `drive.<your-domain>` as public hostnames for the tunnel in the Dashboard.
 
 ## 常用排查 | Troubleshooting
 
@@ -107,12 +108,11 @@ docker ps -a
 curl -I http://127.0.0.1:3210/chat
 curl -I http://127.0.0.1:8080/chat
 ls -la ~/.cloudflared
+sudo cat /etc/systemd/system/cloudflared.service
 ```
 
-- 如果 AI 页面打不开，但本地 `127.0.0.1:3210` 和 `127.0.0.1:8080` 正常，优先检查 `~/.cloudflared/config.yml`、凭据文件和 DNS route。  
-  If the AI page is down while local `127.0.0.1:3210` and `127.0.0.1:8080` are healthy, check `~/.cloudflared/config.yml`, the credential file, and the DNS route first.
-- 如果服务器上没有 `~/.cloudflared/cert.pem`，就还没有完成 Cloudflare 登录，Named Tunnel 不能真正创建。  
-  If `~/.cloudflared/cert.pem` is missing on the server, Cloudflare login is not complete and the Named Tunnel cannot be created yet.
+- 如果 AI 页面打不开，但本地 `127.0.0.1:3210` 和 `127.0.0.1:8080` 正常，优先检查 `cloudflared.service` 是否载入了正确的 `TUNNEL_TOKEN`，以及 Dashboard 里的 public hostname 是否指向当前 tunnel。  
+  If the AI page is down while local `127.0.0.1:3210` and `127.0.0.1:8080` are healthy, first check whether `cloudflared.service` loaded the correct `TUNNEL_TOKEN` and whether the Dashboard public hostname points to the current tunnel.
 
 ## 更新记录 | Update Log
 
@@ -122,5 +122,5 @@ ls -la ~/.cloudflared
   Updated the server-side `cloud-gateway.service` to the current repo version.
 - 已修复 `lobe-chat.service` 的容器名冲突，并改为 `docker compose up -d` 托管方式。  
   Fixed the `lobe-chat.service` container-name conflict and switched it to `docker compose up -d`.
-- 已把仓库切换为 Cloudflare Named Tunnel 方案，新增配置模板和新的 `cloudflared.service`。  
-  Switched the repository to the Cloudflare Named Tunnel approach and added the new config template plus `cloudflared.service`.
+- 已把服务器切到 dashboard 管理的 token tunnel，并同步更新仓库中的 `cloudflared.service` 说明。  
+  Switched the server to a dashboard-managed token tunnel and updated the repository `cloudflared.service` accordingly.

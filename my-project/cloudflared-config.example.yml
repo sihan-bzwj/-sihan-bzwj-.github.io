@@ -1,3 +1,5 @@
+# Optional reference for locally managed tunnels.
+# The live server now uses a dashboard-managed token tunnel instead.
 tunnel: YOUR_TUNNEL_ID
 credentials-file: /home/azureuser/.cloudflared/YOUR_TUNNEL_ID.json
 
