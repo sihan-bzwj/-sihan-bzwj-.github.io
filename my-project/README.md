@@ -68,8 +68,8 @@ The following status is based on the actual server check performed on `2026-04-1
   `http://127.0.0.1:3210/chat`: `200 OK`
 - `http://127.0.0.1:8080/chat`：`200 OK`  
   `http://127.0.0.1:8080/chat`: `200 OK`
-- `https://procurement-trying-beside-beginning.trycloudflare.com/chat`：`200 OK`  
-  `https://procurement-trying-beside-beginning.trycloudflare.com/chat`: `200 OK`
+- `https://procurement-trying-beside-beginning.trycloudflare.com/`：`200 OK`  
+  `https://procurement-trying-beside-beginning.trycloudflare.com/`: `200 OK`
 
 ## 核心原理 | Core Principles
 

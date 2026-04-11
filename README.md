@@ -14,7 +14,7 @@ The following status was verified on `2026-04-11`.
 
 | 项目 Item | 当前状态 Current State | 说明 Notes |
 |---|---|---|
-| AI 对话平台 AI chat | `200 OK` | 公网 `https://procurement-trying-beside-beginning.trycloudflare.com/chat` 可访问。 |
+| AI 对话平台 AI chat | `200 OK` | 公网 `https://procurement-trying-beside-beginning.trycloudflare.com/` 可访问。 |
 | 云盘 Cloud drive | `200 OK` | 公网 `https://procurement-trying-beside-beginning.trycloudflare.com/cloud-drive` 可访问。 |
 | GitHub Pages | `200 OK` | `https://sihan-bzwj.github.io/` 从服务器侧验证可访问。 |
 | `lobe-chat.service` | `active` | 通过 `systemd + docker compose` 管理。 |
@@ -33,7 +33,7 @@ The following status was verified on `2026-04-11`.
 
 | 服务 Service | 地址 URL | 说明 Description |
 |---|---|---|
-| AI 对话平台 AI chat | https://procurement-trying-beside-beginning.trycloudflare.com/chat | LobeChat 主入口。 / Main LobeChat entrypoint. |
+| AI 对话平台 AI chat | https://procurement-trying-beside-beginning.trycloudflare.com/ | LobeChat 主入口。 / Main LobeChat entrypoint. |
 | 云盘 Cloud drive | https://procurement-trying-beside-beginning.trycloudflare.com/cloud-drive | 文件浏览、上传、下载、建目录、删除。 / Browse, upload, download, create folders, and delete entries. |
 | 项目主页 Project home | https://sihan-bzwj.github.io/ | GitHub Pages + MkDocs 静态站点。 / Static site powered by GitHub Pages and MkDocs. |
 | 仓库 Repository | https://github.com/sihan-bzwj/sihan-bzwj.github.io | 源码、服务文件和文档。 / Source code, service files, and docs. |
