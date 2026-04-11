@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import argparse
 import mimetypes
+import os
 import shutil
 import sys
 from http import HTTPStatus
@@ -1130,8 +1131,8 @@ class CloudDriveHandler(BaseHTTPRequestHandler):
 
 def main() -> int:
     parser = argparse.ArgumentParser(description="Cloud drive server")
-    parser.add_argument("--host", default="127.0.0.1")
-    parser.add_argument("--port", default=8787, type=int)
+    parser.add_argument("--host", default=os.environ.get("HOST", "127.0.0.1"))
+    parser.add_argument("--port", default=int(os.environ.get("PORT", "8787")), type=int)
     parser.add_argument("--root", default=str(BOOT_CONFIG.root))
     args = parser.parse_args()
 
