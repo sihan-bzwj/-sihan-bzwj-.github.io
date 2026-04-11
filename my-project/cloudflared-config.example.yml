@@ -5,6 +5,6 @@ tunnel: YOUR_TUNNEL_ID
 credentials-file: /home/azureuser/.cloudflared/YOUR_TUNNEL_ID.json
 
 ingress:
-  - hostname: drive.example.com
+  - hostname: clouddrive.ccwu.cc
     service: http://127.0.0.1:8080/cloud-drive
   - service: http_status:404
