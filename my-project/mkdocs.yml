@@ -1,5 +1,5 @@
 site_name: Sihan's Blog | 思涵的个人网站
-site_description: Cloud AI Chat Platform + Personal Cloud Drive | 云端AI对话平台 + 个人云盘
+site_description: Personal Cloud Drive + Project Notes | 个人云盘 + 项目说明
 site_author: Sihan
 site_url: https://sihan-bzwj.github.io/
 repo_url: https://github.com/sihan-bzwj/sihan-bzwj.github.io
@@ -8,7 +8,7 @@ repo_name: GitHub
 theme:
   name: material
   language: zh
-  
+
 markdown_extensions:
   - pymdownx.emoji
   - pymdownx.highlight:
@@ -26,4 +26,3 @@ extra_javascript:
 nav:
   - 首页 / Home: index.md
   - 云盘 / Cloud Drive: cloud-drive.md
-  - AI 站点 / AI: https://ai.example.com

@@ -22,14 +22,13 @@
 			</div>
 			<div class="hero-actions">
 				<a class="button" href="https://drive.example.com/" target="_blank" rel="noreferrer noopener">打开云盘 | Open Drive</a>
-				<a class="button-secondary" href="https://ai.example.com/" target="_blank" rel="noreferrer noopener">AI 站点 | AI Chat</a>
 				<a class="button-secondary" href="../">回到首页 | Back Home</a>
 			</div>
 		</div>
 
 		<aside class="side-panel">
 			<h2>当前能力 | Current Scope</h2>
-			<p>当前版本聚焦基础文件管理：目录浏览、上传、下载、建目录和删除。上传与删除都需要服务端密码。| The current version focuses on core file management: browsing, upload, download, folder creation, and deletion. Upload and delete actions require the server-side password.</p>
+			<p>当前版本聚焦基础文件管理：目录浏览、上传、下载、建目录和删除。上传与删除都需要服务端密码。公开 AI 入口已移除，不再从这里跳转。| The current version focuses on core file management: browsing, upload, download, folder creation, and deletion. Upload and delete actions require the server-side password. The public AI entry has been removed and is no longer linked from here.</p>
 			<div class="card-actions">
 				<a class="button" href="https://drive.example.com/" target="_blank" rel="noreferrer noopener">打开云盘 | Open</a>
 				<a class="button-secondary" href="https://github.com/sihan-bzwj/sihan-bzwj.github.io" target="_blank" rel="noreferrer noopener">GitHub 源码 | Code</a>
@@ -41,7 +40,7 @@
 		<div class="section-header">
 			<div>
 				<h2>界面预览 | Interface Preview</h2>
-				<p>下面直接嵌入当前云盘页面；如果加载不稳定，使用上面的按钮直接打开即可。| The current cloud drive page is embedded below. If the iframe is unstable, open it directly with the button above.</p>
+				<p>下面直接嵌入当前云盘页面；如果 iframe 不稳定，使用上面的按钮直接打开即可。| The current cloud drive page is embedded below. If the iframe is unstable, open it directly with the button above.</p>
 			</div>
 		</div>
 
@@ -67,7 +66,7 @@
 					<span class="kicker">Browse | 浏览</span>
 					<h3>目录浏览 | Directory Browser</h3>
 				</div>
-				<p>支持按目录层级浏览文件，目录优先展示，并实时显示当前磁盘使用情况。| Browse files by folder hierarchy with directories listed first, plus live storage usage information.</p>
+				<p>支持按目录层级浏览文件，目录优先显示，并实时显示当前磁盘使用情况。| Browse files by folder hierarchy with directories listed first, plus live storage usage information.</p>
 				<div class="tag-list">
 					<span class="tag">tree view</span>
 					<span class="tag">storage stats</span>
