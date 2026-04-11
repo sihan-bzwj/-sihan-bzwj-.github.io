@@ -94,7 +94,7 @@
 			</div>
 			<div class="site-footer__item">
 				<span class="site-footer__label">更新时间 | Updated</span>
-				<strong class="site-footer__value">2026-04-05</strong>
+				<strong class="site-footer__value">2026-04-11</strong>
 			</div>
 		</footer>
 

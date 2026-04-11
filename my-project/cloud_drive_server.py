@@ -3,202 +3,32 @@
 from __future__ import annotations
 
 import argparse
-import json
 import mimetypes
-import os
 import shutil
 import sys
-from datetime import datetime, timezone
-from dataclasses import dataclass
-from email.parser import BytesParser
-from email.policy import default as default_email_policy
 from http import HTTPStatus
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
-from io import BytesIO
-from pathlib import Path
-from urllib.parse import parse_qs, quote, urlparse
+from urllib.parse import quote
 
+from cloud_drive_app.config import CloudDriveConfig, load_config
+from cloud_drive_app.http_utils import (
+    get_query_value,
+    parse_query,
+    request_json,
+    send_html,
+    send_json,
+)
+from cloud_drive_app.service import (
+    create_directory,
+    delete_entry,
+    download_path,
+    health_payload,
+    list_directory_payload,
+    store_uploads,
+)
+from cloud_drive_app.uploads import parse_uploaded_files
 
-def build_root(path_value: str | None) -> Path:
-    root_path = Path(path_value or os.environ.get("CLOUD_DRIVE_ROOT", "/home/azureuser/cloud-drive")).expanduser()
-    root_path.mkdir(parents=True, exist_ok=True)
-    return root_path.resolve()
-
-
-ROOT = build_root(None)
-UPLOAD_PASSWORD = os.environ.get("CLOUD_DRIVE_UPLOAD_PASSWORD", "sihan123")
-
-
-def human_size(byte_count: int) -> str:
-    units = ["B", "KB", "MB", "GB", "TB"]
-    value = float(byte_count)
-    for unit in units:
-        if value < 1024.0 or unit == units[-1]:
-            if unit == "B":
-                return f"{int(value)} {unit}"
-            return f"{value:.1f} {unit}"
-        value /= 1024.0
-    return f"{byte_count} B"
-
-
-def iso_timestamp(timestamp: float) -> str:
-    return datetime.fromtimestamp(timestamp, tz=timezone.utc).astimezone().isoformat(timespec="seconds")
-
-
-def relative_path(value: str) -> str:
-    normalized = value.strip().lstrip("/")
-    if not normalized or normalized == ".":
-        return ""
-    return Path(normalized).as_posix()
-
-
-def resolve_inside_root(relative_value: str) -> Path:
-    candidate = (ROOT / relative_path(relative_value)).resolve()
-    if candidate == ROOT or ROOT in candidate.parents:
-        return candidate
-    raise ValueError("Path escapes storage root")
-
-
-def safe_name(value: str) -> str:
-    candidate = Path(value).name.strip()
-    if not candidate or candidate in {".", ".."}:
-        raise ValueError("Invalid name")
-    return candidate
-
-
-def parent_relative_path(value: str) -> str:
-    cleaned = relative_path(value)
-    if not cleaned:
-        return ""
-    parent = Path(cleaned).parent.as_posix()
-    return "" if parent == "." else parent
-
-
-def make_unique_path(base_path: Path) -> Path:
-    if not base_path.exists():
-        return base_path
-
-    suffix = "".join(base_path.suffixes)
-    stem = base_path.name[: -len(suffix)] if suffix else base_path.name
-
-    for index in range(1, 10_000):
-        candidate_name = f"{stem} ({index}){suffix}"
-        candidate_path = base_path.with_name(candidate_name)
-        if not candidate_path.exists():
-            return candidate_path
-
-    raise RuntimeError("Cannot allocate a unique filename")
-
-
-def file_metadata(file_path: Path) -> dict[str, object]:
-    stat_result = file_path.stat()
-    kind = "directory" if file_path.is_dir() else "file"
-    return {
-        "name": file_path.name,
-        "path": relative_path(file_path.relative_to(ROOT).as_posix()),
-        "kind": kind,
-        "size": stat_result.st_size if file_path.is_file() else 0,
-        "modified": iso_timestamp(stat_result.st_mtime),
-    }
-
-
-def list_directory(folder_path: Path) -> list[dict[str, object]]:
-    entries: list[dict[str, object]] = []
-    for child in sorted(folder_path.iterdir(), key=lambda item: (not item.is_dir(), item.name.lower())):
-        if child.is_symlink():
-            continue
-        entries.append(file_metadata(child))
-    return entries
-
-
-def request_json(handler: BaseHTTPRequestHandler) -> dict[str, object]:
-    content_length = int(handler.headers.get("Content-Length", "0") or "0")
-    if content_length <= 0:
-        return {}
-    raw_body = handler.rfile.read(content_length)
-    if not raw_body:
-        return {}
-    return json.loads(raw_body.decode("utf-8"))
-
-
-def write_response(handler: BaseHTTPRequestHandler, status: HTTPStatus, content_type: str, data: bytes) -> None:
-    handler.send_response(status)
-    handler.send_header("Content-Type", content_type)
-    handler.send_header("Content-Length", str(len(data)))
-    handler.send_header("Cache-Control", "no-store")
-    handler.send_header("Access-Control-Allow-Origin", "*")
-    handler.send_header("Access-Control-Allow-Methods", "GET, POST, DELETE, OPTIONS")
-    handler.send_header("Access-Control-Allow-Headers", "Content-Type, X-Upload-Password")
-    handler.end_headers()
-    handler.wfile.write(data)
-
-
-def send_json(handler: BaseHTTPRequestHandler, status: HTTPStatus, payload: dict[str, object]) -> None:
-    write_response(handler, status, "application/json; charset=utf-8", json.dumps(payload, ensure_ascii=False).encode("utf-8"))
-
-
-def send_text(handler: BaseHTTPRequestHandler, status: HTTPStatus, content: str, content_type: str = "text/plain; charset=utf-8") -> None:
-    write_response(handler, status, content_type, content.encode("utf-8"))
-
-
-def send_html(handler: BaseHTTPRequestHandler, status: HTTPStatus, content: str) -> None:
-    write_response(handler, status, "text/html; charset=utf-8", content.encode("utf-8"))
-
-
-def parse_query(path: str) -> tuple[str, dict[str, list[str]]]:
-    parsed = urlparse(path)
-    return parsed.path, parse_qs(parsed.query)
-
-
-def get_query_value(values: dict[str, list[str]], key: str, default: str = "") -> str:
-    value_list = values.get(key)
-    if not value_list:
-        return default
-    return value_list[0]
-
-
-@dataclass
-class UploadedFile:
-  filename: str
-  file: BytesIO
-
-
-def parse_uploaded_files(handler: BaseHTTPRequestHandler) -> list[UploadedFile]:
-  content_length = int(handler.headers.get("Content-Length", "0") or "0")
-  if content_length <= 0:
-    return []
-
-  content_type = handler.headers.get("Content-Type", "")
-  if not content_type.startswith("multipart/form-data"):
-    raise ValueError("上传接口只接受 multipart/form-data")
-
-  raw_body = handler.rfile.read(content_length)
-  if not raw_body:
-    return []
-
-  parser = BytesParser(policy=default_email_policy)
-  message = parser.parsebytes(
-    f"Content-Type: {content_type}\r\nMIME-Version: 1.0\r\n\r\n".encode("utf-8") + raw_body
-  )
-
-  uploaded_files: list[UploadedFile] = []
-  if not message.is_multipart():
-    return uploaded_files
-
-  for part in message.iter_parts():
-    if part.get_content_disposition() != "form-data":
-      continue
-    if part.get_param("name", header="content-disposition") != "file":
-      continue
-
-    filename = part.get_filename()
-    if not filename:
-      continue
-
-    payload = part.get_payload(decode=True) or b""
-    uploaded_files.append(UploadedFile(filename=filename, file=BytesIO(payload)))
-
-  return uploaded_files
+BOOT_CONFIG = load_config()
 
 
 APP_HTML = """<!doctype html>
@@ -1178,7 +1008,20 @@ APP_HTML = """<!doctype html>
 
 
 class CloudDriveHandler(BaseHTTPRequestHandler):
-    server_version = "CloudDrive/1.0"
+    server_version = "CloudDrive/1.1"
+
+    @property
+    def config(self) -> CloudDriveConfig:
+        """Expose typed configuration stored on the HTTP server."""
+        return self.server.config
+
+    def _require_upload_password(self, error_message: str) -> bool:
+        """Gate mutating routes behind the shared upload password."""
+        provided_password = self.headers.get("X-Upload-Password", "")
+        if provided_password == self.config.upload_password:
+            return True
+        send_json(self, HTTPStatus.UNAUTHORIZED, {"ok": False, "error": error_message})
+        return False
 
     def do_OPTIONS(self) -> None:
         self.send_response(HTTPStatus.NO_CONTENT)
@@ -1190,62 +1033,32 @@ class CloudDriveHandler(BaseHTTPRequestHandler):
 
     def do_GET(self) -> None:
         path, query = parse_query(self.path)
+        root = self.config.root
 
         if path in {"/", "/index.html"}:
             send_html(self, HTTPStatus.OK, APP_HTML)
             return
 
         if path == "/health":
-            usage = shutil.disk_usage(ROOT)
-            send_json(
-                self,
-                HTTPStatus.OK,
-                {
-                    "ok": True,
-                    "storage": {
-                        "root": str(ROOT),
-                        "total_bytes": usage.total,
-                        "used_bytes": usage.used,
-                        "free_bytes": usage.free,
-                    },
-                },
-            )
+            send_json(self, HTTPStatus.OK, health_payload(root))
             return
 
         if path == "/api/list":
             try:
-                folder = resolve_inside_root(get_query_value(query, "path"))
-                if not folder.exists() or not folder.is_dir():
-                    raise FileNotFoundError
-                usage = shutil.disk_usage(ROOT)
                 send_json(
                     self,
                     HTTPStatus.OK,
-                    {
-                        "ok": True,
-                        "path": relative_path(folder.relative_to(ROOT).as_posix()),
-                        "parent": parent_relative_path(folder.relative_to(ROOT).as_posix()),
-                        "entries": list_directory(folder),
-                        "storage": {
-                            "root": str(ROOT),
-                            "total_bytes": usage.total,
-                            "used_bytes": usage.used,
-                            "free_bytes": usage.free,
-                        },
-                    },
+                    list_directory_payload(root, get_query_value(query, "path")),
                 )
-            except FileNotFoundError:
-                send_json(self, HTTPStatus.NOT_FOUND, {"ok": False, "error": "目录不存在"})
+            except FileNotFoundError as error:
+                send_json(self, HTTPStatus.NOT_FOUND, {"ok": False, "error": str(error)})
             except Exception as error:
                 send_json(self, HTTPStatus.BAD_REQUEST, {"ok": False, "error": str(error)})
             return
 
         if path == "/api/download":
             try:
-                file_path = resolve_inside_root(get_query_value(query, "path"))
-                if not file_path.is_file():
-                    raise FileNotFoundError
-
+                file_path = download_path(root, get_query_value(query, "path"))
                 guessed_type = mimetypes.guess_type(file_path.name)[0] or "application/octet-stream"
                 encoded_name = quote(file_path.name)
 
@@ -1259,8 +1072,8 @@ class CloudDriveHandler(BaseHTTPRequestHandler):
 
                 with file_path.open("rb") as file_handle:
                     shutil.copyfileobj(file_handle, self.wfile, length=1024 * 1024)
-            except FileNotFoundError:
-                send_json(self, HTTPStatus.NOT_FOUND, {"ok": False, "error": "文件不存在"})
+            except FileNotFoundError as error:
+                send_json(self, HTTPStatus.NOT_FOUND, {"ok": False, "error": str(error)})
             except Exception as error:
                 send_json(self, HTTPStatus.BAD_REQUEST, {"ok": False, "error": str(error)})
             return
@@ -1269,45 +1082,28 @@ class CloudDriveHandler(BaseHTTPRequestHandler):
 
     def do_POST(self) -> None:
         path, query = parse_query(self.path)
+        root = self.config.root
 
         if path == "/api/upload":
-          try:
-            provided_password = self.headers.get("X-Upload-Password", "")
-            if provided_password != UPLOAD_PASSWORD:
-              send_json(self, HTTPStatus.UNAUTHORIZED, {"ok": False, "error": "上传密码错误"})
-              return
+            try:
+                if not self._require_upload_password("上传密码错误"):
+                    return
 
-            folder = resolve_inside_root(get_query_value(query, "path"))
-            if not folder.exists() or not folder.is_dir():
-              raise FileNotFoundError("目标目录不存在")
-
-            fields = parse_uploaded_files(self)
-
-            uploaded: list[dict[str, object]] = []
-            for field in fields:
-              filename = safe_name(field.filename or "")
-              destination = make_unique_path(folder / filename)
-              with destination.open("wb") as destination_handle:
-                shutil.copyfileobj(field.file, destination_handle, length=1024 * 1024)
-              uploaded.append(file_metadata(destination))
-
-            send_json(self, HTTPStatus.OK, {"ok": True, "uploaded": uploaded})
-          except Exception as error:
-            send_json(self, HTTPStatus.BAD_REQUEST, {"ok": False, "error": str(error)})
-          return
+                uploaded = store_uploads(
+                    root,
+                    get_query_value(query, "path"),
+                    parse_uploaded_files(self),
+                )
+                send_json(self, HTTPStatus.OK, {"ok": True, "uploaded": uploaded})
+            except Exception as error:
+                send_json(self, HTTPStatus.BAD_REQUEST, {"ok": False, "error": str(error)})
+            return
 
         if path == "/api/mkdir":
             try:
                 payload = request_json(self)
-                folder = resolve_inside_root(str(payload.get("path", "")))
-                if not folder.exists() or not folder.is_dir():
-                    raise FileNotFoundError("目标目录不存在")
-
-                name = safe_name(str(payload.get("name", "")))
-                new_folder = folder / name
-                new_folder.mkdir(parents=True, exist_ok=False)
-
-                send_json(self, HTTPStatus.OK, {"ok": True, "entry": file_metadata(new_folder)})
+                entry = create_directory(root, str(payload.get("path", "")), str(payload.get("name", "")))
+                send_json(self, HTTPStatus.OK, {"ok": True, "entry": entry})
             except FileExistsError:
                 send_json(self, HTTPStatus.CONFLICT, {"ok": False, "error": "文件夹已存在"})
             except Exception as error:
@@ -1316,23 +1112,11 @@ class CloudDriveHandler(BaseHTTPRequestHandler):
 
         if path == "/api/delete":
             try:
-                provided_password = self.headers.get("X-Upload-Password", "")
-                if provided_password != UPLOAD_PASSWORD:
-                    send_json(self, HTTPStatus.UNAUTHORIZED, {"ok": False, "error": "删除密码错误"})
+                if not self._require_upload_password("删除密码错误"):
                     return
 
                 payload = request_json(self)
-                target = resolve_inside_root(str(payload.get("path", "")))
-                if target == ROOT:
-                    raise ValueError("不允许删除根目录")
-
-                if target.is_dir():
-                    shutil.rmtree(target)
-                elif target.exists():
-                    target.unlink()
-                else:
-                    raise FileNotFoundError("目标不存在")
-
+                delete_entry(root, str(payload.get("path", "")))
                 send_json(self, HTTPStatus.OK, {"ok": True})
             except Exception as error:
                 send_json(self, HTTPStatus.BAD_REQUEST, {"ok": False, "error": str(error)})
@@ -1345,18 +1129,18 @@ class CloudDriveHandler(BaseHTTPRequestHandler):
 
 
 def main() -> int:
-    global ROOT
-
     parser = argparse.ArgumentParser(description="Cloud drive server")
-    parser.add_argument("--host", default=os.environ.get("CLOUD_DRIVE_HOST", "127.0.0.1"))
-    parser.add_argument("--port", default=int(os.environ.get("CLOUD_DRIVE_PORT", "8787")), type=int)
-    parser.add_argument("--root", default=str(ROOT))
+    parser.add_argument("--host", default="127.0.0.1")
+    parser.add_argument("--port", default=8787, type=int)
+    parser.add_argument("--root", default=str(BOOT_CONFIG.root))
     args = parser.parse_args()
-    ROOT = build_root(args.root)
+
+    config = load_config(root_override=args.root)
 
     server = ThreadingHTTPServer((args.host, args.port), CloudDriveHandler)
+    server.config = config
     print(f"Cloud drive server listening on http://{args.host}:{args.port}")
-    print(f"Storage root: {ROOT}")
+    print(f"Storage root: {config.root}")
 
     try:
         server.serve_forever()
